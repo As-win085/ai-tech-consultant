@@ -1,0 +1,31 @@
+{
+  "name": "inbox-agent",
+  "version": "0.1.0",
+  "description": "Inbox Agent (Task 2) — email classification, grounding via Task 1 Knowledge Brain, human review",
+  "type": "commonjs",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "jest --maxWorkers=2",
+    "test:integration": "jest --maxWorkers=2 --testPathPattern=integration",
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "fastify": "^4.28.1",
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/tests"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/.venv"
+    ]
+  }
+}
