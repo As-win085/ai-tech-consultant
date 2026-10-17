@@ -1,0 +1,11 @@
+# Task 3 — Meeting-to-Scope local artifacts
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+.env.*
+!.env.example
+data/generated/
+*.db
+*.sqlite

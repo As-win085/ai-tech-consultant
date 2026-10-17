@@ -1,0 +1,10 @@
+# Task 3 — Meeting-to-Scope direct dependencies.
+# Versions match the verified Task 1 runtime (Python 3.14).
+fastapi==0.143.3
+uvicorn==0.54.0
+pydantic==2.14.1
+pydantic-settings==2.16.0
+httpx==0.28.1
+pg8000==1.31.5
+python-dotenv==1.2.4
+pytest==9.1.1

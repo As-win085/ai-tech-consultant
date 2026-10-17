@@ -1,0 +1,175 @@
+import { InboxAgent } from '../src/agent';
+import { RuleBasedClassifier } from '../src/classifier';
+import { InMemoryStore } from '../src/store';
+import { abstainAnswer, groundedAnswer, MockKbClient, sampleEmail } from './helpers';
+
+function makeAgent(kb: MockKbClient, maxConsecutive = 20) {
+  const store = new InMemoryStore();
+  const agent = new InboxAgent({
+    store,
+    classifier: new RuleBasedClassifier(),
+    kbClient: kb,
+    maxConsecutiveUneditedApprovals: maxConsecutive,
+  });
+  return { agent, store };
+}
+
+describe('InboxAgent ingestion and classification', () => {
+  it('ingests emails and classifies them', async () => {
+    const { agent } = makeAgent(new MockKbClient([groundedAnswer()]));
+    const items = await agent.ingestEmails([sampleEmail() as never]);
+    expect(items).toHaveLength(1);
+    expect(items[0].classification.category).toBe('product_howto');
+    expect(items[0].state).toBe('pending_review');
+  });
+
+  it('records an audit entry on ingest', async () => {
+    const { agent } = makeAgent(new MockKbClient([groundedAnswer()]));
+    const items = await agent.ingestEmails([sampleEmail() as never]);
+    const audit = await agent.getAudit(items[0].id);
+    expect(audit.some((a) => a.event === 'ingested')).toBe(true);
+  });
+});
+
+describe('draft generation', () => {
+  it('produces a grounded draft with citations', async () => {
+    const { agent } = makeAgent(new MockKbClient([groundedAnswer()]));
+    const [item] = await agent.ingestEmails([sampleEmail() as never]);
+    const updated = await agent.generateDraft(item.id);
+    expect(updated.draft?.grounded).toBe(true);
+    expect(updated.draft?.citations).toHaveLength(1);
+    expect(updated.automationExcluded).toBe(false);
+  });
+
+  it('produces a safe clarification draft on abstention', async () => {
+    const { agent } = makeAgent(new MockKbClient([abstainAnswer()]));
+    const [item] = await agent.ingestEmails([sampleEmail({ body: 'Something off, not sure what.' }) as never]);
+    const updated = await agent.generateDraft(item.id);
+    expect(updated.draft?.grounded).toBe(false);
+    expect(updated.draft?.escalationReason).toBeTruthy();
+    expect(updated.automationExcluded).toBe(true);
+  });
+
+  it('produces a degraded escalation draft when the knowledge brain is unavailable', async () => {
+    const { KnowledgeBrainError } = require('../src/kbClient');
+    const kb = new MockKbClient(() => {
+      throw new KnowledgeBrainError('unavailable', 'kb down');
+    });
+    const { agent } = makeAgent(kb);
+    const [item] = await agent.ingestEmails([sampleEmail() as never]);
+    const updated = await agent.generateDraft(item.id);
+    expect(updated.draft).not.toBeNull();
+    expect(updated.draft?.grounded).toBe(false);
+    expect(updated.draft?.citations).toHaveLength(0);
+    expect(updated.draft?.escalationReason).toMatch(/unavailable/i);
+    expect(updated.metadata.kbError).toMatchObject({ kind: 'unavailable' });
+    const audit = await agent.getAudit(item.id);
+    expect(audit.some((a) => a.event === 'draft_generation_degraded')).toBe(true);
+  });
+
+  it('still propagates unexpected (non-KB) errors', async () => {
+    const kb = new MockKbClient(() => {
+      throw new Error('programmer bug');
+    });
+    const { agent } = makeAgent(kb);
+    const [item] = await agent.ingestEmails([sampleEmail() as never]);
+    await expect(agent.generateDraft(item.id)).rejects.toThrow('programmer bug');
+  });
+});
+
+describe('review outcomes', () => {
+  it('approves a grounded draft and increments the automation counter', async () => {
+    const { agent } = makeAgent(new MockKbClient([groundedAnswer()]));
+    const [item] = await agent.ingestEmails([sampleEmail() as never]);
+    await agent.generateDraft(item.id);
+    const result = await agent.review(item.id, { action: 'approve', reviewerId: 'reviewer-1' });
+    expect(result.item.state).toBe('approved');
+    expect(result.feedback.outcome).toBe('approved_without_edit');
+    expect(result.automationState.consecutiveUneditedApprovals).toBe(1);
+  });
+
+  it('edit resets the counter and records feedback', async () => {
+    const { agent } = makeAgent(new MockKbClient([groundedAnswer(), groundedAnswer()]));
+    const [item] = await agent.ingestEmails([sampleEmail() as never]);
+    await agent.generateDraft(item.id);
+    // first item increment via a second item
+    const [item2] = await agent.ingestEmails([sampleEmail({ id: 'email-2' }) as never]);
+    await agent.generateDraft(item2.id);
+    await agent.review(item2.id, { action: 'approve' });
+    const result = await agent.review(item.id, { action: 'edit', editedDraft: 'edited response' });
+    expect(result.item.state).toBe('edited_and_approved');
+    expect(result.feedback.outcome).toBe('edited');
+    expect(result.feedback.edited).toBe(true);
+    expect(result.automationState.consecutiveUneditedApprovals).toBe(0);
+  });
+
+  it('reject stores a reason and resets the counter', async () => {
+    const { agent } = makeAgent(new MockKbClient([groundedAnswer()]));
+    const [item] = await agent.ingestEmails([sampleEmail() as never]);
+    await agent.generateDraft(item.id);
+    const result = await agent.review(item.id, { action: 'reject', rejectionReason: 'tone too casual' });
+    expect(result.item.state).toBe('rejected');
+    expect(result.feedback.outcome).toBe('rejected');
+    expect(result.feedback.reason).toBe('tone too casual');
+  });
+
+  it('escalate sets escalated state and resets the counter', async () => {
+    const { agent } = makeAgent(new MockKbClient([groundedAnswer()]));
+    const [item] = await agent.ingestEmails([sampleEmail() as never]);
+    await agent.generateDraft(item.id);
+    const result = await agent.review(item.id, { action: 'escalate', escalationReason: 'needs specialist' });
+    expect(result.item.state).toBe('escalated');
+    expect(result.feedback.outcome).toBe('escalated');
+  });
+
+  it('rejects duplicate actions from a terminal state', async () => {
+    const { agent } = makeAgent(new MockKbClient([groundedAnswer()]));
+    const [item] = await agent.ingestEmails([sampleEmail() as never]);
+    await agent.generateDraft(item.id);
+    await agent.review(item.id, { action: 'approve' });
+    await expect(agent.review(item.id, { action: 'approve' })).rejects.toThrow(/not valid/);
+  });
+
+  it('refuses review before a draft exists', async () => {
+    const { agent } = makeAgent(new MockKbClient([groundedAnswer()]));
+    const [item] = await agent.ingestEmails([sampleEmail() as never]);
+    await expect(agent.review(item.id, { action: 'approve' })).rejects.toThrow(/no draft/);
+  });
+
+  it('requires an editedDraft for edit', async () => {
+    const { agent } = makeAgent(new MockKbClient([groundedAnswer()]));
+    const [item] = await agent.ingestEmails([sampleEmail() as never]);
+    await agent.generateDraft(item.id);
+    await expect(agent.review(item.id, { action: 'edit' })).rejects.toThrow(/editedDraft/);
+  });
+});
+
+describe('automation threshold', () => {
+  it('becomes eligible after N consecutive unedited approvals', async () => {
+    const { agent } = makeAgent(new MockKbClient([groundedAnswer()]), 3);
+    const emails = [1, 2, 3].map((n) => sampleEmail({ id: `email-${n}` }) as never);
+    const items = await agent.ingestEmails(emails);
+    for (const item of items) {
+      await agent.generateDraft(item.id);
+      const res = await agent.review(item.id, { action: 'approve' });
+      if (item === items[items.length - 1]) {
+        expect(res.automationState.consecutiveUneditedApprovals).toBe(3);
+        expect(res.automationState.automationEligible).toBe(true);
+        expect(res.automationState.automationThresholdReachedAt).toBeTruthy();
+      }
+    }
+    const audit = await agent.getAudit();
+    expect(audit.some((a) => a.event === 'automation_eligible_threshold_reached')).toBe(true);
+  });
+
+  it('does not count excluded (billing) approvals toward automation', async () => {
+    const { agent } = makeAgent(new MockKbClient([groundedAnswer()]), 3);
+    const [item] = await agent.ingestEmails([
+      sampleEmail({ subject: 'Charged twice', body: 'You charged my card twice, please refund.' }) as never,
+    ]);
+    await agent.generateDraft(item.id);
+    const res = await agent.review(item.id, { action: 'approve' });
+    expect(res.automationExcluded).toBe(true);
+    expect(res.automationState.consecutiveUneditedApprovals).toBe(0);
+  });
+});
