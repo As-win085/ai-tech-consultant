@@ -10,9 +10,9 @@
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "start": "ts-node src/server.ts",
     "dev": "ts-node src/server.ts",
-    "test": "jest --maxWorkers=2",
+    "test": "jest --runInBand --cacheDirectory ./.jest-cache",
     "test:watch": "jest --maxWorkers=2 --watch",
-    "test:integration": "jest --maxWorkers=2 --testPathPattern=integration --runInBand",
+    "test:integration": "jest --runInBand --cacheDirectory ./.jest-cache --testPathPattern=integration",
     "evals": "ts-node evals/runEvals.ts"
   },
   "dependencies": {
