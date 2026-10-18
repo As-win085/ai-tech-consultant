@@ -158,15 +158,15 @@ def test_factory_selects_fake():
 
 def test_factory_anthropic_requires_model_and_key():
     with pytest.raises(ChatConfigError):
-        build_chat_provider(ChatSettings(provider="anthropic"))
+        build_chat_provider(ChatSettings(provider="anthropic", model=None, api_key=None))
     with pytest.raises(ChatConfigError):
-        build_chat_provider(ChatSettings(provider="anthropic", model="claude-x"))
+        build_chat_provider(ChatSettings(provider="anthropic", model="claude-x", api_key=None))
 
 
 def test_factory_anthropic_builds_with_key(monkeypatch):
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     provider = build_chat_provider(
-        ChatSettings(provider="anthropic", model="claude-x", api_key="k")
+        ChatSettings(provider="anthropic", model="claude-x", api_key="k", base_url=None)
     )
     assert isinstance(provider, AnthropicChatProvider)
     assert provider.base_url == "https://api.anthropic.com/v1"
@@ -175,16 +175,35 @@ def test_factory_anthropic_builds_with_key(monkeypatch):
 def test_factory_anthropic_reads_anthropic_env_fallbacks(monkeypatch):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "env-key")
     monkeypatch.setenv("ANTHROPIC_MODEL", "claude-from-env")
-    provider = build_chat_provider(ChatSettings(provider="anthropic"))
+    provider = build_chat_provider(ChatSettings(provider="anthropic", model=None))
     assert isinstance(provider, AnthropicChatProvider)
     assert provider.model_name == "claude-from-env"
 
 
 def test_factory_ollama_default_base_url():
     provider = build_chat_provider(
-        ChatSettings(provider="ollama", model="llama3.2:1b")
+        ChatSettings(provider="ollama", model="llama3.2:1b", base_url=None)
     )
     assert provider.base_url == "http://localhost:11434/v1"
+
+
+def test_factory_uses_openrouter_specific_key_and_default_url(monkeypatch):
+    monkeypatch.setenv("OPENROUTER_API_KEY", "openrouter-test-only")
+    monkeypatch.setenv("LLM_API_KEY", "generic-test-only")
+    settings = ChatSettings(provider="openrouter", model="openrouter/test-model", base_url=None)
+    provider = build_chat_provider(settings)
+    assert isinstance(provider, OpenAICompatibleChatProvider)
+    assert provider.base_url == "https://openrouter.ai/api/v1"
+    assert provider.api_key == "openrouter-test-only"
+
+
+def test_factory_uses_groq_specific_key_and_default_url(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "groq-test-only")
+    settings = ChatSettings(provider="groq", model="test-model", base_url=None)
+    provider = build_chat_provider(settings)
+    assert isinstance(provider, OpenAICompatibleChatProvider)
+    assert provider.base_url == "https://api.groq.com/openai/v1"
+    assert provider.api_key == "groq-test-only"
 
 
 def test_factory_rejects_unknown_provider():

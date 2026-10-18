@@ -41,19 +41,19 @@ def test_factory_builds_fake_provider():
 
 def test_factory_requires_model_and_dimensions_for_openai():
     with pytest.raises(EmbeddingConfigError):
-        build_embedding_provider(EmbeddingSettings(provider="openai"))
+        build_embedding_provider(EmbeddingSettings(provider="openai", model=None, dimensions=None))
 
 
 def test_factory_requires_api_key_for_openai():
     with pytest.raises(EmbeddingConfigError):
         build_embedding_provider(
-            EmbeddingSettings(provider="openai", model="text-embedding-3-small", dimensions=1536)
+            EmbeddingSettings(provider="openai", model="text-embedding-3-small", dimensions=1536, api_key=None)
         )
 
 
 def test_factory_ollama_default_base_url_and_no_key():
     provider = build_embedding_provider(
-        EmbeddingSettings(provider="ollama", model="nomic-embed-text", dimensions=768)
+        EmbeddingSettings(provider="ollama", model="nomic-embed-text", dimensions=768, base_url=None)
     )
     assert provider.base_url == "http://localhost:11434/v1"
     assert provider.dimensions == 768
