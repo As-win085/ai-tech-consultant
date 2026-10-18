@@ -134,7 +134,7 @@ def main() -> int:
         started = time.perf_counter()
         error = None
         try:
-            response = service.ask(AskRequest(question=case["question"]))
+            response = service.ask(AskRequest(question=case["question"], include_chunks=True))
             problems = score(case, response)
         except ServiceUnavailable as exc:
             problems = [f"service unavailable ({exc.dependency})"]
@@ -147,6 +147,20 @@ def main() -> int:
 
         ok = not problems
         passed += ok
+        cited = [] if response is None else [citation.article_id for citation in response.citations]
+        expected_articles = case.get("expect_articles") or []
+        if response is None:
+            citation_correctness = None
+            abstention_correctness = None
+        else:
+            citation_correctness = (
+                bool(set(cited) & set(expected_articles))
+                if expected_articles
+                else not response.citations if case.get("expect_no_citations") else None
+            )
+            expected_abstention = case["category"] != "answerable"
+            observed_abstention = response.evidence_status != "sufficient"
+            abstention_correctness = expected_abstention == observed_abstention
         results.append(
             {
                 "id": case["id"],
@@ -158,6 +172,14 @@ def main() -> int:
                 "citations": []
                 if response is None
                 else [c.article_id for c in response.citations],
+                "retrieved_sources": None if response is None else [
+                    chunk.model_dump(mode="json") for chunk in (response.retrieved_chunks or [])
+                ],
+                "expected_citation_articles": expected_articles,
+                "citation_correctness": citation_correctness,
+                "expected_abstention": None if response is None else case["category"] != "answerable",
+                "observed_abstention": None if response is None else response.evidence_status != "sufficient",
+                "abstention_correctness": abstention_correctness,
                 "escalate": None if response is None else response.needs_escalation,
                 "elapsed_ms": round((time.perf_counter() - started) * 1000, 2),
                 "error": error,
@@ -191,6 +213,10 @@ def main() -> int:
                 "response_source": "actual configured providers for this run; inspect model fields and raw responses",
                 "passed": passed,
                 "total": total,
+                "citation_correct_cases": sum(r["citation_correctness"] is True for r in results),
+                "citation_scored_cases": sum(r["citation_correctness"] is not None for r in results),
+                "abstention_correct_cases": sum(r["abstention_correctness"] is True for r in results),
+                "abstention_scored_cases": sum(r["abstention_correctness"] is not None for r in results),
                 "results": results,
             }, indent=2),
             encoding="utf-8",

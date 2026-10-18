@@ -16,6 +16,11 @@ function median(values: number[]): number {
   return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
 }
 
+function percentile95(values: number[]): number {
+  const sorted = [...values].sort((a, b) => a - b);
+  return sorted.length ? sorted[Math.max(0, Math.ceil(sorted.length * 0.95) - 1)] : 0;
+}
+
 function accuracy(expected: unknown[], actual: unknown[]): number {
   return expected.length ? expected.filter((value, index) => value === actual[index]).length / expected.length : 0;
 }
@@ -54,7 +59,8 @@ async function main(): Promise<void> {
       urgency_accuracy: accuracy(cases.map((item) => item.urgency), results.map((item) => item.classification.urgency)),
       escalation_accuracy: accuracy(cases.map((item) => item.needsEscalation), results.map((item) => item.classification.needsEscalation)),
       escalation_precision: tp + fp ? tp / (tp + fp) : 0, escalation_recall: tp + fn ? tp / (tp + fn) : 0,
-      median_local_classifier_latency_ms: median(results.map((item) => item.elapsed_ms)), estimated_cost_usd: null,
+      median_local_classifier_latency_ms: median(results.map((item) => item.elapsed_ms)),
+      p95_local_classifier_latency_ms: percentile95(results.map((item) => item.elapsed_ms)), estimated_cost_usd: null,
       failures: 0, note: 'Rules baseline only; these metrics are not Claude model measurements.',
     }, results,
   };

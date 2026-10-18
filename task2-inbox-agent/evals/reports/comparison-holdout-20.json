@@ -1,0 +1,59 @@
+{
+  "generated_at": "2026-10-18T06:18:50.701Z",
+  "dataset_sha256": "e9b5f9d4935311c2f7517be853c49c4efaa7aef444c8c022bd6c287220da13b5",
+  "dataset_size": 20,
+  "note": "Claude rows were not run; no per-case model results exist. Rule latency is local and not comparable to network latency.",
+  "rows": [
+    {
+      "model": "Claude Haiku 5.5 (lower cost)",
+      "source": "live Anthropic API",
+      "status": "NOT RUN: ANTHROPIC_API_KEY absent",
+      "category_accuracy": null,
+      "category_macro_f1": null,
+      "urgency_accuracy": null,
+      "escalation_precision": null,
+      "escalation_recall": null,
+      "median_latency_ms": null,
+      "p95_latency_ms": null,
+      "estimated_cost_usd": null,
+      "failures": null,
+      "failure_rate": null,
+      "retried_cases": null,
+      "retry_rate": null
+    },
+    {
+      "model": "Claude Sonnet 5.5 (stronger)",
+      "source": "live Anthropic API",
+      "status": "NOT RUN: ANTHROPIC_API_KEY absent",
+      "category_accuracy": null,
+      "category_macro_f1": null,
+      "urgency_accuracy": null,
+      "escalation_precision": null,
+      "escalation_recall": null,
+      "median_latency_ms": null,
+      "p95_latency_ms": null,
+      "estimated_cost_usd": null,
+      "failures": null,
+      "failure_rate": null,
+      "retried_cases": null,
+      "retry_rate": null
+    },
+    {
+      "model": "RuleBasedClassifier",
+      "source": "offline deterministic rules baseline",
+      "status": "measured",
+      "category_accuracy": 0.75,
+      "category_macro_f1": 0.7821733821733822,
+      "urgency_accuracy": 0.7,
+      "escalation_precision": 0.8461538461538461,
+      "escalation_recall": 0.9166666666666666,
+      "median_latency_ms": 0.755,
+      "p95_latency_ms": 3.31,
+      "estimated_cost_usd": null,
+      "failures": 0,
+      "failure_rate": 0,
+      "retried_cases": 0,
+      "retry_rate": 0
+    }
+  ]
+}

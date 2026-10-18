@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-18T05:32:40.445Z",
+  "generated_at": "2026-10-18T06:18:40.667Z",
   "dataset": "holdout-20.json",
   "dataset_sha256": "e9b5f9d4935311c2f7517be853c49c4efaa7aef444c8c022bd6c287220da13b5",
   "dataset_size": 20,
@@ -13,7 +13,8 @@
     "escalation_accuracy": 0.85,
     "escalation_precision": 0.8461538461538461,
     "escalation_recall": 0.9166666666666666,
-    "median_local_classifier_latency_ms": 0.265,
+    "median_local_classifier_latency_ms": 0.755,
+    "p95_local_classifier_latency_ms": 3.31,
     "estimated_cost_usd": null,
     "failures": 0,
     "note": "Rules baseline only; these metrics are not Claude model measurements."
@@ -46,7 +47,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 4.61
+      "elapsed_ms": 6.67
     },
     {
       "id": "email-02",
@@ -75,7 +76,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 1.48
+      "elapsed_ms": 3.31
     },
     {
       "id": "email-03",
@@ -104,7 +105,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.48
+      "elapsed_ms": 1.95
     },
     {
       "id": "email-04",
@@ -133,7 +134,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.46
+      "elapsed_ms": 1.89
     },
     {
       "id": "email-05",
@@ -164,7 +165,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.45
+      "elapsed_ms": 1.79
     },
     {
       "id": "email-06",
@@ -193,7 +194,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.38
+      "elapsed_ms": 1.6
     },
     {
       "id": "email-07",
@@ -222,7 +223,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.36
+      "elapsed_ms": 1.47
     },
     {
       "id": "email-08",
@@ -251,7 +252,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.35
+      "elapsed_ms": 1.36
     },
     {
       "id": "email-09",
@@ -280,7 +281,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.33
+      "elapsed_ms": 1.1
     },
     {
       "id": "email-10",
@@ -309,7 +310,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.28
+      "elapsed_ms": 0.83
     },
     {
       "id": "email-11",
@@ -340,7 +341,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.25
+      "elapsed_ms": 0.68
     },
     {
       "id": "email-12",
@@ -369,7 +370,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.19
+      "elapsed_ms": 0.41
     },
     {
       "id": "email-13",
@@ -400,7 +401,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.18
+      "elapsed_ms": 0.39
     },
     {
       "id": "email-14",
@@ -431,7 +432,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.17
+      "elapsed_ms": 0.36
     },
     {
       "id": "email-15",
@@ -462,7 +463,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.16
+      "elapsed_ms": 0.34
     },
     {
       "id": "email-16",
@@ -494,7 +495,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.15
+      "elapsed_ms": 0.31
     },
     {
       "id": "email-17",
@@ -523,7 +524,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.14
+      "elapsed_ms": 0.29
     },
     {
       "id": "email-18",
@@ -552,7 +553,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.13
+      "elapsed_ms": 0.27
     },
     {
       "id": "email-19",
@@ -583,7 +584,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.12
+      "elapsed_ms": 0.25
     },
     {
       "id": "email-20",
@@ -612,7 +613,7 @@
         "classifier": "rules",
         "fallback": false
       },
-      "elapsed_ms": 0.11
+      "elapsed_ms": 0.22
     }
   ]
 }
