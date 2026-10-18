@@ -534,7 +534,23 @@ def detect_conflicts(requirements: list[Requirement]) -> list[tuple[Requirement,
                         )
 
     # Polarity conflicts on integration/feature keywords.
-    negators = ("not support", "no ", "without", "disable", "remove", "can't", "cannot", "don't want")
+    negators = (
+        "not support",
+        "not need",
+        "no need",
+        "do not need",
+        "don't need",
+        "don't want",
+        "do not want",
+        "not required",
+        "no longer",
+        "without",
+        "disable",
+        "remove",
+        "can't",
+        "cannot",
+        "won't",
+    )
     for i in range(len(requirements)):
         for j in range(i + 1, len(requirements)):
             a, b = requirements[i], requirements[j]

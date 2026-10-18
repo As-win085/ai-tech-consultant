@@ -22,3 +22,10 @@ htmlcov/
 Thumbs.db
 Desktop.ini
 task1-knowledge-brain/data/
+
+# Node dependencies
+**/node_modules/
+
+# Local service logs
+**/_server.*.log
+*.log

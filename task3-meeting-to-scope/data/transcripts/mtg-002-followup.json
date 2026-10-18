@@ -1,0 +1,21 @@
+{
+  "transcript_id": "mtg-002-followup",
+  "project_id": "brightpath-directory",
+  "title": "Brightpath Directory - Follow-up / Scope Review",
+  "meeting_date": "2026-02-09",
+  "sequence": 2,
+  "parent_transcript_id": "mtg-001-kickoff",
+  "participants": [
+    {"name": "Dana", "role": "Product Owner", "organization": "Brightpath", "side": "customer"},
+    {"name": "Marcus", "role": "Operations Lead", "organization": "Brightpath", "side": "customer"},
+    {"name": "Sam", "role": "Solutions Consultant", "organization": "AI Tech Consultant", "side": "consultant"}
+  ],
+  "segments": [
+    {"speaker": "Dana", "timestamp": "00:00:40", "text": "Since we last spoke we have grown a lot, so now we need to support 120,000 members."},
+    {"speaker": "Dana", "timestamp": "00:01:30", "text": "We also need single sign-on, and we have decided it must integrate with Okta specifically."},
+    {"speaker": "Dana", "timestamp": "00:02:40", "text": "We need a Stripe payment gateway integration as well."},
+    {"speaker": "Dana", "timestamp": "00:04:00", "text": "We'd like a more modern mobile experience but we are not sure yet what that means."},
+    {"speaker": "Marcus", "timestamp": "00:05:00", "text": "For the newsletter, please use Mailchimp specifically as we already pay for it."},
+    {"speaker": "Dana", "timestamp": "00:06:00", "text": "We are not sure whether we still need the caching layer you suggested."}
+  ]
+}
