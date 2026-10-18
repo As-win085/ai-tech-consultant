@@ -39,7 +39,7 @@ from app.answer import SYSTEM_PROMPT, AnswerConfig
 from app.chat import build_chat_provider
 from app.embeddings import build_embedding_provider
 from app.indexer import IndexConfig, index_document
-from app.retriever import RetrievalConfig
+from app.retriever import RetrievalConfig, Retriever
 from app.schemas import AskRequest, AskResponse
 from app.service import KnowledgeService, ServiceUnavailable, build_default_service
 from app.store import InMemoryKnowledgeStore
@@ -68,10 +68,11 @@ def build_memory_service(sample_path: Path) -> KnowledgeService:
     store = InMemoryKnowledgeStore()
     report = index_document(store, embedding_provider, document, IndexConfig())
     print(
-        f"indexed {report.chunks_written} chunk(s) into the in-memory store "
+        f"indexed chunks_written={report.chunks_written} chunks_embedded={report.chunks_embedded} "
+        f"chunks_failed={report.chunks_failed} status={report.status} "
         f"using {embedding_provider.model_name} ({embedding_provider.dimensions}d)"
     )
-    return KnowledgeService(
+    service = KnowledgeService(
         store_factory=lambda: store,
         embedding_provider=embedding_provider,
         chat_provider=chat_provider,
@@ -80,6 +81,46 @@ def build_memory_service(sample_path: Path) -> KnowledgeService:
         embedding_detail=f"{embedding_provider.model_name} ({embedding_provider.dimensions}d)",
         chat_detail=chat_provider.model_name,
     )
+    service.eval_store = store
+    service.eval_index_report = report
+    return service
+
+
+def retrieval_diagnostics(service: KnowledgeService, cases: list[dict]) -> dict:
+    """Inspect the real indexed vectors independently of answer-model availability."""
+    store = getattr(service, "eval_store", None)
+    provider = getattr(service, "embedding_provider", None)
+    if store is None or provider is None:
+        return {"status": "not_available_for_store_mode", "cases": []}
+    target_cases = [case for case in cases if case.get("category") == "answerable"]
+    try:
+        vectors = provider.embed([case["question"] for case in target_cases])
+        retriever = Retriever(store, provider, service.retrieval_config)
+        rows = []
+        for case, vector in zip(target_cases, vectors):
+            candidates = store.search_similar(
+                vector, provider.model_name, provider.dimensions,
+                max(service.retrieval_config.top_k * service.retrieval_config.oversample,
+                    service.retrieval_config.top_k),
+            )
+            above = [hit for hit in candidates if hit.score >= service.retrieval_config.min_score]
+            selected, _ = retriever._select(above, service.retrieval_config.top_k)
+            expected = case.get("expect_articles") or []
+            rows.append({
+                "id": case["id"], "expected_articles": expected,
+                "top_candidate_article": candidates[0].article_id if candidates else None,
+                "top_candidate_score": round(candidates[0].score, 6) if candidates else None,
+                "expected_article_in_candidates": any(hit.article_id in expected for hit in candidates),
+                "expected_article_above_threshold": any(hit.article_id in expected for hit in above),
+                "selected_articles": [hit.article_id for hit in selected],
+                "selected_sources": [{"article_id": hit.article_id, "chunk_id": hit.chunk_id,
+                    "score": round(hit.score, 6), "title": hit.title,
+                    "canonical_url": hit.canonical_url, "content": hit.content} for hit in selected],
+            })
+        return {"status": "measured_real_embeddings", "min_score": service.retrieval_config.min_score,
+                "indexed_chunks": store.index_metadata().indexed_chunks, "cases": rows}
+    except Exception as exc:
+        return {"status": "diagnostic_failed", "error_type": type(exc).__name__, "cases": []}
 
 
 def score(case: dict, response: AskResponse) -> list[str]:
@@ -217,6 +258,8 @@ def main() -> int:
                 "citation_scored_cases": sum(r["citation_correctness"] is not None for r in results),
                 "abstention_correct_cases": sum(r["abstention_correctness"] is True for r in results),
                 "abstention_scored_cases": sum(r["abstention_correctness"] is not None for r in results),
+                "indexing": (service.eval_index_report.summary() if hasattr(service, "eval_index_report") else None),
+                "retrieval_diagnostics": retrieval_diagnostics(service, cases),
                 "results": results,
             }, indent=2),
             encoding="utf-8",

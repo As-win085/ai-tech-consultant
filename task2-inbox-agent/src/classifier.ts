@@ -168,12 +168,13 @@ function extractJson(text: string): unknown {
 }
 
 export interface LlmClassifierOptions {
-  provider: 'openai_compatible' | 'anthropic';
+  provider: 'openai_compatible' | 'anthropic' | 'gemini' | 'google' | 'groq' | 'openrouter' | 'ollama';
   model: string;
   baseUrl: string | null;
   apiKey: string | null;
   timeoutMs: number;
   retries: number;
+  requestDelayMs?: number;
   fetchImpl?: typeof fetch;
 }
 
@@ -192,6 +193,7 @@ export class LlmClassifier implements Classifier {
   readonly name: string;
   private opts: LlmClassifierOptions;
   private fetchImpl: typeof fetch;
+  private lastRequestAt = 0;
 
   constructor(opts: LlmClassifierOptions) {
     this.opts = opts;
@@ -213,6 +215,15 @@ export class LlmClassifier implements Classifier {
         };
       } catch (err) {
         lastError = err instanceof Error ? err.message : String(err);
+        const transient = err instanceof RetryableProviderError ||
+          (err instanceof Error && /timeout|abort|network/i.test(err.message));
+        if (transient && attempt < this.opts.retries) {
+          const waitMs = Math.max(0, this.opts.requestDelayMs ?? Number(process.env.LLM_REQUEST_DELAY_MS ?? 250)) * (2 ** attempt);
+          console.info(`LLM retry provider=${this.opts.provider} model=${this.opts.model} attempt=${attempt + 1}/${this.opts.retries} delay_ms=${waitMs}`);
+          if (waitMs) await new Promise((resolve) => setTimeout(resolve, waitMs));
+          continue;
+        }
+        if (!transient) break;
       }
     }
     return safeFallback(email, lastError);
@@ -223,6 +234,10 @@ export class LlmClassifier implements Classifier {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.opts.timeoutMs);
     try {
+      const delay = Math.max(0, this.opts.requestDelayMs ?? Number(process.env.LLM_REQUEST_DELAY_MS ?? 0));
+      const wait = delay - (Date.now() - this.lastRequestAt);
+      if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait));
+      this.lastRequestAt = Date.now();
       if (this.opts.provider === 'anthropic') {
         const base = this.opts.baseUrl ?? 'https://api.anthropic.com/v1';
         const res = await this.fetchImpl(`${base.replace(/\/$/, '')}/messages`, {
@@ -240,7 +255,12 @@ export class LlmClassifier implements Classifier {
           }),
           signal: controller.signal,
         });
-        if (!res.ok) throw new Error(`anthropic HTTP ${res.status}`);
+        if (!res.ok) {
+          if ((res.status === 429 || res.status >= 500) && this.lastRequestAt) {
+            throw new RetryableProviderError(`anthropic HTTP ${res.status}`);
+          }
+          throw new Error(`anthropic HTTP ${res.status}`);
+        }
         const data = (await res.json()) as { content?: Array<{ text?: string }> };
         return data.content?.map((c) => c.text ?? '').join('') ?? '';
       }
@@ -262,7 +282,10 @@ export class LlmClassifier implements Classifier {
         }),
         signal: controller.signal,
       });
-      if (!res.ok) throw new Error(`llm HTTP ${res.status}`);
+      if (!res.ok) {
+        if (res.status === 429 || res.status >= 500) throw new RetryableProviderError(`llm HTTP ${res.status}`);
+        throw new Error(`llm HTTP ${res.status}`);
+      }
       const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
       return data.choices?.[0]?.message?.content ?? '';
     } finally {
@@ -271,11 +294,13 @@ export class LlmClassifier implements Classifier {
   }
 }
 
+class RetryableProviderError extends Error {}
+
 export function buildClassifier(kind: 'rules' | 'llm', opts?: Partial<LlmClassifierOptions>): Classifier {
   if (kind === 'llm') {
     return new LlmClassifier({
-      provider: opts?.provider ?? 'openai_compatible',
-      model: opts?.model ?? 'llama3.2:1b',
+      provider: opts?.provider ?? 'gemini',
+      model: opts?.model ?? 'gemini-3.8-flash',
       baseUrl: opts?.baseUrl ?? null,
       apiKey: opts?.apiKey ?? null,
       timeoutMs: opts?.timeoutMs ?? 60000,

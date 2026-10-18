@@ -8,12 +8,15 @@ export interface AppConfig {
   knowledgeBrainTimeoutMs: number;
   knowledgeBrainRetries: number;
   classifier: 'rules' | 'llm';
-  llmProvider: 'openai_compatible' | 'anthropic';
+  llmProvider: 'openai_compatible' | 'anthropic' | 'gemini' | 'google' | 'groq' | 'openrouter' | 'ollama';
   llmModel: string;
   llmBaseUrl: string | null;
   llmApiKey: string | null;
   llmTimeoutMs: number;
   llmRetries: number;
+  llmRequestDelayMs: number;
+  embeddingProvider: string;
+  embeddingModel: string;
   maxConsecutiveUneditedApprovals: number;
   databaseUrl: string | null;
   databaseSchema: string;
@@ -36,9 +39,9 @@ export function loadConfig(overrides: Partial<AppConfig> = {}): AppConfig {
   if (classifier !== 'rules' && classifier !== 'llm') {
     throw new Error(`CLASSIFIER must be "rules" or "llm", got "${classifier}"`);
   }
-  const llmProvider = (process.env.LLM_PROVIDER ?? 'openai_compatible').toLowerCase();
-  if (llmProvider !== 'openai_compatible' && llmProvider !== 'anthropic') {
-    throw new Error(`LLM_PROVIDER must be "openai_compatible" or "anthropic", got "${llmProvider}"`);
+  const llmProvider = (process.env.LLM_PROVIDER ?? 'gemini').toLowerCase();
+  if (!['openai_compatible', 'anthropic', 'gemini', 'google', 'groq', 'openrouter', 'ollama'].includes(llmProvider)) {
+    throw new Error(`Unsupported LLM_PROVIDER: ${llmProvider}`);
   }
 
   const config: AppConfig = {
@@ -48,11 +51,19 @@ export function loadConfig(overrides: Partial<AppConfig> = {}): AppConfig {
     knowledgeBrainRetries: intEnv('KNOWLEDGE_BRAIN_RETRIES', 2),
     classifier: classifier as AppConfig['classifier'],
     llmProvider: llmProvider as AppConfig['llmProvider'],
-    llmModel: process.env.LLM_MODEL ?? process.env.CHAT_MODEL ?? 'llama3.2:1b',
-    llmBaseUrl: process.env.LLM_BASE_URL ?? process.env.CHAT_BASE_URL ?? null,
-    llmApiKey: process.env.LLM_API_KEY ?? process.env.ANTHROPIC_API_KEY ?? null,
+    llmModel: process.env.LLM_MODEL ?? process.env.CHAT_MODEL ?? 'gemini-3.8-flash',
+    llmBaseUrl: process.env.LLM_BASE_URL ?? process.env.CHAT_BASE_URL ?? ({
+      gemini: 'https://generativelanguage.googleapis.com/v1beta/openai',
+      google: 'https://generativelanguage.googleapis.com/v1beta/openai',
+      groq: 'https://api.groq.com/openai/v1', openrouter: 'https://openrouter.ai/api/v1',
+      ollama: 'http://localhost:11434/v1',
+    } as Record<string, string>)[llmProvider] ?? null,
+    llmApiKey: process.env.LLM_API_KEY ?? null,
     llmTimeoutMs: intEnv('LLM_TIMEOUT_MS', 60000),
     llmRetries: intEnv('LLM_RETRIES', 1),
+    llmRequestDelayMs: intEnv('LLM_REQUEST_DELAY_MS', 250),
+    embeddingProvider: process.env.EMBEDDING_PROVIDER ?? 'gemini',
+    embeddingModel: process.env.EMBEDDING_MODEL ?? 'gemini-embedding-001',
     maxConsecutiveUneditedApprovals: intEnv('MAX_CONSECUTIVE_UNEDITED_APPROVALS', 20),
     databaseUrl: process.env.DATABASE_URL ?? null,
     databaseSchema: process.env.DATABASE_SCHEMA ?? 'inbox_agent',

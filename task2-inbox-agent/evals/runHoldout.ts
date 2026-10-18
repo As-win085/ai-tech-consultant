@@ -11,10 +11,17 @@ dotenv.config();
 type Case = { id: string; subject: string; body: string; category: string; urgency: string; needsEscalation: boolean };
 const DATA = path.resolve(__dirname, '../datasets/holdout-20.json');
 const OUTPUT = path.resolve(__dirname, 'reports');
+const PROVIDER = (process.env.LLM_PROVIDER ?? 'gemini').toLowerCase();
 const MODELS = [
-  { id: 'claude-haiku-5-5', label: 'Claude Haiku 5.5 (lower cost)', inputPerMillion: 0.10, outputPerMillion: 0.50 },
-  { id: 'claude-sonnet-5-5', label: 'Claude Sonnet 5.5 (stronger)', inputPerMillion: 2, outputPerMillion: 10 },
+  { id: process.env.EVAL_MODEL_CHEAP ?? 'gemini-3.1-flash-lite', label: 'Lower-cost model', inputPerMillion: 0.25, outputPerMillion: 1.50 },
+  { id: process.env.EVAL_MODEL_STRONG ?? 'gemini-3.8-flash', label: 'Stronger model', inputPerMillion: 0.75, outputPerMillion: 3.75 },
 ];
+const BASE_URLS: Record<string, string> = {
+  gemini: 'https://generativelanguage.googleapis.com/v1beta/openai',
+  google: 'https://generativelanguage.googleapis.com/v1beta/openai',
+  groq: 'https://api.groq.com/openai/v1', openrouter: 'https://openrouter.ai/api/v1',
+  ollama: 'http://localhost:11434/v1', anthropic: 'https://api.anthropic.com/v1',
+};
 
 function median(values: number[]): number {
   const sorted = [...values].sort((a, b) => a - b);
@@ -48,7 +55,7 @@ function macroF1(expected: string[], actual: Array<string | null>): number {
 }
 
 async function main(): Promise<void> {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.LLM_API_KEY;
   const bytes = fs.readFileSync(DATA);
   const cases = (JSON.parse(bytes.toString('utf8')) as { cases: Case[] }).cases;
   fs.mkdirSync(OUTPUT, { recursive: true });
@@ -57,7 +64,7 @@ async function main(): Promise<void> {
     const rulesPath = path.join(OUTPUT, 'holdout-20-rules-mock.json');
     const rules = JSON.parse(fs.readFileSync(rulesPath, 'utf8'));
     comparisonRows.push(...MODELS.map((model) => ({
-      model: model.label, source: 'live Anthropic API', status: 'NOT RUN: ANTHROPIC_API_KEY absent',
+      model: model.label, source: `${PROVIDER} API`, status: 'NOT RUN: LLM_API_KEY absent',
       category_accuracy: null, category_macro_f1: null, urgency_accuracy: null,
       escalation_precision: null, escalation_recall: null, median_latency_ms: null, p95_latency_ms: null,
       estimated_cost_usd: null, failures: null, failure_rate: null, retried_cases: null, retry_rate: null,
@@ -73,9 +80,9 @@ async function main(): Promise<void> {
     const comparisonPath = path.join(OUTPUT, 'comparison-holdout-20.json');
     fs.writeFileSync(comparisonPath, JSON.stringify({
       generated_at: new Date().toISOString(), dataset_sha256: createHash('sha256').update(bytes).digest('hex'),
-      dataset_size: cases.length, note: 'Claude rows were not run; no per-case model results exist. Rule latency is local and not comparable to network latency.', rows: comparisonRows,
+      dataset_size: cases.length, note: `Provider deviation: configured default is ${PROVIDER}, not Claude. Model rows were not run; no per-case model results exist. Rule latency is local and not comparable to network latency.`, rows: comparisonRows,
     }, null, 2));
-    console.log('Model comparison (20 frozen emails; Claude rows not run)');
+    console.log(`Model comparison (20 frozen emails; ${PROVIDER} rows not run)`);
     console.log('| Model | Status | Category acc. | Macro-F1 | Urgency acc. | Escalation P/R | Median / p95 ms | Cost USD | Failure / retry rate |');
     console.log('|---|---|---:|---:|---:|---:|---:|---:|---:|');
     for (const row of comparisonRows) {
@@ -105,21 +112,23 @@ async function main(): Promise<void> {
         try {
           const body = await response.clone().json() as any;
           raw = body;
-          inputTokens = Number(body.usage?.input_tokens ?? 0);
-          outputTokens = Number(body.usage?.output_tokens ?? 0);
+          inputTokens = Number(body.usage?.input_tokens ?? body.usage?.prompt_tokens ?? 0);
+          outputTokens = Number(body.usage?.output_tokens ?? body.usage?.completion_tokens ?? 0);
         } catch { /* retain status and transport failure without inventing response data */ }
         calls.push({ raw, inputTokens, outputTokens, status: response.status });
         return response;
       };
       const classifier = new LlmClassifier({
-        provider: 'anthropic', model: model.id, baseUrl: null, apiKey,
+        provider: PROVIDER as any, model: model.id,
+        baseUrl: process.env.LLM_BASE_URL ?? BASE_URLS[PROVIDER] ?? null, apiKey,
         timeoutMs, retries, fetchImpl: captureFetch,
       });
       const started = performance.now();
       const classification = await classifier.classify(email);
       const elapsedMs = Math.round((performance.now() - started) * 100) / 100;
       const successful = [...calls].reverse().find((call) => call.status >= 200 && call.status < 300);
-      const rawText = (successful?.raw as any)?.content?.map((part: any) => part.text ?? '').join('') ?? null;
+      const rawText = (successful?.raw as any)?.content?.map((part: any) => part.text ?? '').join('') ??
+        (successful?.raw as any)?.choices?.[0]?.message?.content ?? null;
       const failedCalls = calls.filter((call) => call.status < 200 || call.status >= 300).length;
       results.push({
         id: item.id, input: item, expected: { category: item.category, urgency: item.urgency, needsEscalation: item.needsEscalation },
@@ -147,7 +156,7 @@ async function main(): Promise<void> {
     const latencies = results.map((row) => row.elapsed_ms);
     const report = {
       generated_at: new Date().toISOString(), dataset: path.basename(DATA), dataset_sha256: createHash('sha256').update(bytes).digest('hex'),
-      dataset_size: cases.length, model: model.id, model_label: model.label, provider: 'Anthropic Messages API', source_mode: 'live API',
+      dataset_size: cases.length, model: model.id, model_label: model.label, provider: PROVIDER, source_mode: 'live API',
       thresholds: 'No pass threshold; descriptive metrics on this fixed synthetic holdout.',
       metrics: {
         category_accuracy: accuracy(expectedCategory, actualCategory), category_macro_f1: macroF1(expectedCategory, actualCategory),
@@ -159,12 +168,12 @@ async function main(): Promise<void> {
         http_failures: results.reduce((sum, row) => sum + row.failed_http_responses, 0),
         transport_failures: results.reduce((sum, row) => sum + row.transport_failures, 0),
         input_tokens: inputTokens, output_tokens: outputTokens, estimated_cost_usd: totalCost,
-        cost_basis: `Anthropic published list rates: input $${model.inputPerMillion}/MTok and output $${model.outputPerMillion}/MTok; estimate from reported usage, not invoice.`
+        cost_basis: `Published Gemini paid-tier list rates (USD/MTok): input $${model.inputPerMillion}, output $${model.outputPerMillion}; estimated from provider-reported usage, not an invoice. Eligible free-tier usage may have zero billed cost.`
       }, results,
     };
     const target = path.join(OUTPUT, `holdout-20-${model.id}.json`);
     fs.writeFileSync(target, JSON.stringify(report, null, 2));
-    comparisonRows.push({ model: model.label, source: 'live Anthropic API', ...report.metrics });
+    comparisonRows.push({ model: model.label, source: `live ${PROVIDER} API`, ...report.metrics });
     console.log(`${model.id}: category accuracy=${report.metrics.category_accuracy}, urgency accuracy=${report.metrics.urgency_accuracy}, escalation precision=${report.metrics.escalation_precision}, recall=${report.metrics.escalation_recall}, median latency=${report.metrics.median_latency_ms} ms, p95=${report.metrics.p95_latency_ms} ms, failures=${report.metrics.failures}, retry rate=${report.metrics.retry_rate}, estimated cost=$${totalCost.toFixed(6)}; report=${target}`);
   }
   const rulesPath = path.join(OUTPUT, 'holdout-20-rules-mock.json');
@@ -180,7 +189,7 @@ async function main(): Promise<void> {
   const comparisonPath = path.join(OUTPUT, 'comparison-holdout-20.json');
   fs.writeFileSync(comparisonPath, JSON.stringify({
     generated_at: new Date().toISOString(), dataset_sha256: createHash('sha256').update(bytes).digest('hex'),
-    note: 'Rule-based latency is local execution time and is not comparable to network model latency. Claude costs use published token list rates.', rows: comparisonRows,
+    note: 'Deviation: uses configurable Gemini-compatible endpoints by default instead of the originally requested Claude models. Set LLM_PROVIDER, LLM_BASE_URL, LLM_API_KEY, EVAL_MODEL_CHEAP and EVAL_MODEL_STRONG to select provider/models. Rule latency is local and not comparable to network latency.', rows: comparisonRows,
   }, null, 2));
   console.log('\nModel comparison (20 fixed synthetic emails)');
   console.log('| Model | Source | Category acc. | Macro-F1 | Urgency acc. | Escalation P/R | Median / p95 ms | Cost USD | Failure / retry rate |');

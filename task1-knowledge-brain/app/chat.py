@@ -14,6 +14,8 @@ pretending an answer was produced. No secrets are logged or embedded in errors.
 """
 
 import base64
+import logging
+import os
 import time
 from typing import Callable, Protocol, runtime_checkable
 
@@ -22,6 +24,7 @@ import httpx
 from app.settings import ChatSettings, ConfigError
 
 ANTHROPIC_VERSION = "2023-06-01"
+logger = logging.getLogger(__name__)
 
 _FAKE_ABSTENTION = (
     '{"answer": "The knowledge base does not contain enough information to answer '
@@ -134,18 +137,22 @@ class _HTTPChatProvider:
         self._owns_client = client is None
         self._sleeper = sleeper or time.sleep
         self._backoff_seconds = backoff_seconds
+        self._request_delay_seconds = max(0.0, float(os.getenv("LLM_REQUEST_DELAY_MS", "0")) / 1000)
 
     def _post(self, path: str, *, json: dict, headers: dict) -> str:
         attempts = self.max_retries + 1
         last_error: Exception | None = None
         for attempt in range(attempts):
             try:
+                if self._request_delay_seconds:
+                    self._sleeper(self._request_delay_seconds)
                 response = self._client.post(
                     f"{self.base_url}{path}", json=json, headers=headers
                 )
             except httpx.HTTPError as exc:
                 last_error = exc
                 if attempt < attempts - 1:
+                    logger.warning("chat retry attempt=%d/%d error=%s", attempt + 1, attempts - 1, type(exc).__name__)
                     self._sleeper(self._backoff_seconds * (2**attempt))
                     continue
                 raise ChatRequestError(
@@ -155,6 +162,7 @@ class _HTTPChatProvider:
             if response.status_code == 429 or 500 <= response.status_code < 600:
                 last_error = ChatResponseError(f"retryable HTTP {response.status_code}")
                 if attempt < attempts - 1:
+                    logger.warning("chat retry attempt=%d/%d status=%d", attempt + 1, attempts - 1, response.status_code)
                     self._sleeper(self._backoff_seconds * (2**attempt))
                     continue
                 raise self._as_error(response)
@@ -363,13 +371,14 @@ def build_chat_provider(
             sleeper=sleeper,
         )
 
-    if provider in {"openai", "openai_compatible", "ollama", "compatible"}:
+    provider = __import__("os").environ.get("LLM_PROVIDER", provider).lower()
+    if provider in {"openai", "openai_compatible", "ollama", "compatible", "gemini", "google", "groq", "openrouter"}:
         if not model:
             raise ChatConfigError(
                 f"CHAT_MODEL is required for CHAT_PROVIDER={provider!r}"
             )
-        if provider == "openai" and not api_key:
-            raise ChatConfigError("CHAT_API_KEY is required for the openai provider")
+        if provider in {"openai", "gemini", "google", "groq", "openrouter"} and not api_key:
+            raise ChatConfigError("LLM_API_KEY (or CHAT_API_KEY) is required for this provider")
         if not base_url:
             raise ChatConfigError("CHAT_BASE_URL could not be determined")
         return OpenAICompatibleChatProvider(

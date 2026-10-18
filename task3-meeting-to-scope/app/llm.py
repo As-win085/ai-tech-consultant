@@ -14,6 +14,8 @@ pretending extraction succeeded. Secrets are never logged or embedded in errors.
 from __future__ import annotations
 
 import time
+import logging
+import os
 from typing import Callable, Protocol, runtime_checkable
 
 import httpx
@@ -21,12 +23,17 @@ import httpx
 from app.config import ConfigError, Settings
 
 ANTHROPIC_VERSION = "2023-06-01"
+logger = logging.getLogger(__name__)
 
 DEFAULT_BASE_URLS = {
     "anthropic": "https://api.anthropic.com/v1",
     "openai": "https://api.openai.com/v1",
     "openai_compatible": "https://api.openai.com/v1",
     "ollama": "http://localhost:11434/v1",
+    "gemini": "https://generativelanguage.googleapis.com/v1beta/openai",
+    "google": "https://generativelanguage.googleapis.com/v1beta/openai",
+    "groq": "https://api.groq.com/openai/v1",
+    "openrouter": "https://openrouter.ai/api/v1",
 }
 
 
@@ -115,16 +122,20 @@ class _HTTPChatProvider:
         self._owns_client = client is None
         self._sleeper = sleeper or time.sleep
         self._backoff_seconds = backoff_seconds
+        self._request_delay_seconds = max(0.0, float(os.getenv("LLM_REQUEST_DELAY_MS", "0")) / 1000)
 
     def _post(self, path: str, *, json: dict, headers: dict) -> str:
         attempts = self.max_retries + 1
         last_error: Exception | None = None
         for attempt in range(attempts):
             try:
+                if self._request_delay_seconds:
+                    self._sleeper(self._request_delay_seconds)
                 response = self._client.post(f"{self.base_url}{path}", json=json, headers=headers)
             except httpx.HTTPError as exc:
                 last_error = exc
                 if attempt < attempts - 1:
+                    logger.warning("llm retry attempt=%d/%d error=%s", attempt + 1, attempts - 1, type(exc).__name__)
                     self._sleeper(self._backoff_seconds * (2**attempt))
                     continue
                 raise ChatRequestError(f"chat request failed after {attempts} attempt(s): {exc}") from exc
@@ -132,6 +143,7 @@ class _HTTPChatProvider:
             if response.status_code == 429 or 500 <= response.status_code < 600:
                 last_error = ChatResponseError(f"retryable HTTP {response.status_code}")
                 if attempt < attempts - 1:
+                    logger.warning("llm retry attempt=%d/%d status=%d", attempt + 1, attempts - 1, response.status_code)
                     self._sleeper(self._backoff_seconds * (2**attempt))
                     continue
                 raise ChatResponseError(f"chat request failed with HTTP {response.status_code}")
@@ -246,7 +258,7 @@ def build_chat_provider(
             sleeper=sleeper,
         )
 
-    if provider in {"openai", "openai_compatible", "ollama", "compatible"}:
+    if provider in {"openai", "openai_compatible", "ollama", "compatible", "gemini", "google", "groq", "openrouter"}:
         if not model:
             raise ChatConfigError(f"LLM_MODEL is required for LLM_PROVIDER={provider!r}")
         if not base_url:

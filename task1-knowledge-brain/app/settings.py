@@ -8,6 +8,7 @@ than mid-run.
 
 import os
 
+from pydantic import AliasChoices, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ENV_FILE = ".env"
@@ -16,6 +17,10 @@ DEFAULT_BASE_URLS = {
     "openai": "https://api.openai.com/v1",
     "openai_compatible": "https://api.openai.com/v1",
     "ollama": "http://localhost:11434/v1",
+    "gemini": "https://generativelanguage.googleapis.com/v1beta",
+    "google": "https://generativelanguage.googleapis.com/v1beta",
+    "groq": "https://api.groq.com/openai/v1",
+    "openrouter": "https://openrouter.ai/api/v1",
 }
 
 DEFAULT_CHAT_BASE_URLS = {
@@ -23,6 +28,10 @@ DEFAULT_CHAT_BASE_URLS = {
     "openai": "https://api.openai.com/v1",
     "openai_compatible": "https://api.openai.com/v1",
     "ollama": "http://localhost:11434/v1",
+    "gemini": "https://generativelanguage.googleapis.com/v1beta/openai",
+    "google": "https://generativelanguage.googleapis.com/v1beta/openai",
+    "groq": "https://api.groq.com/openai/v1",
+    "openrouter": "https://openrouter.ai/api/v1",
 }
 
 
@@ -32,13 +41,13 @@ class ConfigError(RuntimeError):
 
 class EmbeddingSettings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_prefix="EMBEDDING_", env_file=ENV_FILE, extra="ignore"
+        env_prefix="EMBEDDING_", env_file=ENV_FILE, extra="ignore", populate_by_name=True
     )
 
-    provider: str = "fake"
-    model: str | None = None
+    provider: str = "gemini"
+    model: str | None = "gemini-embedding-001"
     dimensions: int | None = None
-    api_key: str | None = None
+    api_key: str | None = Field(default=None, validation_alias=AliasChoices("EMBEDDING_API_KEY", "LLM_API_KEY", "GEMINI_API_KEY"))
     base_url: str | None = None
     batch_size: int = 64
     timeout: float = 30.0
@@ -66,28 +75,32 @@ class ChatSettings(BaseSettings):
     """
 
     model_config = SettingsConfigDict(
-        env_prefix="CHAT_", env_file=ENV_FILE, extra="ignore"
+        env_prefix="CHAT_", env_file=ENV_FILE, extra="ignore", populate_by_name=True
     )
 
-    provider: str = "fake"
-    model: str | None = None
-    api_key: str | None = None
-    base_url: str | None = None
+    provider: str = Field(default="gemini", validation_alias=AliasChoices("LLM_PROVIDER", "CHAT_PROVIDER"))
+    model: str | None = Field(default=None, validation_alias=AliasChoices("LLM_MODEL", "CHAT_MODEL"))
+    api_key: str | None = Field(default=None, validation_alias=AliasChoices("LLM_API_KEY", "CHAT_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY"))
+    base_url: str | None = Field(default=None, validation_alias=AliasChoices("LLM_BASE_URL", "CHAT_BASE_URL"))
     timeout: float = 60.0
     max_retries: int = 2
     max_tokens: int = 1024
     temperature: float = 0.0
 
     def resolved_model(self) -> str | None:
-        return self.model or os.environ.get("ANTHROPIC_MODEL")
+        return (os.environ.get("LLM_MODEL") or self.model
+                or os.environ.get("ANTHROPIC_MODEL")
+                or ("gemini-3.8-flash" if self.provider.lower() in {"gemini", "google"} else None))
 
     def resolved_api_key(self) -> str | None:
-        return self.api_key or os.environ.get("ANTHROPIC_API_KEY")
+        return (os.environ.get("LLM_API_KEY") or self.api_key
+                or os.environ.get("ANTHROPIC_API_KEY"))
 
     def effective_base_url(self) -> str | None:
         if self.base_url:
             return self.base_url.rstrip("/")
-        return DEFAULT_CHAT_BASE_URLS.get(self.provider.lower())
+        return (os.environ.get("LLM_BASE_URL") or
+                DEFAULT_CHAT_BASE_URLS.get(os.environ.get("LLM_PROVIDER", self.provider).lower()))
 
 
 class RetrievalSettings(BaseSettings):

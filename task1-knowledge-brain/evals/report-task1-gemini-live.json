@@ -1,0 +1,2052 @@
+{
+  "generated_at": "2026-10-18T06:56:39.965636+00:00",
+  "cases_file": "C:\\Users\\ASWIN\\Documents\\New folder\\mkdir ai-tech-consultant\\task1-knowledge-brain\\evals\\cases.json",
+  "cases_sha256": "da4c522d2ae1bf933fa45bf172b51c113b94df94f5a8db951ebe29b89c522a34",
+  "store_mode": "memory",
+  "embedding_model": "gemini-embedding-001",
+  "chat_model": "gemini-3.8-flash",
+  "response_source": "actual configured providers for this run; inspect model fields and raw responses",
+  "passed": 3,
+  "total": 29,
+  "citation_correct_cases": 3,
+  "citation_scored_cases": 3,
+  "abstention_correct_cases": 3,
+  "abstention_scored_cases": 3,
+  "indexing": {
+    "status": "ok",
+    "run_id": 1,
+    "model": "gemini-embedding-001",
+    "dimensions": 768,
+    "articles_processed": 5,
+    "articles_failed": 0,
+    "chunks_written": 29,
+    "chunks_pruned": 0,
+    "chunks_embedded": 29,
+    "chunks_skipped": 0,
+    "chunks_failed": 0,
+    "errors": []
+  },
+  "retrieval_diagnostics": {
+    "status": "measured_real_embeddings",
+    "min_score": 0.35,
+    "indexed_chunks": 29,
+    "cases": [
+      {
+        "id": "email-mass-01",
+        "expected_articles": [
+          "5000558357"
+        ],
+        "top_candidate_article": "5000558357",
+        "top_candidate_score": 0.67216,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558357",
+          "5000558363",
+          "5000558363",
+          "5000558373",
+          "5000558373"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558357",
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "score": 0.67216,
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your domain, and result in future emails being blocked or blacklisted.\n\nIn some cases, sending spam messages can also negatively impact other sites on the same server and may lead to account restrictions or termination with Brilliant Directories."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "2eb5e39507bdcfb3f73f93e28b9d8586",
+            "score": 0.574438,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Email replies do not have a separate reply-to address. Responses go to the address that sent the original message.\n\nTo read a mailbox in the browser, see How To Access Webmail Through the Admin Area."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "19239a75774ff1bdd958533bf8b37117",
+            "score": 0.57154,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Connect a custom domain to the website. A free directoryup.com address has no mailboxes of its own.\n\nConfirm which provider receives the domain's email. Mailboxes on the website's hosting receive new mail only when the domain's MX records point to them."
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "c6a2200a11e813246115ed866fb55436",
+            "score": 0.570344,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "Paid Google Workspace email accounts can connect to 3rd party email accounts to send and receive emails. For this, the MX record would need to be pointed to Google workspace, for more information: How To Change Email MX Records"
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "a35321199500b6fe53c046417b69fd2a",
+            "score": 0.534938,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "Apple includes a free email client that can connect to 3rd party email accounts for all of their devices and operating systems."
+          }
+        ]
+      },
+      {
+        "id": "email-mass-02",
+        "expected_articles": [
+          "5000558357"
+        ],
+        "top_candidate_article": "5000558357",
+        "top_candidate_score": 0.673669,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558357",
+          "5000558373",
+          "5000558363",
+          "5000558389",
+          "5000558389"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558357",
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "score": 0.673669,
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your domain, and result in future emails being blocked or blacklisted.\n\nIn some cases, sending spam messages can also negatively impact other sites on the same server and may lead to account restrictions or termination with Brilliant Directories."
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "c324c5cca1ff010fe0460c7080498b0e",
+            "score": 0.550968,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "The recommended alternative for using email forwarders is to use an email app that can send and receive emails from multiple email accounts in one place:"
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "2eb5e39507bdcfb3f73f93e28b9d8586",
+            "score": 0.539077,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Email replies do not have a separate reply-to address. Responses go to the address that sent the original message.\n\nTo read a mailbox in the browser, see How To Access Webmail Through the Admin Area."
+          },
+          {
+            "article_id": "5000558389",
+            "chunk_id": "bbcca60573c33d6eb6b5502b33c1bfa2",
+            "score": 0.524977,
+            "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+            "content": "This article reviews links for the Social Media accounts for the website, members and visitors will be able to access the full spectrum of profiles available for the website and it helps link the social media world to the website"
+          },
+          {
+            "article_id": "5000558389",
+            "chunk_id": "33a0b56eec5f6533da32820aecbcea32",
+            "score": 0.516653,
+            "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+            "content": "Inside the Footer Menu of the website:"
+          }
+        ]
+      },
+      {
+        "id": "email-mass-03",
+        "expected_articles": [
+          "5000558357"
+        ],
+        "top_candidate_article": "5000558357",
+        "top_candidate_score": 0.74974,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558357",
+          "5000558363",
+          "5000558363",
+          "5000558373",
+          "5000558373"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558357",
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "score": 0.74974,
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your domain, and result in future emails being blocked or blacklisted.\n\nIn some cases, sending spam messages can also negatively impact other sites on the same server and may lead to account restrictions or termination with Brilliant Directories."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "19239a75774ff1bdd958533bf8b37117",
+            "score": 0.603217,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Connect a custom domain to the website. A free directoryup.com address has no mailboxes of its own.\n\nConfirm which provider receives the domain's email. Mailboxes on the website's hosting receive new mail only when the domain's MX records point to them."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "253437b5bd1122559a6b214385d9d859",
+            "score": 0.595448,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "On the Mailboxes tab, Add a mailbox creates a new mailbox with its password and storage limit. Each mailbox in the list offers Open webmail, Set up for the settings to enter in Outlook, Apple Mail, or a phone, and More for changing the password or storage limit or deleting the mailbox. The full steps are in Settings \u00bb Domain Manager \u00bb Mailboxes and Email Routing.\n\nGeneric addresses such as info@ are more often treated as spam by receiving mail systems. Addresses such as support@, admin@, or contact@ are usually a better choice."
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "e698e3bd2073b05d617af849a31dc356",
+            "score": 0.593552,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "IMPORTANT: The Email Forwarders functionality has been removed from our implementation of cPanel as of June, 2024.\n\nDue to the way this functionality works in cPanel, it caused several issues for users. Some of these issue included: Not all emails being forwarded properly based on the domain settings of the email sender and the receiver of the forwarded email Sendgrid blocking emails from being sent to accounts hosted in cPanel, preventing the Admins of sites from getting notification emails The domain reputation and reputation of the server being harmed when SPAM emails are forwarded through this system While email forwarders can no longer be added or modified, any existing email forwarders will remain in place. If an email forwarder needs to be removed from a site, please submit a ticket to our Support Team for assistance."
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "c324c5cca1ff010fe0460c7080498b0e",
+            "score": 0.57907,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "The recommended alternative for using email forwarders is to use an email app that can send and receive emails from multiple email accounts in one place:"
+          }
+        ]
+      },
+      {
+        "id": "email-accounts-01",
+        "expected_articles": [
+          "5000558363"
+        ],
+        "top_candidate_article": "5000558363",
+        "top_candidate_score": 0.769389,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558363",
+          "5000558363",
+          "5000558373",
+          "5000558373",
+          "5000558357"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558363",
+            "chunk_id": "f434cc304c5b3322ecebeffe8f1d8254",
+            "score": 0.769389,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Email accounts (mailboxes) at the website's own domain, such as support@example.com, are created and managed in Settings > Domain Manager > Mailboxes. The Emails > Email Accounts menu item opens that tab directly."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "253437b5bd1122559a6b214385d9d859",
+            "score": 0.747145,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "On the Mailboxes tab, Add a mailbox creates a new mailbox with its password and storage limit. Each mailbox in the list offers Open webmail, Set up for the settings to enter in Outlook, Apple Mail, or a phone, and More for changing the password or storage limit or deleting the mailbox. The full steps are in Settings \u00bb Domain Manager \u00bb Mailboxes and Email Routing.\n\nGeneric addresses such as info@ are more often treated as spam by receiving mail systems. Addresses such as support@, admin@, or contact@ are usually a better choice."
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "c324c5cca1ff010fe0460c7080498b0e",
+            "score": 0.609799,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "The recommended alternative for using email forwarders is to use an email app that can send and receive emails from multiple email accounts in one place:"
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "c6a2200a11e813246115ed866fb55436",
+            "score": 0.6028,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "Paid Google Workspace email accounts can connect to 3rd party email accounts to send and receive emails. For this, the MX record would need to be pointed to Google workspace, for more information: How To Change Email MX Records"
+          },
+          {
+            "article_id": "5000558357",
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "score": 0.52533,
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your domain, and result in future emails being blocked or blacklisted.\n\nIn some cases, sending spam messages can also negatively impact other sites on the same server and may lead to account restrictions or termination with Brilliant Directories."
+          }
+        ]
+      },
+      {
+        "id": "email-accounts-02",
+        "expected_articles": [
+          "5000558363"
+        ],
+        "top_candidate_article": "5000558363",
+        "top_candidate_score": 0.83232,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558363",
+          "5000558363",
+          "5000558373",
+          "5000558373",
+          "5000558357"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558363",
+            "chunk_id": "f434cc304c5b3322ecebeffe8f1d8254",
+            "score": 0.83232,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Email accounts (mailboxes) at the website's own domain, such as support@example.com, are created and managed in Settings > Domain Manager > Mailboxes. The Emails > Email Accounts menu item opens that tab directly."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "a232fe55447545b68682b15ba4cadcce",
+            "score": 0.829778,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "In the admin, open Emails.\n\nClick Email Accounts.\n\nDomain Manager opens on the Mailboxes tab, which lists the mailboxes, their storage use, and where the domain's email is delivered.\n\nEmail Accounts in the Emails menu (1) opens Domain Manager on the Mailboxes tab (2)."
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "c324c5cca1ff010fe0460c7080498b0e",
+            "score": 0.668246,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "The recommended alternative for using email forwarders is to use an email app that can send and receive emails from multiple email accounts in one place:"
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "c6a2200a11e813246115ed866fb55436",
+            "score": 0.625197,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "Paid Google Workspace email accounts can connect to 3rd party email accounts to send and receive emails. For this, the MX record would need to be pointed to Google workspace, for more information: How To Change Email MX Records"
+          },
+          {
+            "article_id": "5000558357",
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "score": 0.587956,
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your domain, and result in future emails being blocked or blacklisted.\n\nIn some cases, sending spam messages can also negatively impact other sites on the same server and may lead to account restrictions or termination with Brilliant Directories."
+          }
+        ]
+      },
+      {
+        "id": "email-accounts-03",
+        "expected_articles": [
+          "5000558363"
+        ],
+        "top_candidate_article": "5000558363",
+        "top_candidate_score": 0.743002,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558363",
+          "5000558363",
+          "5000558357",
+          "5000558373",
+          "5000558373"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558363",
+            "chunk_id": "253437b5bd1122559a6b214385d9d859",
+            "score": 0.743002,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "On the Mailboxes tab, Add a mailbox creates a new mailbox with its password and storage limit. Each mailbox in the list offers Open webmail, Set up for the settings to enter in Outlook, Apple Mail, or a phone, and More for changing the password or storage limit or deleting the mailbox. The full steps are in Settings \u00bb Domain Manager \u00bb Mailboxes and Email Routing.\n\nGeneric addresses such as info@ are more often treated as spam by receiving mail systems. Addresses such as support@, admin@, or contact@ are usually a better choice."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "f434cc304c5b3322ecebeffe8f1d8254",
+            "score": 0.646108,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Email accounts (mailboxes) at the website's own domain, such as support@example.com, are created and managed in Settings > Domain Manager > Mailboxes. The Emails > Email Accounts menu item opens that tab directly."
+          },
+          {
+            "article_id": "5000558357",
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "score": 0.60407,
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your domain, and result in future emails being blocked or blacklisted.\n\nIn some cases, sending spam messages can also negatively impact other sites on the same server and may lead to account restrictions or termination with Brilliant Directories."
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "c324c5cca1ff010fe0460c7080498b0e",
+            "score": 0.571219,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "The recommended alternative for using email forwarders is to use an email app that can send and receive emails from multiple email accounts in one place:"
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "e698e3bd2073b05d617af849a31dc356",
+            "score": 0.561436,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "IMPORTANT: The Email Forwarders functionality has been removed from our implementation of cPanel as of June, 2024.\n\nDue to the way this functionality works in cPanel, it caused several issues for users. Some of these issue included: Not all emails being forwarded properly based on the domain settings of the email sender and the receiver of the forwarded email Sendgrid blocking emails from being sent to accounts hosted in cPanel, preventing the Admins of sites from getting notification emails The domain reputation and reputation of the server being harmed when SPAM emails are forwarded through this system While email forwarders can no longer be added or modified, any existing email forwarders will remain in place. If an email forwarder needs to be removed from a site, please submit a ticket to our Support Team for assistance."
+          }
+        ]
+      },
+      {
+        "id": "email-accounts-04",
+        "expected_articles": [
+          "5000558363"
+        ],
+        "top_candidate_article": "5000558363",
+        "top_candidate_score": 0.722464,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558363",
+          "5000558363",
+          "5000558373",
+          "5000558373",
+          "5000558357"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558363",
+            "chunk_id": "f434cc304c5b3322ecebeffe8f1d8254",
+            "score": 0.722464,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Email accounts (mailboxes) at the website's own domain, such as support@example.com, are created and managed in Settings > Domain Manager > Mailboxes. The Emails > Email Accounts menu item opens that tab directly."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "c4090b3a9629104dc11d5350acf5e072",
+            "score": 0.710268,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "The previous Manage Email Accounts page still opens in two cases: The website uses a free directoryup.com address. The page explains that a live domain name must be connected before email accounts can be set up, and offers Connect Live Domain. See How to Connect a Domain to a Brilliant Directories Website.\n\nThe administrator's role does not include access to the Domain Manager's Mailboxes tab.\n\nOn a free directoryup.com address, Email Accounts shows the previous page with Connect Live Domain (1)."
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "c6a2200a11e813246115ed866fb55436",
+            "score": 0.656174,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "Paid Google Workspace email accounts can connect to 3rd party email accounts to send and receive emails. For this, the MX record would need to be pointed to Google workspace, for more information: How To Change Email MX Records"
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "c324c5cca1ff010fe0460c7080498b0e",
+            "score": 0.646858,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "The recommended alternative for using email forwarders is to use an email app that can send and receive emails from multiple email accounts in one place:"
+          },
+          {
+            "article_id": "5000558357",
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "score": 0.566652,
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your domain, and result in future emails being blocked or blacklisted.\n\nIn some cases, sending spam messages can also negatively impact other sites on the same server and may lead to account restrictions or termination with Brilliant Directories."
+          }
+        ]
+      },
+      {
+        "id": "forwarders-01",
+        "expected_articles": [
+          "5000558373"
+        ],
+        "top_candidate_article": "5000558373",
+        "top_candidate_score": 0.778468,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558373",
+          "5000558373",
+          "5000558363",
+          "5000558363",
+          "5000558357"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558373",
+            "chunk_id": "e698e3bd2073b05d617af849a31dc356",
+            "score": 0.778468,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "IMPORTANT: The Email Forwarders functionality has been removed from our implementation of cPanel as of June, 2024.\n\nDue to the way this functionality works in cPanel, it caused several issues for users. Some of these issue included: Not all emails being forwarded properly based on the domain settings of the email sender and the receiver of the forwarded email Sendgrid blocking emails from being sent to accounts hosted in cPanel, preventing the Admins of sites from getting notification emails The domain reputation and reputation of the server being harmed when SPAM emails are forwarded through this system While email forwarders can no longer be added or modified, any existing email forwarders will remain in place. If an email forwarder needs to be removed from a site, please submit a ticket to our Support Team for assistance."
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "c324c5cca1ff010fe0460c7080498b0e",
+            "score": 0.771097,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "The recommended alternative for using email forwarders is to use an email app that can send and receive emails from multiple email accounts in one place:"
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "c4090b3a9629104dc11d5350acf5e072",
+            "score": 0.626978,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "The previous Manage Email Accounts page still opens in two cases: The website uses a free directoryup.com address. The page explains that a live domain name must be connected before email accounts can be set up, and offers Connect Live Domain. See How to Connect a Domain to a Brilliant Directories Website.\n\nThe administrator's role does not include access to the Domain Manager's Mailboxes tab.\n\nOn a free directoryup.com address, Email Accounts shows the previous page with Connect Live Domain (1)."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "f434cc304c5b3322ecebeffe8f1d8254",
+            "score": 0.625564,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Email accounts (mailboxes) at the website's own domain, such as support@example.com, are created and managed in Settings > Domain Manager > Mailboxes. The Emails > Email Accounts menu item opens that tab directly."
+          },
+          {
+            "article_id": "5000558357",
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "score": 0.554067,
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your domain, and result in future emails being blocked or blacklisted.\n\nIn some cases, sending spam messages can also negatively impact other sites on the same server and may lead to account restrictions or termination with Brilliant Directories."
+          }
+        ]
+      },
+      {
+        "id": "forwarders-02",
+        "expected_articles": [
+          "5000558373"
+        ],
+        "top_candidate_article": "5000558373",
+        "top_candidate_score": 0.836226,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558373",
+          "5000558373",
+          "5000558363",
+          "5000558363",
+          "5000558357"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558373",
+            "chunk_id": "c324c5cca1ff010fe0460c7080498b0e",
+            "score": 0.836226,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "The recommended alternative for using email forwarders is to use an email app that can send and receive emails from multiple email accounts in one place:"
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "e698e3bd2073b05d617af849a31dc356",
+            "score": 0.705455,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "IMPORTANT: The Email Forwarders functionality has been removed from our implementation of cPanel as of June, 2024.\n\nDue to the way this functionality works in cPanel, it caused several issues for users. Some of these issue included: Not all emails being forwarded properly based on the domain settings of the email sender and the receiver of the forwarded email Sendgrid blocking emails from being sent to accounts hosted in cPanel, preventing the Admins of sites from getting notification emails The domain reputation and reputation of the server being harmed when SPAM emails are forwarded through this system While email forwarders can no longer be added or modified, any existing email forwarders will remain in place. If an email forwarder needs to be removed from a site, please submit a ticket to our Support Team for assistance."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "19239a75774ff1bdd958533bf8b37117",
+            "score": 0.619772,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Connect a custom domain to the website. A free directoryup.com address has no mailboxes of its own.\n\nConfirm which provider receives the domain's email. Mailboxes on the website's hosting receive new mail only when the domain's MX records point to them."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "253437b5bd1122559a6b214385d9d859",
+            "score": 0.604727,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "On the Mailboxes tab, Add a mailbox creates a new mailbox with its password and storage limit. Each mailbox in the list offers Open webmail, Set up for the settings to enter in Outlook, Apple Mail, or a phone, and More for changing the password or storage limit or deleting the mailbox. The full steps are in Settings \u00bb Domain Manager \u00bb Mailboxes and Email Routing.\n\nGeneric addresses such as info@ are more often treated as spam by receiving mail systems. Addresses such as support@, admin@, or contact@ are usually a better choice."
+          },
+          {
+            "article_id": "5000558357",
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "score": 0.540413,
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your domain, and result in future emails being blocked or blacklisted.\n\nIn some cases, sending spam messages can also negatively impact other sites on the same server and may lead to account restrictions or termination with Brilliant Directories."
+          }
+        ]
+      },
+      {
+        "id": "forwarders-03",
+        "expected_articles": [
+          "5000558373"
+        ],
+        "top_candidate_article": "5000558373",
+        "top_candidate_score": 0.755786,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558373",
+          "5000558373",
+          "5000558363",
+          "5000558363",
+          "5000558357"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558373",
+            "chunk_id": "e698e3bd2073b05d617af849a31dc356",
+            "score": 0.755786,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "IMPORTANT: The Email Forwarders functionality has been removed from our implementation of cPanel as of June, 2024.\n\nDue to the way this functionality works in cPanel, it caused several issues for users. Some of these issue included: Not all emails being forwarded properly based on the domain settings of the email sender and the receiver of the forwarded email Sendgrid blocking emails from being sent to accounts hosted in cPanel, preventing the Admins of sites from getting notification emails The domain reputation and reputation of the server being harmed when SPAM emails are forwarded through this system While email forwarders can no longer be added or modified, any existing email forwarders will remain in place. If an email forwarder needs to be removed from a site, please submit a ticket to our Support Team for assistance."
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "c324c5cca1ff010fe0460c7080498b0e",
+            "score": 0.737751,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "The recommended alternative for using email forwarders is to use an email app that can send and receive emails from multiple email accounts in one place:"
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "c4090b3a9629104dc11d5350acf5e072",
+            "score": 0.616151,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "The previous Manage Email Accounts page still opens in two cases: The website uses a free directoryup.com address. The page explains that a live domain name must be connected before email accounts can be set up, and offers Connect Live Domain. See How to Connect a Domain to a Brilliant Directories Website.\n\nThe administrator's role does not include access to the Domain Manager's Mailboxes tab.\n\nOn a free directoryup.com address, Email Accounts shows the previous page with Connect Live Domain (1)."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "19239a75774ff1bdd958533bf8b37117",
+            "score": 0.585367,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Connect a custom domain to the website. A free directoryup.com address has no mailboxes of its own.\n\nConfirm which provider receives the domain's email. Mailboxes on the website's hosting receive new mail only when the domain's MX records point to them."
+          },
+          {
+            "article_id": "5000558357",
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "score": 0.551235,
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your domain, and result in future emails being blocked or blacklisted.\n\nIn some cases, sending spam messages can also negatively impact other sites on the same server and may lead to account restrictions or termination with Brilliant Directories."
+          }
+        ]
+      },
+      {
+        "id": "social-01",
+        "expected_articles": [
+          "5000558389"
+        ],
+        "top_candidate_article": "5000558389",
+        "top_candidate_score": 0.792542,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558389",
+          "5000558389",
+          "5000558363",
+          "5000558363",
+          "5000558401"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558389",
+            "chunk_id": "4156bf23e0ea6e2eab2c6f7a44aee7a4",
+            "score": 0.792542,
+            "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+            "content": "Add a link to the website's Twitter account using the following format: https://www.twitter.com/CompanyTwitter"
+          },
+          {
+            "article_id": "5000558389",
+            "chunk_id": "d2e556c9d89b95eea0c8325b4d714fb1",
+            "score": 0.769762,
+            "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+            "content": "Below is a full list of the Social Media accounts linked to the website.\n\nImportant note: The system will ask for absolute URLs. For example: facebook.com will not be accepted https://www.facebook.com will be accepted"
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "19239a75774ff1bdd958533bf8b37117",
+            "score": 0.545054,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Connect a custom domain to the website. A free directoryup.com address has no mailboxes of its own.\n\nConfirm which provider receives the domain's email. Mailboxes on the website's hosting receive new mail only when the domain's MX records point to them."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "f434cc304c5b3322ecebeffe8f1d8254",
+            "score": 0.539636,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Email accounts (mailboxes) at the website's own domain, such as support@example.com, are created and managed in Settings > Domain Manager > Mailboxes. The Emails > Email Accounts menu item opens that tab directly."
+          },
+          {
+            "article_id": "5000558401",
+            "chunk_id": "33115c4ae34da2d9d19d8feeaf11b446",
+            "score": 0.512212,
+            "title": "How To Import Categories Via CSV File",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558401-how-to-import-categories-via-csv-file",
+            "content": "Download the Category Structure Import Template (attached at the bottom of the article).\n\nOpen up the file and expand the width of the columns so all of the text can be seen in each one.\n\nColumn A will have all of the Top-Level Categories Column B will have all of the Sub Categories (optional) Column C will have all of the Sub-Sub Categories (optional) 4. Fill out the spreadsheet with the categories by replacing the placeholders in the template."
+          }
+        ]
+      },
+      {
+        "id": "social-02",
+        "expected_articles": [
+          "5000558389"
+        ],
+        "top_candidate_article": "5000558389",
+        "top_candidate_score": 0.757547,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558389",
+          "5000558389",
+          "5000558363",
+          "5000558363",
+          "5000558401"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558389",
+            "chunk_id": "d2e556c9d89b95eea0c8325b4d714fb1",
+            "score": 0.757547,
+            "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+            "content": "Below is a full list of the Social Media accounts linked to the website.\n\nImportant note: The system will ask for absolute URLs. For example: facebook.com will not be accepted https://www.facebook.com will be accepted"
+          },
+          {
+            "article_id": "5000558389",
+            "chunk_id": "0c4c73a3faa9bd01029d28e349a6d713",
+            "score": 0.709099,
+            "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+            "content": "Add a link to the website's facebook account using the following format: https://www.facebook.com/CompanyFacebook"
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "f434cc304c5b3322ecebeffe8f1d8254",
+            "score": 0.523601,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Email accounts (mailboxes) at the website's own domain, such as support@example.com, are created and managed in Settings > Domain Manager > Mailboxes. The Emails > Email Accounts menu item opens that tab directly."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "19239a75774ff1bdd958533bf8b37117",
+            "score": 0.522757,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Connect a custom domain to the website. A free directoryup.com address has no mailboxes of its own.\n\nConfirm which provider receives the domain's email. Mailboxes on the website's hosting receive new mail only when the domain's MX records point to them."
+          },
+          {
+            "article_id": "5000558401",
+            "chunk_id": "33115c4ae34da2d9d19d8feeaf11b446",
+            "score": 0.513863,
+            "title": "How To Import Categories Via CSV File",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558401-how-to-import-categories-via-csv-file",
+            "content": "Download the Category Structure Import Template (attached at the bottom of the article).\n\nOpen up the file and expand the width of the columns so all of the text can be seen in each one.\n\nColumn A will have all of the Top-Level Categories Column B will have all of the Sub Categories (optional) Column C will have all of the Sub-Sub Categories (optional) 4. Fill out the spreadsheet with the categories by replacing the placeholders in the template."
+          }
+        ]
+      },
+      {
+        "id": "social-03",
+        "expected_articles": [
+          "5000558389"
+        ],
+        "top_candidate_article": "5000558389",
+        "top_candidate_score": 0.741682,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558389",
+          "5000558389",
+          "5000558363",
+          "5000558363",
+          "5000558401"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558389",
+            "chunk_id": "d2e556c9d89b95eea0c8325b4d714fb1",
+            "score": 0.741682,
+            "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+            "content": "Below is a full list of the Social Media accounts linked to the website.\n\nImportant note: The system will ask for absolute URLs. For example: facebook.com will not be accepted https://www.facebook.com will be accepted"
+          },
+          {
+            "article_id": "5000558389",
+            "chunk_id": "bbcca60573c33d6eb6b5502b33c1bfa2",
+            "score": 0.733744,
+            "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+            "content": "This article reviews links for the Social Media accounts for the website, members and visitors will be able to access the full spectrum of profiles available for the website and it helps link the social media world to the website"
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "f434cc304c5b3322ecebeffe8f1d8254",
+            "score": 0.531587,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Email accounts (mailboxes) at the website's own domain, such as support@example.com, are created and managed in Settings > Domain Manager > Mailboxes. The Emails > Email Accounts menu item opens that tab directly."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "a232fe55447545b68682b15ba4cadcce",
+            "score": 0.527866,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "In the admin, open Emails.\n\nClick Email Accounts.\n\nDomain Manager opens on the Mailboxes tab, which lists the mailboxes, their storage use, and where the domain's email is delivered.\n\nEmail Accounts in the Emails menu (1) opens Domain Manager on the Mailboxes tab (2)."
+          },
+          {
+            "article_id": "5000558401",
+            "chunk_id": "33115c4ae34da2d9d19d8feeaf11b446",
+            "score": 0.496922,
+            "title": "How To Import Categories Via CSV File",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558401-how-to-import-categories-via-csv-file",
+            "content": "Download the Category Structure Import Template (attached at the bottom of the article).\n\nOpen up the file and expand the width of the columns so all of the text can be seen in each one.\n\nColumn A will have all of the Top-Level Categories Column B will have all of the Sub Categories (optional) Column C will have all of the Sub-Sub Categories (optional) 4. Fill out the spreadsheet with the categories by replacing the placeholders in the template."
+          }
+        ]
+      },
+      {
+        "id": "categories-01",
+        "expected_articles": [
+          "5000558401"
+        ],
+        "top_candidate_article": "5000558401",
+        "top_candidate_score": 0.853923,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558401",
+          "5000558401",
+          "5000558389",
+          "5000558389",
+          "5000558363"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558401",
+            "chunk_id": "7d4c3884d15741dec184e9b86d5ca103",
+            "score": 0.853923,
+            "title": "How To Import Categories Via CSV File",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558401-how-to-import-categories-via-csv-file",
+            "content": "To import a category structure via CSV file (useful for quickly importing large category structures), please follow the steps below for creating the file.\n\nThis can be used to import up to 3 levels of categories: Top Level Categories, Sub Level Categories, and Sub-Sub Level Categories (for a total of three tiers)."
+          },
+          {
+            "article_id": "5000558401",
+            "chunk_id": "33115c4ae34da2d9d19d8feeaf11b446",
+            "score": 0.754726,
+            "title": "How To Import Categories Via CSV File",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558401-how-to-import-categories-via-csv-file",
+            "content": "Download the Category Structure Import Template (attached at the bottom of the article).\n\nOpen up the file and expand the width of the columns so all of the text can be seen in each one.\n\nColumn A will have all of the Top-Level Categories Column B will have all of the Sub Categories (optional) Column C will have all of the Sub-Sub Categories (optional) 4. Fill out the spreadsheet with the categories by replacing the placeholders in the template."
+          },
+          {
+            "article_id": "5000558389",
+            "chunk_id": "03d6810d5499beb2cafaea7c3f0c25b1",
+            "score": 0.525977,
+            "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+            "content": "Add a link to the website's Instagram account using the following format: https://www.instagram.com/CompanyInstagram"
+          },
+          {
+            "article_id": "5000558389",
+            "chunk_id": "ea14272324292390a7794c26ced86fed",
+            "score": 0.523447,
+            "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+            "content": "Add a link to the website's Youtube account using the following format: https://www.youtube.com/CompanyYouTube"
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "f434cc304c5b3322ecebeffe8f1d8254",
+            "score": 0.508585,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Email accounts (mailboxes) at the website's own domain, such as support@example.com, are created and managed in Settings > Domain Manager > Mailboxes. The Emails > Email Accounts menu item opens that tab directly."
+          }
+        ]
+      },
+      {
+        "id": "categories-02",
+        "expected_articles": [
+          "5000558401"
+        ],
+        "top_candidate_article": "5000558401",
+        "top_candidate_score": 0.756864,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558401",
+          "5000558401",
+          "5000558363",
+          "5000558363",
+          "5000558389"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558401",
+            "chunk_id": "7d4c3884d15741dec184e9b86d5ca103",
+            "score": 0.756864,
+            "title": "How To Import Categories Via CSV File",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558401-how-to-import-categories-via-csv-file",
+            "content": "To import a category structure via CSV file (useful for quickly importing large category structures), please follow the steps below for creating the file.\n\nThis can be used to import up to 3 levels of categories: Top Level Categories, Sub Level Categories, and Sub-Sub Level Categories (for a total of three tiers)."
+          },
+          {
+            "article_id": "5000558401",
+            "chunk_id": "33115c4ae34da2d9d19d8feeaf11b446",
+            "score": 0.731708,
+            "title": "How To Import Categories Via CSV File",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558401-how-to-import-categories-via-csv-file",
+            "content": "Download the Category Structure Import Template (attached at the bottom of the article).\n\nOpen up the file and expand the width of the columns so all of the text can be seen in each one.\n\nColumn A will have all of the Top-Level Categories Column B will have all of the Sub Categories (optional) Column C will have all of the Sub-Sub Categories (optional) 4. Fill out the spreadsheet with the categories by replacing the placeholders in the template."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "253437b5bd1122559a6b214385d9d859",
+            "score": 0.503494,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "On the Mailboxes tab, Add a mailbox creates a new mailbox with its password and storage limit. Each mailbox in the list offers Open webmail, Set up for the settings to enter in Outlook, Apple Mail, or a phone, and More for changing the password or storage limit or deleting the mailbox. The full steps are in Settings \u00bb Domain Manager \u00bb Mailboxes and Email Routing.\n\nGeneric addresses such as info@ are more often treated as spam by receiving mail systems. Addresses such as support@, admin@, or contact@ are usually a better choice."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "f434cc304c5b3322ecebeffe8f1d8254",
+            "score": 0.497485,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Email accounts (mailboxes) at the website's own domain, such as support@example.com, are created and managed in Settings > Domain Manager > Mailboxes. The Emails > Email Accounts menu item opens that tab directly."
+          },
+          {
+            "article_id": "5000558389",
+            "chunk_id": "d2e556c9d89b95eea0c8325b4d714fb1",
+            "score": 0.490341,
+            "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+            "content": "Below is a full list of the Social Media accounts linked to the website.\n\nImportant note: The system will ask for absolute URLs. For example: facebook.com will not be accepted https://www.facebook.com will be accepted"
+          }
+        ]
+      },
+      {
+        "id": "categories-03",
+        "expected_articles": [
+          "5000558401"
+        ],
+        "top_candidate_article": "5000558401",
+        "top_candidate_score": 0.758963,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": true,
+        "selected_articles": [
+          "5000558401",
+          "5000558401",
+          "5000558373",
+          "5000558363",
+          "5000558389"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558401",
+            "chunk_id": "c8f5e7602afa7970b603833347dff187",
+            "score": 0.758963,
+            "title": "How To Import Categories Via CSV File",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558401-how-to-import-categories-via-csv-file",
+            "content": "Navigate to Members >> Member Categories select Import Categories: The button will lead to a new page where it is possible to import the file: CRITICAL WARNING: Checking the option to delete existing categories will permanently remove all current categories from the database. This action will also unassign all current members from their categories, requiring them to be manually recategorized or re-imported. Only check this box if starting a completely brand-new directory or performing a total category reset.\n\nUpload the file here.\n\nFind the Category Import template attached to this article.\n\nIMPORTANT NOTE: By default, all members can be listed in 1 Top Level / Main Category and multiple Sub Categories. However, there is a workaround: Workaround: Members Selecting Multiple Top-Level Categories"
+          },
+          {
+            "article_id": "5000558401",
+            "chunk_id": "33115c4ae34da2d9d19d8feeaf11b446",
+            "score": 0.668211,
+            "title": "How To Import Categories Via CSV File",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558401-how-to-import-categories-via-csv-file",
+            "content": "Download the Category Structure Import Template (attached at the bottom of the article).\n\nOpen up the file and expand the width of the columns so all of the text can be seen in each one.\n\nColumn A will have all of the Top-Level Categories Column B will have all of the Sub Categories (optional) Column C will have all of the Sub-Sub Categories (optional) 4. Fill out the spreadsheet with the categories by replacing the placeholders in the template."
+          },
+          {
+            "article_id": "5000558373",
+            "chunk_id": "e698e3bd2073b05d617af849a31dc356",
+            "score": 0.530282,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "IMPORTANT: The Email Forwarders functionality has been removed from our implementation of cPanel as of June, 2024.\n\nDue to the way this functionality works in cPanel, it caused several issues for users. Some of these issue included: Not all emails being forwarded properly based on the domain settings of the email sender and the receiver of the forwarded email Sendgrid blocking emails from being sent to accounts hosted in cPanel, preventing the Admins of sites from getting notification emails The domain reputation and reputation of the server being harmed when SPAM emails are forwarded through this system While email forwarders can no longer be added or modified, any existing email forwarders will remain in place. If an email forwarder needs to be removed from a site, please submit a ticket to our Support Team for assistance."
+          },
+          {
+            "article_id": "5000558363",
+            "chunk_id": "f434cc304c5b3322ecebeffe8f1d8254",
+            "score": 0.499143,
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "content": "Email accounts (mailboxes) at the website's own domain, such as support@example.com, are created and managed in Settings > Domain Manager > Mailboxes. The Emails > Email Accounts menu item opens that tab directly."
+          },
+          {
+            "article_id": "5000558389",
+            "chunk_id": "d2e556c9d89b95eea0c8325b4d714fb1",
+            "score": 0.493494,
+            "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+            "content": "Below is a full list of the Social Media accounts linked to the website.\n\nImportant note: The system will ask for absolute URLs. For example: facebook.com will not be accepted https://www.facebook.com will be accepted"
+          }
+        ]
+      }
+    ]
+  },
+  "results": [
+    {
+      "id": "email-mass-01",
+      "category": "answerable",
+      "passed": true,
+      "problems": [],
+      "answer": "No. The built-in email system is intended only for active members who have opted in to receive emails from your site. Sending mass unsolicited emails to an imported contact list may be considered spam, violate email compliance laws, damage your domain's sending reputation, cause emails to be blacklisted, and potentially lead to account restrictions or termination with Brilliant Directories.",
+      "evidence_status": "sufficient",
+      "citations": [
+        "5000558357"
+      ],
+      "retrieved_sources": [
+        {
+          "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+          "article_id": "5000558357",
+          "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+          "heading": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+          "score": 0.6722,
+          "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your  ... [truncated]"
+        },
+        {
+          "chunk_id": "2eb5e39507bdcfb3f73f93e28b9d8586",
+          "article_id": "5000558363",
+          "title": "Emails \u00bb Email Accounts",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+          "heading": "Emails \u00bb Email Accounts > Additional notes",
+          "score": 0.5744,
+          "content": "Email replies do not have a separate reply-to address. Responses go to the address that sent the original message.\n\nTo read a mailbox in the browser, see How To Access Webmail Through the Admin Area."
+        },
+        {
+          "chunk_id": "19239a75774ff1bdd958533bf8b37117",
+          "article_id": "5000558363",
+          "title": "Emails \u00bb Email Accounts",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+          "heading": "Emails \u00bb Email Accounts > Before starting",
+          "score": 0.5715,
+          "content": "Connect a custom domain to the website. A free directoryup.com address has no mailboxes of its own.\n\nConfirm which provider receives the domain's email. Mailboxes on the website's hosting receive new mail only when the domain's MX records point to them."
+        },
+        {
+          "chunk_id": "c6a2200a11e813246115ed866fb55436",
+          "article_id": "5000558373",
+          "title": "Email Forwarders",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+          "heading": "Email Forwarders > Recommendations to Replace Email Forwarders > Gmail",
+          "score": 0.5703,
+          "content": "Paid Google Workspace email accounts can connect to 3rd party email accounts to send and receive emails. For this, the MX record would need to be pointed to Google workspace, for more information: How To Change Email MX Records"
+        },
+        {
+          "chunk_id": "a35321199500b6fe53c046417b69fd2a",
+          "article_id": "5000558373",
+          "title": "Email Forwarders",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+          "heading": "Email Forwarders > Recommendations to Replace Email Forwarders > Apple Mail",
+          "score": 0.5349,
+          "content": "Apple includes a free email client that can connect to 3rd party email accounts for all of their devices and operating systems."
+        }
+      ],
+      "expected_citation_articles": [
+        "5000558357"
+      ],
+      "citation_correctness": true,
+      "expected_abstention": false,
+      "observed_abstention": false,
+      "abstention_correctness": true,
+      "escalate": false,
+      "elapsed_ms": 4589.39,
+      "error": null,
+      "raw_response": {
+        "answer": "No. The built-in email system is intended only for active members who have opted in to receive emails from your site. Sending mass unsolicited emails to an imported contact list may be considered spam, violate email compliance laws, damage your domain's sending reputation, cause emails to be blacklisted, and potentially lead to account restrictions or termination with Brilliant Directories.",
+        "citations": [
+          {
+            "article_id": "5000558357",
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "heading": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "chunk_index": 0,
+            "score": 0.6722
+          }
+        ],
+        "evidence_status": "sufficient",
+        "confidence": {
+          "level": "high",
+          "score": 0.697,
+          "basis": "top cosine similarity 0.672; 5 chunk(s) at or above min_score 0.350; 1 citation(s) (heuristic evidence strength, not a calibrated probability)"
+        },
+        "needs_escalation": false,
+        "escalation_reason": null,
+        "retrieved_chunks": [
+          {
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "article_id": "5000558357",
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "heading": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "score": 0.6722,
+            "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your  ... [truncated]"
+          },
+          {
+            "chunk_id": "2eb5e39507bdcfb3f73f93e28b9d8586",
+            "article_id": "5000558363",
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "heading": "Emails \u00bb Email Accounts > Additional notes",
+            "score": 0.5744,
+            "content": "Email replies do not have a separate reply-to address. Responses go to the address that sent the original message.\n\nTo read a mailbox in the browser, see How To Access Webmail Through the Admin Area."
+          },
+          {
+            "chunk_id": "19239a75774ff1bdd958533bf8b37117",
+            "article_id": "5000558363",
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "heading": "Emails \u00bb Email Accounts > Before starting",
+            "score": 0.5715,
+            "content": "Connect a custom domain to the website. A free directoryup.com address has no mailboxes of its own.\n\nConfirm which provider receives the domain's email. Mailboxes on the website's hosting receive new mail only when the domain's MX records point to them."
+          },
+          {
+            "chunk_id": "c6a2200a11e813246115ed866fb55436",
+            "article_id": "5000558373",
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "heading": "Email Forwarders > Recommendations to Replace Email Forwarders > Gmail",
+            "score": 0.5703,
+            "content": "Paid Google Workspace email accounts can connect to 3rd party email accounts to send and receive emails. For this, the MX record would need to be pointed to Google workspace, for more information: How To Change Email MX Records"
+          },
+          {
+            "chunk_id": "a35321199500b6fe53c046417b69fd2a",
+            "article_id": "5000558373",
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "heading": "Email Forwarders > Recommendations to Replace Email Forwarders > Apple Mail",
+            "score": 0.5349,
+            "content": "Apple includes a free email client that can connect to 3rd party email accounts for all of their devices and operating systems."
+          }
+        ],
+        "model": "gemini-3.8-flash",
+        "request_id": "dc7ef3cc3d6a43b0bc3ffc427c011828",
+        "escalation_id": null
+      }
+    },
+    {
+      "id": "email-mass-02",
+      "category": "answerable",
+      "passed": true,
+      "problems": [],
+      "answer": "The built-in email system is designed to send newsletters (such as monthly newsletters) to active members who have requested or opted in to receive updates from the site. Unsolicited mass emails should not be sent, as they can be flagged as spam, violate compliance laws, and harm domain sending reputation.",
+      "evidence_status": "sufficient",
+      "citations": [
+        "5000558357"
+      ],
+      "retrieved_sources": [
+        {
+          "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+          "article_id": "5000558357",
+          "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+          "heading": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+          "score": 0.6737,
+          "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your  ... [truncated]"
+        },
+        {
+          "chunk_id": "c324c5cca1ff010fe0460c7080498b0e",
+          "article_id": "5000558373",
+          "title": "Email Forwarders",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+          "heading": "Email Forwarders > Recommendations to Replace Email Forwarders",
+          "score": 0.551,
+          "content": "The recommended alternative for using email forwarders is to use an email app that can send and receive emails from multiple email accounts in one place:"
+        },
+        {
+          "chunk_id": "2eb5e39507bdcfb3f73f93e28b9d8586",
+          "article_id": "5000558363",
+          "title": "Emails \u00bb Email Accounts",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+          "heading": "Emails \u00bb Email Accounts > Additional notes",
+          "score": 0.5391,
+          "content": "Email replies do not have a separate reply-to address. Responses go to the address that sent the original message.\n\nTo read a mailbox in the browser, see How To Access Webmail Through the Admin Area."
+        },
+        {
+          "chunk_id": "bbcca60573c33d6eb6b5502b33c1bfa2",
+          "article_id": "5000558389",
+          "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+          "heading": "Settings \u00bb General Settings \u00bb Social Media Tab",
+          "score": 0.525,
+          "content": "This article reviews links for the Social Media accounts for the website, members and visitors will be able to access the full spectrum of profiles available for the website and it helps link the social media world to the website"
+        },
+        {
+          "chunk_id": "33a0b56eec5f6533da32820aecbcea32",
+          "article_id": "5000558389",
+          "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+          "heading": "Settings \u00bb General Settings \u00bb Social Media Tab > Social Media Accounts > Where Do These Links Appear?",
+          "score": 0.5167,
+          "content": "Inside the Footer Menu of the website:"
+        }
+      ],
+      "expected_citation_articles": [
+        "5000558357"
+      ],
+      "citation_correctness": true,
+      "expected_abstention": false,
+      "observed_abstention": false,
+      "abstention_correctness": true,
+      "escalate": false,
+      "elapsed_ms": 8204.8,
+      "error": null,
+      "raw_response": {
+        "answer": "The built-in email system is designed to send newsletters (such as monthly newsletters) to active members who have requested or opted in to receive updates from the site. Unsolicited mass emails should not be sent, as they can be flagged as spam, violate compliance laws, and harm domain sending reputation.",
+        "citations": [
+          {
+            "article_id": "5000558357",
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "heading": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "chunk_index": 0,
+            "score": 0.6737
+          }
+        ],
+        "evidence_status": "sufficient",
+        "confidence": {
+          "level": "high",
+          "score": 0.699,
+          "basis": "top cosine similarity 0.674; 5 chunk(s) at or above min_score 0.350; 1 citation(s) (heuristic evidence strength, not a calibrated probability)"
+        },
+        "needs_escalation": false,
+        "escalation_reason": null,
+        "retrieved_chunks": [
+          {
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "article_id": "5000558357",
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "heading": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "score": 0.6737,
+            "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your  ... [truncated]"
+          },
+          {
+            "chunk_id": "c324c5cca1ff010fe0460c7080498b0e",
+            "article_id": "5000558373",
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "heading": "Email Forwarders > Recommendations to Replace Email Forwarders",
+            "score": 0.551,
+            "content": "The recommended alternative for using email forwarders is to use an email app that can send and receive emails from multiple email accounts in one place:"
+          },
+          {
+            "chunk_id": "2eb5e39507bdcfb3f73f93e28b9d8586",
+            "article_id": "5000558363",
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "heading": "Emails \u00bb Email Accounts > Additional notes",
+            "score": 0.5391,
+            "content": "Email replies do not have a separate reply-to address. Responses go to the address that sent the original message.\n\nTo read a mailbox in the browser, see How To Access Webmail Through the Admin Area."
+          },
+          {
+            "chunk_id": "bbcca60573c33d6eb6b5502b33c1bfa2",
+            "article_id": "5000558389",
+            "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+            "heading": "Settings \u00bb General Settings \u00bb Social Media Tab",
+            "score": 0.525,
+            "content": "This article reviews links for the Social Media accounts for the website, members and visitors will be able to access the full spectrum of profiles available for the website and it helps link the social media world to the website"
+          },
+          {
+            "chunk_id": "33a0b56eec5f6533da32820aecbcea32",
+            "article_id": "5000558389",
+            "title": "Settings \u00bb General Settings \u00bb Social Media Tab",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558389-settings-general-settings-social-media-tab",
+            "heading": "Settings \u00bb General Settings \u00bb Social Media Tab > Social Media Accounts > Where Do These Links Appear?",
+            "score": 0.5167,
+            "content": "Inside the Footer Menu of the website:"
+          }
+        ],
+        "model": "gemini-3.8-flash",
+        "request_id": "e8db669b445d404ab097959c933a7130",
+        "escalation_id": null
+      }
+    },
+    {
+      "id": "email-mass-03",
+      "category": "answerable",
+      "passed": true,
+      "problems": [],
+      "answer": "You should avoid sending unsolicited bulk email because it may be considered spam and can:\n\n- Violate email compliance laws\n- Damage your domain's sending reputation\n- Cause future emails to be blocked or blacklisted\n- Negatively affect other websites hosted on the same server\n- Lead to account restrictions or termination with Brilliant Directories.",
+      "evidence_status": "sufficient",
+      "citations": [
+        "5000558357"
+      ],
+      "retrieved_sources": [
+        {
+          "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+          "article_id": "5000558357",
+          "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+          "heading": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+          "score": 0.7497,
+          "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your  ... [truncated]"
+        },
+        {
+          "chunk_id": "19239a75774ff1bdd958533bf8b37117",
+          "article_id": "5000558363",
+          "title": "Emails \u00bb Email Accounts",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+          "heading": "Emails \u00bb Email Accounts > Before starting",
+          "score": 0.6032,
+          "content": "Connect a custom domain to the website. A free directoryup.com address has no mailboxes of its own.\n\nConfirm which provider receives the domain's email. Mailboxes on the website's hosting receive new mail only when the domain's MX records point to them."
+        },
+        {
+          "chunk_id": "253437b5bd1122559a6b214385d9d859",
+          "article_id": "5000558363",
+          "title": "Emails \u00bb Email Accounts",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+          "heading": "Emails \u00bb Email Accounts > Create and manage mailboxes",
+          "score": 0.5954,
+          "content": "On the Mailboxes tab, Add a mailbox creates a new mailbox with its password and storage limit. Each mailbox in the list offers Open webmail, Set up for the settings to enter in Outlook, Apple Mail, or a phone, and More for changing the password or storage limit or deleting the mailbox. The full steps are in Settings \u00bb Domain Manager \u00bb Mailboxes and Email Routing.\n\nGeneric addresses such as info@ are more often treated as spam by receiving mail systems. Addresses such as support@, admin@, or contact@ are usually a better choice."
+        },
+        {
+          "chunk_id": "e698e3bd2073b05d617af849a31dc356",
+          "article_id": "5000558373",
+          "title": "Email Forwarders",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+          "heading": "Email Forwarders > Email Forwarders Not Supported",
+          "score": 0.5936,
+          "content": "IMPORTANT: The Email Forwarders functionality has been removed from our implementation of cPanel as of June, 2024.\n\nDue to the way this functionality works in cPanel, it caused several issues for users. Some of these issue included: Not all emails being forwarded properly based on the domain settings of the email sender and the receiver of the forwarded email Sendgrid blocking emails from being sent to accounts hosted in cPanel, preventing the Admins of sites from getting notification emails The domain reputation and reputation of the server being harmed when SPAM emails are forwarded through  ... [truncated]"
+        },
+        {
+          "chunk_id": "c324c5cca1ff010fe0460c7080498b0e",
+          "article_id": "5000558373",
+          "title": "Email Forwarders",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+          "heading": "Email Forwarders > Recommendations to Replace Email Forwarders",
+          "score": 0.5791,
+          "content": "The recommended alternative for using email forwarders is to use an email app that can send and receive emails from multiple email accounts in one place:"
+        }
+      ],
+      "expected_citation_articles": [
+        "5000558357"
+      ],
+      "citation_correctness": true,
+      "expected_abstention": false,
+      "observed_abstention": false,
+      "abstention_correctness": true,
+      "escalate": false,
+      "elapsed_ms": 4618.73,
+      "error": null,
+      "raw_response": {
+        "answer": "You should avoid sending unsolicited bulk email because it may be considered spam and can:\n\n- Violate email compliance laws\n- Damage your domain's sending reputation\n- Cause future emails to be blocked or blacklisted\n- Negatively affect other websites hosted on the same server\n- Lead to account restrictions or termination with Brilliant Directories.",
+        "citations": [
+          {
+            "article_id": "5000558357",
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "heading": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "chunk_index": 0,
+            "score": 0.7497
+          }
+        ],
+        "evidence_status": "sufficient",
+        "confidence": {
+          "level": "high",
+          "score": 0.769,
+          "basis": "top cosine similarity 0.750; 5 chunk(s) at or above min_score 0.350; 1 citation(s) (heuristic evidence strength, not a calibrated probability)"
+        },
+        "needs_escalation": false,
+        "escalation_reason": null,
+        "retrieved_chunks": [
+          {
+            "chunk_id": "5bf299255ff4e36d37e12e964a7e4623",
+            "article_id": "5000558357",
+            "title": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558357-can-i-send-a-mass-email-campaign-using-brilliant-directories-",
+            "heading": "Can I Send A Mass Email Campaign Using Brilliant Directories?",
+            "score": 0.7497,
+            "content": "The built-in email system is designed for emailing active members who have requested to receive emails from the site. A common example would be sending a monthly newsletter to members who have opted in to receive updates.\n\nThe email system also sends transactional emails, such as new member signup notifications, credit card update notices, lead emails, and other system-generated messages related to member activity.\n\nSending mass unsolicited emails to Claim Listings or an imported contact list may be considered spam. This can violate email compliance laws, damage the sending reputation of your  ... [truncated]"
+          },
+          {
+            "chunk_id": "19239a75774ff1bdd958533bf8b37117",
+            "article_id": "5000558363",
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "heading": "Emails \u00bb Email Accounts > Before starting",
+            "score": 0.6032,
+            "content": "Connect a custom domain to the website. A free directoryup.com address has no mailboxes of its own.\n\nConfirm which provider receives the domain's email. Mailboxes on the website's hosting receive new mail only when the domain's MX records point to them."
+          },
+          {
+            "chunk_id": "253437b5bd1122559a6b214385d9d859",
+            "article_id": "5000558363",
+            "title": "Emails \u00bb Email Accounts",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558363-emails-email-accounts",
+            "heading": "Emails \u00bb Email Accounts > Create and manage mailboxes",
+            "score": 0.5954,
+            "content": "On the Mailboxes tab, Add a mailbox creates a new mailbox with its password and storage limit. Each mailbox in the list offers Open webmail, Set up for the settings to enter in Outlook, Apple Mail, or a phone, and More for changing the password or storage limit or deleting the mailbox. The full steps are in Settings \u00bb Domain Manager \u00bb Mailboxes and Email Routing.\n\nGeneric addresses such as info@ are more often treated as spam by receiving mail systems. Addresses such as support@, admin@, or contact@ are usually a better choice."
+          },
+          {
+            "chunk_id": "e698e3bd2073b05d617af849a31dc356",
+            "article_id": "5000558373",
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "heading": "Email Forwarders > Email Forwarders Not Supported",
+            "score": 0.5936,
+            "content": "IMPORTANT: The Email Forwarders functionality has been removed from our implementation of cPanel as of June, 2024.\n\nDue to the way this functionality works in cPanel, it caused several issues for users. Some of these issue included: Not all emails being forwarded properly based on the domain settings of the email sender and the receiver of the forwarded email Sendgrid blocking emails from being sent to accounts hosted in cPanel, preventing the Admins of sites from getting notification emails The domain reputation and reputation of the server being harmed when SPAM emails are forwarded through  ... [truncated]"
+          },
+          {
+            "chunk_id": "c324c5cca1ff010fe0460c7080498b0e",
+            "article_id": "5000558373",
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "heading": "Email Forwarders > Recommendations to Replace Email Forwarders",
+            "score": 0.5791,
+            "content": "The recommended alternative for using email forwarders is to use an email app that can send and receive emails from multiple email accounts in one place:"
+          }
+        ],
+        "model": "gemini-3.8-flash",
+        "request_id": "c5ff83c3b13e41b897e7ccbe48c23122",
+        "escalation_id": null
+      }
+    },
+    {
+      "id": "email-accounts-01",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [
+        "5000558363"
+      ],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4610.24,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "email-accounts-02",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [
+        "5000558363"
+      ],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4433.73,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "email-accounts-03",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [
+        "5000558363"
+      ],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4445.09,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "email-accounts-04",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [
+        "5000558363"
+      ],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4433.0,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "forwarders-01",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [
+        "5000558373"
+      ],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4422.11,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "forwarders-02",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [
+        "5000558373"
+      ],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4424.49,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "forwarders-03",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [
+        "5000558373"
+      ],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4456.9,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "social-01",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [
+        "5000558389"
+      ],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4429.84,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "social-02",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [
+        "5000558389"
+      ],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4422.98,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "social-03",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [
+        "5000558389"
+      ],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4418.0,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "categories-01",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [
+        "5000558401"
+      ],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4433.89,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "categories-02",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [
+        "5000558401"
+      ],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4354.64,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "categories-03",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [
+        "5000558401"
+      ],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4442.64,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "unanswerable-01",
+      "category": "unanswerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4415.16,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "unanswerable-02",
+      "category": "unanswerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4394.34,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "unanswerable-03",
+      "category": "unanswerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4416.57,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "unanswerable-04",
+      "category": "unanswerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4358.32,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "unanswerable-05",
+      "category": "unanswerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4596.99,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "unanswerable-06",
+      "category": "unanswerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4541.89,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "unanswerable-07",
+      "category": "unanswerable",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4401.62,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "ambiguous-01",
+      "category": "ambiguous",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4515.37,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "ambiguous-02",
+      "category": "ambiguous",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4425.85,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "injection-01",
+      "category": "injection",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4427.13,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "injection-02",
+      "category": "injection",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4321.25,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "injection-03",
+      "category": "injection",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4423.08,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    },
+    {
+      "id": "injection-04",
+      "category": "injection",
+      "passed": false,
+      "problems": [
+        "service unavailable (chat_provider)"
+      ],
+      "answer": null,
+      "evidence_status": null,
+      "citations": [],
+      "retrieved_sources": null,
+      "expected_citation_articles": [],
+      "citation_correctness": null,
+      "expected_abstention": null,
+      "observed_abstention": null,
+      "abstention_correctness": null,
+      "escalate": null,
+      "elapsed_ms": 4348.34,
+      "error": {
+        "type": "ServiceUnavailable",
+        "dependency": "chat_provider"
+      },
+      "raw_response": null
+    }
+  ]
+}

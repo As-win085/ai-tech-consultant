@@ -6,6 +6,7 @@ from app.embeddings import (
     EmbeddingRequestError,
     EmbeddingResponseError,
     FakeEmbeddingProvider,
+    GeminiEmbeddingProvider,
     OpenAICompatibleEmbeddingProvider,
     build_embedding_provider,
 )
@@ -154,3 +155,17 @@ def test_provider_empty_input_makes_no_request():
 
     provider = OpenAICompatibleEmbeddingProvider("m", 3, client=make_client(handler))
     assert provider.embed([]) == []
+
+
+def test_gemini_provider_batches_with_requested_dimensions():
+    seen = {}
+    def handler(request):
+        seen["url"] = str(request.url)
+        seen["key"] = request.headers.get("x-goog-api-key")
+        seen["body"] = request.read().decode()
+        return httpx.Response(200, json={"embeddings": [{"values": [0.1, 0.2]}]})
+    provider = GeminiEmbeddingProvider("gemini-embedding-001", 2, "test-key", client=make_client(handler))
+    assert provider.embed(["sample"]) == [[0.1, 0.2]]
+    assert seen["key"] == "test-key"
+    assert '"outputDimensionality":2' in seen["body"]
+    assert seen["url"].endswith("/models/gemini-embedding-001:batchEmbedContents")

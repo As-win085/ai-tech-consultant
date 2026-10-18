@@ -118,4 +118,17 @@ describe('LlmClassifier', () => {
     const result = await classifier.classify(sampleEmail() as never);
     expect(result.fallback).toBe(true);
   });
+
+  it('retries a rate limited request and succeeds', async () => {
+    let calls = 0;
+    const fetchImpl = (async () => {
+      calls++;
+      if (calls === 1) return { ok: false, status: 429, json: async () => ({}) } as Response;
+      return { ok: true, status: 200, json: async () => ({ choices: [{ message: { content: '{"category":"product_howto","urgency":"low","ambiguity":"clear","confidence":0.9,"riskFlags":[],"needsEscalation":false}' } }] }) } as Response;
+    }) as typeof fetch;
+    const classifier = new LlmClassifier({ provider: 'gemini', model: 'test', baseUrl: 'http://example.test/v1', apiKey: 'test', timeoutMs: 1000, retries: 1, requestDelayMs: 0, fetchImpl });
+    const result = await classifier.classify(sampleEmail() as never);
+    expect(result.fallback).toBe(false);
+    expect(calls).toBe(2);
+  });
 });

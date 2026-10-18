@@ -6,6 +6,9 @@ import argparse
 import hashlib
 import json
 import sys
+import time
+import math
+import statistics
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -50,6 +53,7 @@ class ScriptedKB:
 
 
 def run_case(case: dict) -> dict:
+    started = time.perf_counter()
     transcript = new_transcript(
         transcript_id=f"eval-{case['id']}",
         project_id=f"project-{case['id']}",
@@ -93,6 +97,7 @@ def run_case(case: dict) -> dict:
     return {
         "id": case["id"],
         "passed": not problems,
+        "latency_ms": round((time.perf_counter() - started) * 1000, 3),
         "problems": problems,
         "input": {"transcript": transcript.model_dump(mode="json"), "kb_mode": "scripted_mock", "kb_status": kb.status},
         "output": {
@@ -127,6 +132,15 @@ def main() -> int:
         "cases_file_sha256": hashlib.sha256(case_bytes).hexdigest(),
         "passed": passed,
         "total": len(results),
+        "metrics": {
+            "case_pass_rate": passed / len(results) if results else 0,
+            "median_latency_ms": statistics.median(r["latency_ms"] for r in results) if results else None,
+            "p95_latency_ms": sorted(r["latency_ms"] for r in results)[max(0, math.ceil(len(results) * .95) - 1)] if results else None,
+            "model_tokens": None,
+            "retry_count": 0,
+            "failures": len(results) - passed,
+            "provider_mode": "deterministic rules extractor + scripted Task 1 mock; zero live model calls",
+        },
         "results": results,
     }
     args.report.parent.mkdir(parents=True, exist_ok=True)

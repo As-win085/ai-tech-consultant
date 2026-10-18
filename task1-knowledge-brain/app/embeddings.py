@@ -13,12 +13,16 @@ them; embeddings are never silently faked or replaced with placeholders.
 """
 
 import hashlib
+import logging
+import os
 import time
 from typing import Callable, Protocol, runtime_checkable
 
 import httpx
 
 from app.settings import ConfigError, EmbeddingSettings
+
+logger = logging.getLogger(__name__)
 
 
 class EmbeddingError(RuntimeError):
@@ -96,6 +100,7 @@ class OpenAICompatibleEmbeddingProvider:
         self.dimensions = dimensions
         self.api_key = api_key
         self.base_url = base_url.rstrip("/")
+        self.request_delay_seconds = max(0.0, float(os.getenv("LLM_REQUEST_DELAY_MS", "0")) / 1000)
         self.timeout = timeout
         self.max_retries = max(0, max_retries)
         self._client = client or httpx.Client(timeout=timeout)
@@ -115,12 +120,15 @@ class OpenAICompatibleEmbeddingProvider:
         last_error: Exception | None = None
         for attempt in range(attempts):
             try:
+                if self.request_delay_seconds:
+                    self._sleeper(self.request_delay_seconds)
                 response = self._client.post(
                     f"{self.base_url}/embeddings", json=payload, headers=headers
                 )
             except httpx.HTTPError as exc:
                 last_error = exc
                 if attempt < attempts - 1:
+                    logger.warning("embedding retry attempt=%d/%d error=%s", attempt + 1, attempts - 1, type(exc).__name__)
                     self._sleeper(self._backoff_seconds * (2**attempt))
                     continue
                 raise EmbeddingRequestError(
@@ -132,6 +140,7 @@ class OpenAICompatibleEmbeddingProvider:
                     f"retryable HTTP {response.status_code}"
                 )
                 if attempt < attempts - 1:
+                    logger.warning("embedding retry attempt=%d/%d status=%d", attempt + 1, attempts - 1, response.status_code)
                     self._sleeper(self._backoff_seconds * (2**attempt))
                     continue
                 raise self._as_error(response)
@@ -178,6 +187,60 @@ class OpenAICompatibleEmbeddingProvider:
             self._client.close()
 
 
+class GeminiEmbeddingProvider:
+    """Google Gemini batch embedding endpoint with explicit output dimension."""
+    def __init__(self, model_name: str, dimensions: int, api_key: str,
+                 base_url: str = "https://generativelanguage.googleapis.com/v1beta",
+                 timeout: float = 30.0, client: httpx.Client | None = None) -> None:
+        if not model_name or not api_key or not dimensions:
+            raise EmbeddingConfigError("Gemini embeddings require model, API key, and dimensions")
+        self.model_name, self.dimensions, self.api_key = model_name, dimensions, api_key
+        self.base_url = base_url.rstrip("/")
+        self.request_delay_seconds = max(0.0, float(os.getenv("LLM_REQUEST_DELAY_MS", "0")) / 1000)
+        self._client = client or httpx.Client(timeout=timeout)
+        self._owns_client = client is None
+
+    def embed(self, texts: list[str]) -> list[list[float]]:
+        if not texts:
+            return []
+        body = {"requests": [{"model": f"models/{self.model_name}",
+                "content": {"parts": [{"text": text}]},
+                "outputDimensionality": self.dimensions} for text in texts]}
+        if self.request_delay_seconds:
+            time.sleep(self.request_delay_seconds)
+        attempts = 4
+        for attempt in range(attempts):
+            try:
+                response = self._client.post(
+                    f"{self.base_url}/models/{self.model_name}:batchEmbedContents",
+                    json=body, headers={"x-goog-api-key": self.api_key})
+                if response.status_code == 429 or 500 <= response.status_code < 600:
+                    if attempt + 1 < attempts:
+                        delay = 0.25 * (2 ** attempt)
+                        logger.warning("embedding retry provider=gemini attempt=%d/%d status=%d delay_seconds=%.2f", attempt + 1, attempts - 1, response.status_code, delay)
+                        time.sleep(delay)
+                        continue
+                    raise EmbeddingRequestError(f"Gemini embedding request failed after {attempts} attempts with HTTP {response.status_code}")
+                if response.status_code >= 400:
+                    raise EmbeddingRequestError(f"Gemini embedding request failed with HTTP {response.status_code}")
+                break
+            except httpx.HTTPError as exc:
+                if attempt + 1 == attempts:
+                    raise EmbeddingRequestError(f"Gemini embedding request failed after {attempts} attempts: {type(exc).__name__}") from exc
+                delay = 0.25 * (2 ** attempt)
+                logger.warning("embedding retry provider=gemini attempt=%d/%d error=%s delay_seconds=%.2f", attempt + 1, attempts - 1, type(exc).__name__, delay)
+                time.sleep(delay)
+        payload = response.json()
+        vectors = [item.get("values") for item in payload.get("embeddings", [])]
+        if len(vectors) != len(texts) or any(not isinstance(v, list) or len(v) != self.dimensions for v in vectors):
+            raise EmbeddingResponseError("Gemini embeddings response has unexpected dimensions")
+        return vectors
+
+    def close(self) -> None:
+        if self._owns_client:
+            self._client.close()
+
+
 def build_embedding_provider(
     settings: EmbeddingSettings | None = None,
     client: httpx.Client | None = None,
@@ -193,7 +256,17 @@ def build_embedding_provider(
             dimensions=settings.dimensions or 64,
         )
 
-    if provider in {"openai", "openai_compatible", "ollama", "compatible"}:
+    provider = __import__("os").environ.get("EMBEDDING_PROVIDER", provider).lower()
+    if provider in {"gemini", "google"}:
+        model = settings.model or "gemini-embedding-001"
+        dimensions = settings.dimensions or 768
+        key = settings.api_key or __import__("os").environ.get("LLM_API_KEY")
+        if not key:
+            raise EmbeddingConfigError("LLM_API_KEY is required for Gemini embeddings")
+        return GeminiEmbeddingProvider(model, dimensions, key,
+            settings.effective_base_url() or "https://generativelanguage.googleapis.com/v1beta",
+            settings.timeout, client)
+    if provider in {"openai", "openai_compatible", "ollama", "compatible", "groq", "openrouter"}:
         if not settings.model:
             raise EmbeddingConfigError(
                 f"EMBEDDING_MODEL is required for EMBEDDING_PROVIDER={provider!r}"

@@ -4,6 +4,7 @@ from app.embeddings import FakeEmbeddingProvider
 from app.ingestion import run_ingestion
 from app.models import ArticleRecord
 from app.store import InMemoryKnowledgeStore
+from app.settings import ChatSettings
 
 
 def _article(article_id: str, text: str) -> dict:
@@ -25,7 +26,8 @@ def _article(article_id: str, text: str) -> dict:
     }
 
 
-def test_run_ingestion_indexes_present_pages_and_deactivates_removed_pages(tmp_path):
+def test_run_ingestion_indexes_present_pages_and_deactivates_removed_pages(tmp_path, monkeypatch):
+    monkeypatch.setattr("app.ingestion.get_chat_settings", lambda: ChatSettings(provider="fake"))
     store = InMemoryKnowledgeStore()
     store.upsert_article(ArticleRecord(article_id="old", title="Old", status="ok"))
     doc = {

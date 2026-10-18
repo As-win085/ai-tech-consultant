@@ -33,10 +33,12 @@ class Settings(BaseSettings):
     extractor: str = "rules"  # rules | llm
 
     # LLM provider (used only when extractor=llm)
-    llm_provider: str = "openai_compatible"  # anthropic | openai_compatible
-    llm_model: str | None = None
+    llm_provider: str = "gemini"  # anthropic | openai_compatible | gemini | groq | openrouter | ollama
+    llm_model: str | None = "gemini-3.8-flash"
     llm_base_url: str | None = None
     llm_api_key: str | None = None
+    embedding_provider: str = "gemini"
+    embedding_model: str = "gemini-embedding-001"
     llm_timeout_ms: int = 60000
     llm_max_retries: int = 1
     llm_max_tokens: int = 2048
