@@ -242,7 +242,14 @@ def build_chat_provider(
         return FakeChatProvider()
 
     model = settings.llm_model
-    api_key = settings.llm_api_key
+    provider_keys = {
+        "openrouter": settings.openrouter_api_key or os.environ.get("OPENROUTER_API_KEY"),
+        "groq": settings.groq_api_key or os.environ.get("GROQ_API_KEY"),
+        "gemini": settings.gemini_api_key or os.environ.get("GEMINI_API_KEY"),
+        "google": settings.gemini_api_key or os.environ.get("GEMINI_API_KEY"),
+        "anthropic": settings.anthropic_api_key or os.environ.get("ANTHROPIC_API_KEY"),
+    }
+    api_key = provider_keys.get(provider) or settings.llm_api_key
     base_url = (settings.llm_base_url or DEFAULT_BASE_URLS.get(provider, "")).rstrip("/")
 
     if provider == "anthropic":

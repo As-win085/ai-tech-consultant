@@ -6,6 +6,7 @@ fails with an actionable error. The service is designed to run with the
 deterministic offline extractor and no database (in-memory store) for tests.
 """
 
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 ENV_FILE = ".env"
@@ -37,6 +38,10 @@ class Settings(BaseSettings):
     llm_model: str | None = "gemini-3.8-flash"
     llm_base_url: str | None = None
     llm_api_key: str | None = None
+    openrouter_api_key: str | None = Field(default=None, validation_alias="OPENROUTER_API_KEY")
+    groq_api_key: str | None = Field(default=None, validation_alias="GROQ_API_KEY")
+    gemini_api_key: str | None = Field(default=None, validation_alias="GEMINI_API_KEY")
+    anthropic_api_key: str | None = Field(default=None, validation_alias="ANTHROPIC_API_KEY")
     embedding_provider: str = "gemini"
     embedding_model: str = "gemini-embedding-001"
     llm_timeout_ms: int = 60000
