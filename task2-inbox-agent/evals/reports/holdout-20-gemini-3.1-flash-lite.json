@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-18T06:57:42.119Z",
+  "generated_at": "2026-10-18T07:28:36.645Z",
   "dataset": "holdout-20.json",
   "dataset_sha256": "e9b5f9d4935311c2f7517be853c49c4efaa7aef444c8c022bd6c287220da13b5",
   "dataset_size": 20,
@@ -7,6 +7,13 @@
   "model_label": "Lower-cost model",
   "provider": "gemini",
   "source_mode": "live API",
+  "merged_prior_results": true,
+  "rerun_case_ids": [
+    "email-17",
+    "email-18",
+    "email-19",
+    "email-20"
+  ],
   "thresholds": "No pass threshold; descriptive metrics on this fixed synthetic holdout.",
   "metrics": {
     "category_accuracy": 0.65,
@@ -15,14 +22,15 @@
     "escalation_accuracy": 0.7,
     "escalation_precision": 0.8333333333333334,
     "escalation_recall": 0.8333333333333334,
-    "median_latency_ms": 1128.5149999999999,
-    "p95_latency_ms": 2466.84,
+    "median_latency_ms": 1633.375,
+    "p95_latency_ms": 8002.31,
     "failures": 4,
     "failure_rate": 0.2,
-    "retried_cases": 4,
-    "retry_rate": 0.2,
-    "http_failures": 8,
-    "transport_failures": 0,
+    "retried_cases": 0,
+    "retry_rate": 0,
+    "retry_attempts_total": 0,
+    "http_failures": 0,
+    "transport_failures": 4,
     "input_tokens": 3297,
     "output_tokens": 996,
     "estimated_cost_usd": 0.00231825,
@@ -91,7 +99,9 @@
       "usage": {
         "input_tokens": 208,
         "output_tokens": 67
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-02",
@@ -153,7 +163,9 @@
       "usage": {
         "input_tokens": 200,
         "output_tokens": 57
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-03",
@@ -215,7 +227,9 @@
       "usage": {
         "input_tokens": 209,
         "output_tokens": 56
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-04",
@@ -277,7 +291,9 @@
       "usage": {
         "input_tokens": 202,
         "output_tokens": 57
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-05",
@@ -341,7 +357,9 @@
       "usage": {
         "input_tokens": 206,
         "output_tokens": 67
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-06",
@@ -403,7 +421,9 @@
       "usage": {
         "input_tokens": 206,
         "output_tokens": 57
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-07",
@@ -465,7 +485,9 @@
       "usage": {
         "input_tokens": 209,
         "output_tokens": 56
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-08",
@@ -527,7 +549,9 @@
       "usage": {
         "input_tokens": 209,
         "output_tokens": 56
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-09",
@@ -589,7 +613,9 @@
       "usage": {
         "input_tokens": 204,
         "output_tokens": 57
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-10",
@@ -651,7 +677,9 @@
       "usage": {
         "input_tokens": 202,
         "output_tokens": 57
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-11",
@@ -715,7 +743,9 @@
       "usage": {
         "input_tokens": 207,
         "output_tokens": 68
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-12",
@@ -777,7 +807,9 @@
       "usage": {
         "input_tokens": 208,
         "output_tokens": 61
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-13",
@@ -841,7 +873,9 @@
       "usage": {
         "input_tokens": 203,
         "output_tokens": 67
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-14",
@@ -906,7 +940,9 @@
       "usage": {
         "input_tokens": 210,
         "output_tokens": 75
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-15",
@@ -970,7 +1006,9 @@
       "usage": {
         "input_tokens": 208,
         "output_tokens": 69
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-16",
@@ -1034,7 +1072,9 @@
       "usage": {
         "input_tokens": 206,
         "output_tokens": 69
-      }
+      },
+      "retry_count": 0,
+      "model_failure": false
     },
     {
       "id": "email-17",
@@ -1051,44 +1091,7 @@
         "urgency": "low",
         "needsEscalation": false
       },
-      "raw_model_response": [
-        {
-          "error": {
-            "code": 429,
-            "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.1-flash-lite\nPlease retry in 20.503184269s.",
-            "status": "RESOURCE_EXHAUSTED",
-            "details": [
-              {
-                "@type": "type.googleapis.com/google.rpc.Help",
-                "links": [
-                  {
-                    "description": "Learn more about Gemini API quotas",
-                    "url": "https://ai.google.dev/gemini-api/docs/rate-limits"
-                  }
-                ]
-              },
-              {
-                "@type": "type.googleapis.com/google.rpc.QuotaFailure",
-                "violations": [
-                  {
-                    "quotaMetric": "generativelanguage.googleapis.com/generate_content_free_tier_requests",
-                    "quotaId": "GenerateRequestsPerMinutePerProjectPerModel-FreeTier",
-                    "quotaDimensions": {
-                      "location": "global",
-                      "model": "gemini-3.1-flash-lite"
-                    },
-                    "quotaValue": "15"
-                  }
-                ]
-              },
-              {
-                "@type": "type.googleapis.com/google.rpc.RetryInfo",
-                "retryDelay": "20s"
-              }
-            ]
-          }
-        }
-      ],
+      "raw_model_response": null,
       "raw_model_text": null,
       "classification": {
         "category": "unsupported_unclear",
@@ -1097,15 +1100,17 @@
         "confidence": 0,
         "riskFlags": [],
         "needsEscalation": true,
-        "reasoning": "Classification model unavailable or produced invalid output (llm HTTP 429). Safe-failure: route to human review.",
+        "reasoning": "Classification model unavailable or produced invalid output (fetch failed). Safe-failure: route to human review.",
         "classifier": "llm_fallback",
         "fallback": true
       },
-      "elapsed_ms": 947.6,
-      "attempts": 2,
-      "did_retry": true,
-      "transport_failures": 0,
-      "failed_http_responses": 2,
+      "elapsed_ms": 137.46,
+      "attempts": 1,
+      "did_retry": false,
+      "transport_failures": 1,
+      "failed_http_responses": 0,
+      "retry_count": 0,
+      "model_failure": true,
       "usage": {
         "input_tokens": 0,
         "output_tokens": 0
@@ -1126,44 +1131,7 @@
         "urgency": "medium",
         "needsEscalation": false
       },
-      "raw_model_response": [
-        {
-          "error": {
-            "code": 429,
-            "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.1-flash-lite\nPlease retry in 19.563439371s.",
-            "status": "RESOURCE_EXHAUSTED",
-            "details": [
-              {
-                "@type": "type.googleapis.com/google.rpc.Help",
-                "links": [
-                  {
-                    "description": "Learn more about Gemini API quotas",
-                    "url": "https://ai.google.dev/gemini-api/docs/rate-limits"
-                  }
-                ]
-              },
-              {
-                "@type": "type.googleapis.com/google.rpc.QuotaFailure",
-                "violations": [
-                  {
-                    "quotaMetric": "generativelanguage.googleapis.com/generate_content_free_tier_requests",
-                    "quotaId": "GenerateRequestsPerMinutePerProjectPerModel-FreeTier",
-                    "quotaDimensions": {
-                      "location": "global",
-                      "model": "gemini-3.1-flash-lite"
-                    },
-                    "quotaValue": "15"
-                  }
-                ]
-              },
-              {
-                "@type": "type.googleapis.com/google.rpc.RetryInfo",
-                "retryDelay": "19s"
-              }
-            ]
-          }
-        }
-      ],
+      "raw_model_response": null,
       "raw_model_text": null,
       "classification": {
         "category": "unsupported_unclear",
@@ -1172,15 +1140,17 @@
         "confidence": 0,
         "riskFlags": [],
         "needsEscalation": true,
-        "reasoning": "Classification model unavailable or produced invalid output (llm HTTP 429). Safe-failure: route to human review.",
+        "reasoning": "Classification model unavailable or produced invalid output (fetch failed). Safe-failure: route to human review.",
         "classifier": "llm_fallback",
         "fallback": true
       },
-      "elapsed_ms": 935.38,
-      "attempts": 2,
-      "did_retry": true,
-      "transport_failures": 0,
-      "failed_http_responses": 2,
+      "elapsed_ms": 7880.28,
+      "attempts": 1,
+      "did_retry": false,
+      "transport_failures": 1,
+      "failed_http_responses": 0,
+      "retry_count": 0,
+      "model_failure": true,
       "usage": {
         "input_tokens": 0,
         "output_tokens": 0
@@ -1201,44 +1171,7 @@
         "urgency": "high",
         "needsEscalation": true
       },
-      "raw_model_response": [
-        {
-          "error": {
-            "code": 429,
-            "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.1-flash-lite\nPlease retry in 18.602029241s.",
-            "status": "RESOURCE_EXHAUSTED",
-            "details": [
-              {
-                "@type": "type.googleapis.com/google.rpc.Help",
-                "links": [
-                  {
-                    "description": "Learn more about Gemini API quotas",
-                    "url": "https://ai.google.dev/gemini-api/docs/rate-limits"
-                  }
-                ]
-              },
-              {
-                "@type": "type.googleapis.com/google.rpc.QuotaFailure",
-                "violations": [
-                  {
-                    "quotaMetric": "generativelanguage.googleapis.com/generate_content_free_tier_requests",
-                    "quotaId": "GenerateRequestsPerMinutePerProjectPerModel-FreeTier",
-                    "quotaDimensions": {
-                      "location": "global",
-                      "model": "gemini-3.1-flash-lite"
-                    },
-                    "quotaValue": "15"
-                  }
-                ]
-              },
-              {
-                "@type": "type.googleapis.com/google.rpc.RetryInfo",
-                "retryDelay": "18s"
-              }
-            ]
-          }
-        }
-      ],
+      "raw_model_response": null,
       "raw_model_text": null,
       "classification": {
         "category": "unsupported_unclear",
@@ -1247,15 +1180,17 @@
         "confidence": 0,
         "riskFlags": [],
         "needsEscalation": true,
-        "reasoning": "Classification model unavailable or produced invalid output (llm HTTP 429). Safe-failure: route to human review.",
+        "reasoning": "Classification model unavailable or produced invalid output (fetch failed). Safe-failure: route to human review.",
         "classifier": "llm_fallback",
         "fallback": true
       },
-      "elapsed_ms": 963.85,
-      "attempts": 2,
-      "did_retry": true,
-      "transport_failures": 0,
-      "failed_http_responses": 2,
+      "elapsed_ms": 8002.31,
+      "attempts": 1,
+      "did_retry": false,
+      "transport_failures": 1,
+      "failed_http_responses": 0,
+      "retry_count": 0,
+      "model_failure": true,
       "usage": {
         "input_tokens": 0,
         "output_tokens": 0
@@ -1276,44 +1211,7 @@
         "urgency": "medium",
         "needsEscalation": true
       },
-      "raw_model_response": [
-        {
-          "error": {
-            "code": 429,
-            "message": "You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.1-flash-lite\nPlease retry in 17.657281438s.",
-            "status": "RESOURCE_EXHAUSTED",
-            "details": [
-              {
-                "@type": "type.googleapis.com/google.rpc.Help",
-                "links": [
-                  {
-                    "description": "Learn more about Gemini API quotas",
-                    "url": "https://ai.google.dev/gemini-api/docs/rate-limits"
-                  }
-                ]
-              },
-              {
-                "@type": "type.googleapis.com/google.rpc.QuotaFailure",
-                "violations": [
-                  {
-                    "quotaMetric": "generativelanguage.googleapis.com/generate_content_free_tier_requests",
-                    "quotaId": "GenerateRequestsPerMinutePerProjectPerModel-FreeTier",
-                    "quotaDimensions": {
-                      "location": "global",
-                      "model": "gemini-3.1-flash-lite"
-                    },
-                    "quotaValue": "15"
-                  }
-                ]
-              },
-              {
-                "@type": "type.googleapis.com/google.rpc.RetryInfo",
-                "retryDelay": "17s"
-              }
-            ]
-          }
-        }
-      ],
+      "raw_model_response": null,
       "raw_model_text": null,
       "classification": {
         "category": "unsupported_unclear",
@@ -1322,15 +1220,17 @@
         "confidence": 0,
         "riskFlags": [],
         "needsEscalation": true,
-        "reasoning": "Classification model unavailable or produced invalid output (llm HTTP 429). Safe-failure: route to human review.",
+        "reasoning": "Classification model unavailable or produced invalid output (fetch failed). Safe-failure: route to human review.",
         "classifier": "llm_fallback",
         "fallback": true
       },
-      "elapsed_ms": 944.03,
-      "attempts": 2,
-      "did_retry": true,
-      "transport_failures": 0,
-      "failed_http_responses": 2,
+      "elapsed_ms": 8012.38,
+      "attempts": 1,
+      "did_retry": false,
+      "transport_failures": 1,
+      "failed_http_responses": 0,
+      "retry_count": 0,
+      "model_failure": true,
       "usage": {
         "input_tokens": 0,
         "output_tokens": 0

@@ -1,5 +1,6 @@
 import { Classification, Email, RiskFlag, Urgency, Category, CATEGORIES, RISK_FLAGS } from './types';
 import { classificationSchema } from './schemas';
+import { parseRetryAfterMs, retryDelayMs, withGlobalModelThrottle } from './throttle';
 
 export interface Classifier {
   readonly name: string;
@@ -193,7 +194,7 @@ export class LlmClassifier implements Classifier {
   readonly name: string;
   private opts: LlmClassifierOptions;
   private fetchImpl: typeof fetch;
-  private lastRequestAt = 0;
+  lastRetryCount = 0;
 
   constructor(opts: LlmClassifierOptions) {
     this.opts = opts;
@@ -202,6 +203,7 @@ export class LlmClassifier implements Classifier {
   }
 
   async classify(email: Email): Promise<Classification> {
+    this.lastRetryCount = 0;
     let lastError = 'unknown';
     for (let attempt = 0; attempt <= this.opts.retries; attempt++) {
       try {
@@ -218,8 +220,9 @@ export class LlmClassifier implements Classifier {
         const transient = err instanceof RetryableProviderError ||
           (err instanceof Error && /timeout|abort|network/i.test(err.message));
         if (transient && attempt < this.opts.retries) {
-          const waitMs = Math.max(0, this.opts.requestDelayMs ?? Number(process.env.LLM_REQUEST_DELAY_MS ?? 250)) * (2 ** attempt);
-          console.info(`LLM retry provider=${this.opts.provider} model=${this.opts.model} attempt=${attempt + 1}/${this.opts.retries} delay_ms=${waitMs}`);
+          const waitMs = retryDelayMs(attempt, err instanceof RetryableProviderError ? err.retryAfterMs : 0);
+          this.lastRetryCount++;
+          console.info(`LLM retry case=${email.id} provider=${this.opts.provider} model=${this.opts.model} attempt=${attempt + 1}/${this.opts.retries} delay_ms=${waitMs}`);
           if (waitMs) await new Promise((resolve) => setTimeout(resolve, waitMs));
           continue;
         }
@@ -234,13 +237,9 @@ export class LlmClassifier implements Classifier {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), this.opts.timeoutMs);
     try {
-      const delay = Math.max(0, this.opts.requestDelayMs ?? Number(process.env.LLM_REQUEST_DELAY_MS ?? 0));
-      const wait = delay - (Date.now() - this.lastRequestAt);
-      if (wait > 0) await new Promise((resolve) => setTimeout(resolve, wait));
-      this.lastRequestAt = Date.now();
       if (this.opts.provider === 'anthropic') {
         const base = this.opts.baseUrl ?? 'https://api.anthropic.com/v1';
-        const res = await this.fetchImpl(`${base.replace(/\/$/, '')}/messages`, {
+        const res = await withGlobalModelThrottle(() => this.fetchImpl(`${base.replace(/\/$/, '')}/messages`, {
           method: 'POST',
           headers: {
             'content-type': 'application/json',
@@ -254,10 +253,10 @@ export class LlmClassifier implements Classifier {
             messages: [{ role: 'user', content: userPrompt }],
           }),
           signal: controller.signal,
-        });
+        }), this.opts.requestDelayMs);
         if (!res.ok) {
-          if ((res.status === 429 || res.status >= 500) && this.lastRequestAt) {
-            throw new RetryableProviderError(`anthropic HTTP ${res.status}`);
+          if (res.status === 429 || res.status >= 500) {
+            throw new RetryableProviderError(`anthropic HTTP ${res.status}`, await responseRetryAfterMs(res));
           }
           throw new Error(`anthropic HTTP ${res.status}`);
         }
@@ -265,7 +264,7 @@ export class LlmClassifier implements Classifier {
         return data.content?.map((c) => c.text ?? '').join('') ?? '';
       }
       const base = this.opts.baseUrl ?? 'https://api.openai.com/v1';
-      const res = await this.fetchImpl(`${base.replace(/\/$/, '')}/chat/completions`, {
+      const res = await withGlobalModelThrottle(() => this.fetchImpl(`${base.replace(/\/$/, '')}/chat/completions`, {
         method: 'POST',
         headers: {
           'content-type': 'application/json',
@@ -281,9 +280,9 @@ export class LlmClassifier implements Classifier {
           ],
         }),
         signal: controller.signal,
-      });
+      }), this.opts.requestDelayMs);
       if (!res.ok) {
-        if (res.status === 429 || res.status >= 500) throw new RetryableProviderError(`llm HTTP ${res.status}`);
+        if (res.status === 429 || res.status >= 500) throw new RetryableProviderError(`llm HTTP ${res.status}`, await responseRetryAfterMs(res));
         throw new Error(`llm HTTP ${res.status}`);
       }
       const data = (await res.json()) as { choices?: Array<{ message?: { content?: string } }> };
@@ -294,7 +293,20 @@ export class LlmClassifier implements Classifier {
   }
 }
 
-class RetryableProviderError extends Error {}
+class RetryableProviderError extends Error {
+  constructor(message: string, readonly retryAfterMs = 0) { super(message); }
+}
+
+async function responseRetryAfterMs(response: Response): Promise<number> {
+  const header = parseRetryAfterMs(response.headers.get('retry-after'));
+  if (header) return header;
+  try {
+    const body = await response.clone().json() as { error?: { details?: Array<{ '@type'?: string; retryDelay?: string }> } };
+    const retryInfo = body.error?.details?.find((detail) => detail['@type']?.endsWith('RetryInfo'));
+    const match = retryInfo?.retryDelay?.match(/^(\d+(?:\.\d+)?)s$/);
+    return match ? Number(match[1]) * 1000 : 0;
+  } catch { return 0; }
+}
 
 export function buildClassifier(kind: 'rules' | 'llm', opts?: Partial<LlmClassifierOptions>): Classifier {
   if (kind === 'llm') {

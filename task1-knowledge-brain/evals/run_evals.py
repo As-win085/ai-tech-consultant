@@ -223,6 +223,8 @@ def main() -> int:
                 "abstention_correctness": abstention_correctness,
                 "escalate": None if response is None else response.needs_escalation,
                 "elapsed_ms": round((time.perf_counter() - started) * 1000, 2),
+                "retry_count": int(getattr(getattr(service, "chat_provider", None), "retry_count", 0)),
+                "model_failure": error is not None,
                 "error": error,
                 "raw_response": None if response is None else response.model_dump(mode="json"),
             }
@@ -258,6 +260,9 @@ def main() -> int:
                 "citation_scored_cases": sum(r["citation_correctness"] is not None for r in results),
                 "abstention_correct_cases": sum(r["abstention_correctness"] is True for r in results),
                 "abstention_scored_cases": sum(r["abstention_correctness"] is not None for r in results),
+                "retry_attempts_total": sum(r["retry_count"] for r in results),
+                "retried_cases": sum(r["retry_count"] > 0 for r in results),
+                "model_failures": sum(r["model_failure"] for r in results),
                 "indexing": (service.eval_index_report.summary() if hasattr(service, "eval_index_report") else None),
                 "retrieval_diagnostics": retrieval_diagnostics(service, cases),
                 "results": results,

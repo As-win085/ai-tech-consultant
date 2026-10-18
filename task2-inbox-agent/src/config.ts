@@ -61,7 +61,7 @@ export function loadConfig(overrides: Partial<AppConfig> = {}): AppConfig {
     llmApiKey: process.env.LLM_API_KEY ?? null,
     llmTimeoutMs: intEnv('LLM_TIMEOUT_MS', 60000),
     llmRetries: intEnv('LLM_RETRIES', 1),
-    llmRequestDelayMs: intEnv('LLM_REQUEST_DELAY_MS', 250),
+    llmRequestDelayMs: intEnv('LLM_MIN_DELAY_MS', intEnv('LLM_REQUEST_DELAY_MS', 8000)),
     embeddingProvider: process.env.EMBEDDING_PROVIDER ?? 'gemini',
     embeddingModel: process.env.EMBEDDING_MODEL ?? 'gemini-embedding-001',
     maxConsecutiveUneditedApprovals: intEnv('MAX_CONSECUTIVE_UNEDITED_APPROVALS', 20),

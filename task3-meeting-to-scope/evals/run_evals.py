@@ -138,6 +138,8 @@ def main() -> int:
             "p95_latency_ms": sorted(r["latency_ms"] for r in results)[max(0, math.ceil(len(results) * .95) - 1)] if results else None,
             "model_tokens": None,
             "retry_count": 0,
+        "failure_causes": {result["id"]: "; ".join(result["problems"]) for result in results if not result["passed"]},
+        "harness_mode": "mock/offline",
             "failures": len(results) - passed,
             "provider_mode": "deterministic rules extractor + scripted Task 1 mock; zero live model calls",
         },

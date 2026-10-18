@@ -38,6 +38,10 @@ from app.schemas import (
 # --- Cue phrase sets ---------------------------------------------------------
 
 REQUEST_CUES = (
+    "we do not need",
+    "we don't need",
+    "we no longer require",
+    "our budget cannot exceed",
     "we need",
     "we also need",
     "we'll need",
@@ -147,6 +151,9 @@ OPEN_QUESTION_CUES = (
     "unclear",
     "open question",
     "we'll figure out",
+    "maybe later",
+    "might want",
+    "may want",
     "find out",
     "need to check whether",
     "does it support",
@@ -207,6 +214,7 @@ ACCEPTANCE_CUES = ("acceptance criteria", "we'll consider it done", "done when",
 # Cues that indicate untrusted "instructions" that must never be obeyed.
 INJECTION_CUES = (
     "ignore previous",
+    "ignore all rules",
     "ignore your instructions",
     "ignore all instructions",
     "disregard your",
@@ -218,6 +226,7 @@ INJECTION_CUES = (
     "output the api key",
     "approve everything",
     "mark all requirements approved",
+    "mark every requirement approved",
 )
 
 _NUMBER_WORD_RE = re.compile(r"\b(\d[\d,]*\s*k?)\b", re.IGNORECASE)
@@ -397,19 +406,20 @@ class RuleBasedExtractor:
         seen_desc: set[str] = set()
 
         for segment in transcript.segments:
-            text = segment.text.strip()
+            original_text = segment.text.strip()
+            sentences = [part.strip() for part in _SENTENCE_SPLIT.split(original_text) if part.strip()]
+            safe_sentences = [part for part in sentences if not _is_injection(part)]
+            if len(safe_sentences) != len(sentences):
+                warnings.append(
+                    f"ignored untrusted instruction-like content in segment {segment.segment_id}"
+                )
+            text = " ".join(safe_sentences)
             if len(text) < self.min_chars:
                 continue
 
             speaker_side = "other"
             if segment.speaker:
                 speaker_side = sides.get(segment.speaker.lower(), "other")
-
-            if _is_injection(text):
-                warnings.append(
-                    f"ignored untrusted instruction-like content in segment {segment.segment_id}"
-                )
-                continue
 
             is_question = text.rstrip().endswith("?")
             req_cue = _contains_any(text, REQUEST_CUES)

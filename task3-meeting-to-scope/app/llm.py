@@ -21,6 +21,7 @@ from typing import Callable, Protocol, runtime_checkable
 import httpx
 
 from app.config import ConfigError, Settings
+from app.throttle import MODEL_REQUEST_THROTTLE, response_retry_after, retry_delay_seconds
 
 ANTHROPIC_VERSION = "2023-06-01"
 logger = logging.getLogger(__name__)
@@ -123,28 +124,31 @@ class _HTTPChatProvider:
         self._sleeper = sleeper or time.sleep
         self._backoff_seconds = backoff_seconds
         self._request_delay_seconds = max(0.0, float(os.getenv("LLM_REQUEST_DELAY_MS", "0")) / 1000)
+        self.retry_count = 0
 
     def _post(self, path: str, *, json: dict, headers: dict) -> str:
+        self.retry_count = 0
         attempts = self.max_retries + 1
         last_error: Exception | None = None
         for attempt in range(attempts):
             try:
-                if self._request_delay_seconds:
-                    self._sleeper(self._request_delay_seconds)
-                response = self._client.post(f"{self.base_url}{path}", json=json, headers=headers)
+                with MODEL_REQUEST_THROTTLE.request():
+                    response = self._client.post(f"{self.base_url}{path}", json=json, headers=headers)
             except httpx.HTTPError as exc:
                 last_error = exc
                 if attempt < attempts - 1:
+                    self.retry_count += 1
                     logger.warning("llm retry attempt=%d/%d error=%s", attempt + 1, attempts - 1, type(exc).__name__)
-                    self._sleeper(self._backoff_seconds * (2**attempt))
+                    self._sleeper(retry_delay_seconds(None, attempt, self._backoff_seconds))
                     continue
                 raise ChatRequestError(f"chat request failed after {attempts} attempt(s): {exc}") from exc
 
             if response.status_code == 429 or 500 <= response.status_code < 600:
                 last_error = ChatResponseError(f"retryable HTTP {response.status_code}")
                 if attempt < attempts - 1:
+                    self.retry_count += 1
                     logger.warning("llm retry attempt=%d/%d status=%d", attempt + 1, attempts - 1, response.status_code)
-                    self._sleeper(self._backoff_seconds * (2**attempt))
+                    self._sleeper(retry_delay_seconds(response_retry_after(response), attempt, self._backoff_seconds))
                     continue
                 raise ChatResponseError(f"chat request failed with HTTP {response.status_code}")
             if response.status_code >= 400:

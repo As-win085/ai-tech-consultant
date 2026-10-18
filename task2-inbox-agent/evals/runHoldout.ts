@@ -57,7 +57,11 @@ function macroF1(expected: string[], actual: Array<string | null>): number {
 async function main(): Promise<void> {
   const apiKey = process.env.LLM_API_KEY;
   const bytes = fs.readFileSync(DATA);
-  const cases = (JSON.parse(bytes.toString('utf8')) as { cases: Case[] }).cases;
+  const allCases = (JSON.parse(bytes.toString('utf8')) as { cases: Case[] }).cases;
+  const requestedCaseIds = process.env.EVAL_CASE_IDS?.split(',').map((id) => id.trim()).filter(Boolean);
+  const cases = requestedCaseIds ? allCases.filter((item) => requestedCaseIds.includes(item.id)) : allCases;
+  const requestedModels = process.env.EVAL_MODELS?.split(',').map((id) => id.trim()).filter(Boolean);
+  const modelsToRun = requestedModels ? MODELS.filter((model) => requestedModels.includes(model.id)) : MODELS;
   fs.mkdirSync(OUTPUT, { recursive: true });
   const comparisonRows: Array<Record<string, unknown>> = [];
   if (!apiKey) {
@@ -95,10 +99,22 @@ async function main(): Promise<void> {
   const timeoutMs = Number.parseInt(process.env.LLM_TIMEOUT_MS ?? '60000', 10);
   const retries = Number.parseInt(process.env.LLM_RETRIES ?? '1', 10);
 
-  for (const model of MODELS) {
-    const results: any[] = [];
+  for (const model of modelsToRun) {
+    const priorPath = path.join(OUTPUT, `holdout-20-${model.id}.json`);
+    const priorResults = requestedCaseIds && fs.existsSync(priorPath)
+      ? (JSON.parse(fs.readFileSync(priorPath, 'utf8')).results as any[])
+      : [];
+    const resultById = new Map<string, any>(priorResults.map((result) => [result.id, {
+      ...result,
+      retry_count: Number(result.retry_count ?? Math.max(0, (result.attempts ?? 1) - 1)),
+      model_failure: result.model_failure ?? Boolean(result.classification?.fallback),
+      failed_http_responses: Number(result.failed_http_responses ?? 0),
+      transport_failures: Number(result.transport_failures ?? 0),
+      usage: { input_tokens: Number(result.usage?.input_tokens ?? 0), output_tokens: Number(result.usage?.output_tokens ?? 0) },
+    }]));
+    const freshResults: any[] = [];
     for (const item of cases) {
-      const email: Email = { subject: item.subject, body: item.body } as Email;
+      const email: Email = { id: item.id, subject: item.subject, body: item.body } as Email;
       const calls: Array<{ raw: unknown; inputTokens: number; outputTokens: number; status: number }> = [];
       let fetchAttempts = 0;
       let transportFailures = 0;
@@ -130,20 +146,23 @@ async function main(): Promise<void> {
       const rawText = (successful?.raw as any)?.content?.map((part: any) => part.text ?? '').join('') ??
         (successful?.raw as any)?.choices?.[0]?.message?.content ?? null;
       const failedCalls = calls.filter((call) => call.status < 200 || call.status >= 300).length;
-      results.push({
+      freshResults.push({
         id: item.id, input: item, expected: { category: item.category, urgency: item.urgency, needsEscalation: item.needsEscalation },
         raw_model_response: successful?.raw ?? calls.at(-1)?.raw ?? null,
         raw_model_text: rawText, classification, elapsed_ms: elapsedMs,
         attempts: fetchAttempts, did_retry: fetchAttempts > 1, transport_failures: transportFailures, failed_http_responses: failedCalls,
+        retry_count: classifier.lastRetryCount, model_failure: classification.fallback,
         usage: { input_tokens: calls.reduce((n, call) => n + call.inputTokens, 0), output_tokens: calls.reduce((n, call) => n + call.outputTokens, 0) },
       });
       console.log(`${item.id}: ${classification.fallback ? 'FALLBACK' : 'classified'} (${elapsedMs} ms, ${fetchAttempts} attempt(s))`);
     }
-    const expectedCategory = cases.map((item) => item.category);
+    for (const result of freshResults) resultById.set(result.id, result);
+    const results = allCases.map((item) => resultById.get(item.id)).filter(Boolean);
+    const expectedCategory = results.map((result) => result.expected.category);
     const actualCategory = results.map((result) => result.classification.fallback ? null : result.classification.category);
-    const expectedUrgency = cases.map((item) => item.urgency);
+    const expectedUrgency = results.map((result) => result.expected.urgency);
     const actualUrgency = results.map((result) => result.classification.fallback ? null : result.classification.urgency);
-    const expectedEscalation = cases.map((item) => String(item.needsEscalation));
+    const expectedEscalation = results.map((result) => String(result.expected.needsEscalation));
     const actualEscalation = results.map((result) => result.classification.fallback ? null : String(result.classification.needsEscalation));
     const tp = results.filter((r) => r.classification.needsEscalation && r.expected.needsEscalation).length;
     const fp = results.filter((r) => r.classification.needsEscalation && !r.expected.needsEscalation).length;
@@ -156,7 +175,8 @@ async function main(): Promise<void> {
     const latencies = results.map((row) => row.elapsed_ms);
     const report = {
       generated_at: new Date().toISOString(), dataset: path.basename(DATA), dataset_sha256: createHash('sha256').update(bytes).digest('hex'),
-      dataset_size: cases.length, model: model.id, model_label: model.label, provider: PROVIDER, source_mode: 'live API',
+      dataset_size: allCases.length, model: model.id, model_label: model.label, provider: PROVIDER, source_mode: 'live API',
+      merged_prior_results: Boolean(requestedCaseIds), rerun_case_ids: requestedCaseIds ?? null,
       thresholds: 'No pass threshold; descriptive metrics on this fixed synthetic holdout.',
       metrics: {
         category_accuracy: accuracy(expectedCategory, actualCategory), category_macro_f1: macroF1(expectedCategory, actualCategory),
@@ -165,6 +185,7 @@ async function main(): Promise<void> {
         median_latency_ms: median(latencies), p95_latency_ms: percentile95(latencies),
         failures: failureCount, failure_rate: failureCount / results.length,
         retried_cases: retryCount, retry_rate: retryCount / results.length,
+        retry_attempts_total: results.reduce((sum, row) => sum + row.retry_count, 0),
         http_failures: results.reduce((sum, row) => sum + row.failed_http_responses, 0),
         transport_failures: results.reduce((sum, row) => sum + row.transport_failures, 0),
         input_tokens: inputTokens, output_tokens: outputTokens, estimated_cost_usd: totalCost,
@@ -175,6 +196,14 @@ async function main(): Promise<void> {
     fs.writeFileSync(target, JSON.stringify(report, null, 2));
     comparisonRows.push({ model: model.label, source: `live ${PROVIDER} API`, ...report.metrics });
     console.log(`${model.id}: category accuracy=${report.metrics.category_accuracy}, urgency accuracy=${report.metrics.urgency_accuracy}, escalation precision=${report.metrics.escalation_precision}, recall=${report.metrics.escalation_recall}, median latency=${report.metrics.median_latency_ms} ms, p95=${report.metrics.p95_latency_ms} ms, failures=${report.metrics.failures}, retry rate=${report.metrics.retry_rate}, estimated cost=$${totalCost.toFixed(6)}; report=${target}`);
+  }
+  for (const model of MODELS) {
+    if (modelsToRun.includes(model)) continue;
+    const priorPath = path.join(OUTPUT, `holdout-20-${model.id}.json`);
+    if (fs.existsSync(priorPath)) {
+      const prior = JSON.parse(fs.readFileSync(priorPath, 'utf8'));
+      comparisonRows.push({ model: model.label, source: `live ${PROVIDER} API`, ...prior.metrics });
+    }
   }
   const rulesPath = path.join(OUTPUT, 'holdout-20-rules-mock.json');
   const rules = JSON.parse(fs.readFileSync(rulesPath, 'utf8'));
@@ -189,7 +218,7 @@ async function main(): Promise<void> {
   const comparisonPath = path.join(OUTPUT, 'comparison-holdout-20.json');
   fs.writeFileSync(comparisonPath, JSON.stringify({
     generated_at: new Date().toISOString(), dataset_sha256: createHash('sha256').update(bytes).digest('hex'),
-    note: 'Deviation: uses configurable Gemini-compatible endpoints by default instead of the originally requested Claude models. Set LLM_PROVIDER, LLM_BASE_URL, LLM_API_KEY, EVAL_MODEL_CHEAP and EVAL_MODEL_STRONG to select provider/models. Rule latency is local and not comparable to network latency.', rows: comparisonRows,
+    note: 'Deviation: uses configurable Gemini-compatible endpoints by default instead of the originally requested Claude models. Set LLM_PROVIDER, LLM_BASE_URL, LLM_API_KEY, EVAL_MODEL_CHEAP and EVAL_MODEL_STRONG to select provider/models. Rule latency is local and not comparable to network latency. Partial reruns merge only named cases with earlier raw case results.', rows: comparisonRows,
   }, null, 2));
   console.log('\nModel comparison (20 fixed synthetic emails)');
   console.log('| Model | Source | Category acc. | Macro-F1 | Urgency acc. | Escalation P/R | Median / p95 ms | Cost USD | Failure / retry rate |');

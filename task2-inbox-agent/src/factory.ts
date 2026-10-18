@@ -30,6 +30,7 @@ export async function createAgentBundle(config: AppConfig): Promise<AgentBundle>
     apiKey: config.llmApiKey,
     timeoutMs: config.llmTimeoutMs,
     retries: config.llmRetries,
+    requestDelayMs: config.llmRequestDelayMs,
   });
   const kbClient = new KnowledgeBrainClient({
     baseUrl: config.knowledgeBrainUrl,
