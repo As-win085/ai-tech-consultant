@@ -189,7 +189,8 @@ def test_empty_index_returns_unavailable():
     service = make_service(chat, store=InMemoryKnowledgeStore())
     response = service.ask(AskRequest(question="anything"))
     assert response.evidence_status == "unavailable"
-    assert response.needs_escalation is False
+    assert response.needs_escalation is True
+    assert response.escalation_id
     assert chat.calls == []
 
 

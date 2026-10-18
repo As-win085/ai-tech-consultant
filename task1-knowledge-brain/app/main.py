@@ -1,8 +1,11 @@
 from fastapi import Depends, FastAPI, Request, Response
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 
-from app.schemas import AskRequest, AskResponse, ErrorResponse, ReadyReport
+from app.schemas import (
+    AskRequest, AskResponse, ErrorResponse, ReadyReport,
+    EscalationCreateRequest, EscalationResolveRequest,
+)
 from app.service import KnowledgeService, ServiceUnavailable, build_default_service
 
 app = FastAPI(
@@ -43,6 +46,36 @@ async def health():
     }
 
 
+@app.get("/chat", response_class=HTMLResponse, include_in_schema=False)
+async def knowledge_chat():
+    from app.chat_ui import CHAT_HTML
+    return HTMLResponse(CHAT_HTML)
+
+
+@app.post("/ingestion/run")
+def start_ingestion():
+    from app.ingestion import run_ingestion
+    try:
+        return run_ingestion()
+    except Exception as exc:
+        return JSONResponse(
+            status_code=503,
+            content={"error": {"code": "ingestion_unavailable", "message": "ingestion did not complete", "detail": type(exc).__name__}},
+        )
+
+
+@app.get("/ingestion/status")
+def ingestion_status():
+    from app.ingestion import get_ingestion_status
+    try:
+        return {"latest_run": get_ingestion_status()}
+    except Exception as exc:
+        return JSONResponse(
+            status_code=503,
+            content={"error": {"code": "ingestion_status_unavailable", "message": "ingestion status is unavailable", "detail": type(exc).__name__}},
+        )
+
+
 @app.post(
     "/ask",
     response_model=AskResponse,
@@ -62,6 +95,15 @@ def ask(
     return service.ask(request)
 
 
+@app.post("/query", response_model=AskResponse, include_in_schema=False)
+def query_alias(
+    request: AskRequest,
+    service: KnowledgeService = Depends(get_service),
+) -> AskResponse:
+    """Compatibility alias for clients that still use the requirements route."""
+    return service.ask(request)
+
+
 @app.get(
     "/ready",
     response_model=ReadyReport,
@@ -77,6 +119,34 @@ def ready(response: Response, service: KnowledgeService = Depends(get_service)):
     report = service.readiness()
     response.status_code = 200 if report.ready else 503
     return report
+
+
+@app.post("/escalations")
+def create_escalation(
+    request: EscalationCreateRequest,
+    service: KnowledgeService = Depends(get_service),
+):
+    return service.create_escalation(request.question, request.reason)
+
+
+@app.get("/escalations")
+def list_escalations(
+    limit: int = 100,
+    service: KnowledgeService = Depends(get_service),
+):
+    return {"escalations": service.list_escalations(limit)}
+
+
+@app.post("/escalations/{escalation_id}/resolve")
+def resolve_escalation(
+    escalation_id: str,
+    request: EscalationResolveRequest,
+    service: KnowledgeService = Depends(get_service),
+):
+    try:
+        return service.resolve_escalation(escalation_id, request.answer, request.reviewer)
+    except KeyError:
+        return JSONResponse(status_code=404, content={"error": {"code": "not_found", "message": "escalation not found"}})
 
 
 @app.exception_handler(ServiceUnavailable)

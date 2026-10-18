@@ -4,6 +4,9 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.main import app, get_service
+from app.answer import AnswerConfig
+from app.chat import FakeChatProvider
+from app.embeddings import FakeEmbeddingProvider
 from app.schemas import (
     AskResponse,
     Citation,
@@ -12,6 +15,9 @@ from app.schemas import (
     ReadyReport,
 )
 from app.service import ServiceUnavailable
+from app.retriever import RetrievalConfig
+from app.store import InMemoryKnowledgeStore
+from app.service import KnowledgeService
 
 
 def make_response(**overrides) -> "AskResponse":
@@ -192,3 +198,53 @@ def test_ready_service_unavailable_is_safe(client):
     response = client.get("/ready")
     assert response.status_code == 503
     assert "Traceback" not in response.text
+
+
+def test_query_alias_and_chat_page(client):
+    use_service(client, StubService(response=make_response()))
+    response = client.post("/query", json={"question": "How do I reset a password?"})
+    assert response.status_code == 200
+    assert response.json()["citations"][0]["chunk_id"] == "c1"
+    page = client.get("/chat")
+    assert page.status_code == 200
+    assert "Knowledge Chat" in page.text
+    assert "Service unavailable" in page.text
+
+
+def test_ingestion_run_and_status_routes(client, monkeypatch):
+    from app import ingestion
+
+    monkeypatch.setattr(ingestion, "run_ingestion", lambda: {"run_id": 7, "status": "ok"})
+    monkeypatch.setattr(ingestion, "get_ingestion_status", lambda: {"run_id": 7, "status": "ok"})
+    assert client.post("/ingestion/run").json() == {"run_id": 7, "status": "ok"}
+    assert client.get("/ingestion/status").json() == {"latest_run": {"run_id": 7, "status": "ok"}}
+
+
+def test_abstention_is_persisted_and_reviewed_answer_is_indexed(client):
+    store = InMemoryKnowledgeStore()
+    service = KnowledgeService(
+        store_factory=lambda: store,
+        embedding_provider=FakeEmbeddingProvider(dimensions=8),
+        chat_provider=FakeChatProvider(),
+        retrieval_config=RetrievalConfig(),
+        answer_config=AnswerConfig(),
+        embedding_detail="fake test provider",
+        chat_detail="fake test provider",
+    )
+    use_service(client, service)
+    response = client.post("/ask", json={"question": "How do I configure an unknown feature?"})
+    assert response.status_code == 200
+    escalation_id = response.json()["escalation_id"]
+    assert response.json()["needs_escalation"] is True
+
+    resolved = client.post(
+        f"/escalations/{escalation_id}/resolve",
+        json={"answer": "Open Settings and select Features.", "reviewer": "reviewer-1"},
+    )
+    assert resolved.status_code == 200
+    assert resolved.json()["status"] == "resolved"
+    assert resolved.json()["answers"][0]["version"] == 1
+    article_id = resolved.json()["answers"][0]["article_id"]
+    assert article_id in store.articles
+    assert any(chunk.article_id == article_id for chunk in store.chunks.values())
+    assert any(record.chunk_id in store.chunks for record in store.embeddings.values())

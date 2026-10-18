@@ -110,7 +110,7 @@ def test_parse_sitemap_malformed_returns_empty_without_crashing():
     assert children == []
 
 
-def test_fetch_sitemap_entries_follows_index_and_skips_failed_child():
+def test_fetch_sitemap_entries_fails_closed_when_child_sitemap_is_unavailable():
     root = sitemapindex([f"{BASE}/good.xml", f"{BASE}/bad.xml"])
     good = urlset([(f"{BASE}{ARTICLE_MARKER}1-a", None, None, None)])
 
@@ -123,8 +123,28 @@ def test_fetch_sitemap_entries_follows_index_and_skips_failed_child():
         raise httpx.ConnectError("boom", request=request)
 
     with make_client(handler) as client:
-        entries = fetch_sitemap_entries(client, f"{BASE}/sitemap.xml")
-    assert [entry.url for entry in entries] == [f"{BASE}{ARTICLE_MARKER}1-a"]
+        with pytest.raises(httpx.ConnectError):
+            fetch_sitemap_entries(client, f"{BASE}/sitemap.xml", max_retries=0)
+
+
+def test_sitemap_retries_server_errors_with_exponential_backoff(monkeypatch):
+    calls = 0
+    delays = []
+    content = urlset([(f"{BASE}{ARTICLE_MARKER}1-a", None, None, None)])
+
+    def handler(request):
+        nonlocal calls
+        calls += 1
+        if calls < 3:
+            return httpx.Response(503)
+        return httpx.Response(200, text=content)
+
+    monkeypatch.setattr("app.crawler.time.sleep", delays.append)
+    with make_client(handler) as client:
+        entries = fetch_sitemap_entries(client, f"{BASE}/sitemap.xml", max_retries=3)
+    assert len(entries) == 1
+    assert calls == 3
+    assert delays == [0.25, 0.5]
 
 
 def test_parse_article_extracts_all_required_fields():
@@ -161,6 +181,18 @@ def test_parse_article_strips_page_chrome():
     assert "Related junk" not in record["text"]
     assert "internal" not in record["text"]
     assert "var junk" not in record["text"]
+
+
+def test_parse_article_records_image_url_alt_and_context():
+    html = article_html(title="Images", body='<p>Click this control.</p><img src="/images/button.png" alt="Save button">')
+    record = parse_article(html, f"{BASE}{ARTICLE_MARKER}55-image")
+    assert record["images"] == [{
+        "url": f"{BASE}/images/button.png",
+        "alt": "Save button",
+        "context": "Click this control.",
+    }]
+    assert "Image reference:" in record["text"]
+    assert "Surrounding text: Click this control." in record["text"]
 
 
 def test_parse_article_empty_html_is_marked_failed():
@@ -323,3 +355,67 @@ def test_crawl_respects_limit(tmp_path):
         document = crawl(limit=2, sitemap_url=f"{BASE}/sitemap.xml", output_path=output, delay=0, client=client)
     assert document["source"]["article_urls_found"] == 5
     assert document["source"]["articles_crawled"] == 2
+
+
+def test_crawl_respects_robots_and_resumes_unchanged_pages(tmp_path):
+    url = f"{BASE}{ARTICLE_MARKER}11-image"
+    sitemap = urlset([(url, "2026-01-01", None, None)])
+    article_calls = 0
+
+    def handler(request):
+        nonlocal article_calls
+        if str(request.url) == f"{BASE}/sitemap.xml":
+            return httpx.Response(200, text=sitemap)
+        if str(request.url) == f"{BASE}/robots.txt":
+            return httpx.Response(200, text="User-agent: *\nDisallow: /blocked")
+        if str(request.url) == url:
+            article_calls += 1
+            return httpx.Response(200, text=article_html(title="T", body="<p>Page body.</p>"))
+        return httpx.Response(404)
+
+    manifest = tmp_path / "manifest.json"
+    output = tmp_path / "articles.json"
+    with make_client(handler) as client:
+        first = crawl(sitemap_url=f"{BASE}/sitemap.xml", output_path=output, manifest_path=manifest, delay=0, client=client)
+        second = crawl(sitemap_url=f"{BASE}/sitemap.xml", output_path=output, manifest_path=manifest, delay=0, client=client)
+    assert first["source"]["articles_ok"] == 1
+    assert second["source"]["articles_ok"] == 1
+    assert article_calls == 1
+
+
+def test_crawl_skips_robots_disallowed_pages(tmp_path):
+    url = f"{BASE}{ARTICLE_MARKER}12-blocked"
+
+    def handler(request):
+        if str(request.url) == f"{BASE}/sitemap.xml":
+            return httpx.Response(200, text=urlset([(url, None, None, None)]))
+        if str(request.url) == f"{BASE}/robots.txt":
+            return httpx.Response(200, text="User-agent: *\nDisallow: /support/solutions/articles/")
+        raise AssertionError("crawler must not fetch a robots-disallowed article")
+
+    with make_client(handler) as client:
+        doc = crawl(sitemap_url=f"{BASE}/sitemap.xml", output_path=tmp_path / "out.json", delay=0, client=client)
+    assert doc["articles"][0]["status"] == "skipped"
+    assert doc["source"]["articles_skipped"] == 1
+
+
+def test_crawl_can_attach_a_vision_description_to_one_sample_image(tmp_path):
+    url = f"{BASE}{ARTICLE_MARKER}13-image"
+    seen = []
+
+    def handler(request):
+        if str(request.url) == f"{BASE}/sitemap.xml":
+            return httpx.Response(200, text=urlset([(url, None, None, None)]))
+        if str(request.url) == f"{BASE}/robots.txt":
+            return httpx.Response(200, text="User-agent: *\nAllow: /")
+        return httpx.Response(200, text=article_html(title="T", body='<p>Profile settings.</p><img src="/assets/profile.png" alt="Profile form">'))
+
+    def describe(image_url, context):
+        seen.append((image_url, context))
+        return "A form with a profile image upload control."
+
+    with make_client(handler) as client:
+        doc = crawl(sitemap_url=f"{BASE}/sitemap.xml", output_path=tmp_path / "out.json", delay=0, client=client, image_describer=describe)
+    assert seen == [(f"{BASE}/assets/profile.png", "Profile settings.")]
+    assert doc["source"]["vision_described"] == 1
+    assert "Image description: A form with a profile image upload control." in doc["articles"][0]["text"]

@@ -1,6 +1,7 @@
 """PostgreSQL + pgvector implementation of the KnowledgeStore interface."""
 
 from typing import Sequence
+import uuid
 
 import pg8000.native
 
@@ -219,6 +220,105 @@ class PostgresKnowledgeStore:
             "updated_at = now() WHERE chunk_id = :chunk_id",
             chunk_id=chunk_id,
             error=error[:1000],
+        )
+
+    def deactivate_missing_articles(self, active_article_ids: set[str]) -> int:
+        if active_article_ids:
+            rows = self._run(
+                "UPDATE articles SET is_active = FALSE, deactivated_at = now(), updated_at = now() "
+                "WHERE is_active AND article_id <> ALL(:active_ids::text[]) RETURNING article_id",
+                active_ids=list(active_article_ids),
+            )
+        else:
+            rows = self._run(
+                "UPDATE articles SET is_active = FALSE, deactivated_at = now(), updated_at = now() "
+                "WHERE is_active RETURNING article_id"
+            )
+        return len(rows)
+
+    def create_escalation(self, question: str, reason: str, request_id: str | None = None) -> dict:
+        escalation_id = uuid.uuid4().hex
+        self._run(
+            "INSERT INTO escalations (escalation_id, question, reason, request_id) "
+            "VALUES (:id, :question, :reason, :request_id) ON CONFLICT (request_id) DO NOTHING",
+            id=escalation_id, question=question, reason=reason, request_id=request_id,
+        )
+        return self.get_escalation(escalation_id) or self.get_escalation_by_request(request_id)
+
+    def get_escalation_by_request(self, request_id: str | None) -> dict | None:
+        if not request_id:
+            return None
+        rows = self._run("SELECT escalation_id FROM escalations WHERE request_id = :id", id=request_id)
+        return self.get_escalation(rows[0][0]) if rows else None
+
+    def list_escalations(self, limit: int = 100) -> list[dict]:
+        rows = self._run(
+            "SELECT escalation_id FROM escalations ORDER BY created_at DESC LIMIT :limit",
+            limit=max(1, min(int(limit), 500)),
+        )
+        return [self.get_escalation(row[0]) for row in rows]
+
+    def get_escalation(self, escalation_id: str) -> dict | None:
+        rows = self._run(
+            "SELECT escalation_id, question, reason, request_id, status, created_at, updated_at "
+            "FROM escalations WHERE escalation_id = :id", id=escalation_id,
+        )
+        if not rows:
+            return None
+        row = rows[0]
+        answers = self._run(
+            "SELECT version, answer, reviewer, article_id, created_at FROM escalation_answers "
+            "WHERE escalation_id = :id ORDER BY version", id=escalation_id,
+        )
+        return {
+            "escalation_id": row[0], "question": row[1], "reason": row[2],
+            "request_id": row[3], "status": row[4], "created_at": row[5],
+            "updated_at": row[6],
+            "answers": [dict(version=a[0], answer=a[1], reviewer=a[2], article_id=a[3], created_at=a[4]) for a in answers],
+        }
+
+    def resolve_escalation(self, escalation_id: str, answer: str, reviewer: str, version: int) -> dict:
+        article_id = f"reviewed-escalation-{escalation_id}-v{version}"
+        self._run(
+            "INSERT INTO escalation_answers (escalation_id, version, answer, reviewer, article_id) "
+            "VALUES (:id, :version, :answer, :reviewer, :article_id)",
+            id=escalation_id, version=version, answer=answer, reviewer=reviewer,
+            article_id=article_id,
+        )
+        self._run(
+            "UPDATE escalations SET status='resolved', updated_at=now() WHERE escalation_id=:id",
+            id=escalation_id,
+        )
+        return self.get_escalation(escalation_id)
+
+    def latest_ingestion_run(self) -> dict | None:
+        rows = self._run(
+            "SELECT run_id, status, started_at, finished_at, sitemap_url, article_urls_found, "
+            "articles_crawled, articles_ok, articles_failed, articles_deactivated, error "
+            "FROM ingestion_runs ORDER BY run_id DESC LIMIT 1"
+        )
+        if not rows:
+            return None
+        names = ("run_id", "status", "started_at", "finished_at", "sitemap_url",
+                 "article_urls_found", "articles_crawled", "articles_ok", "articles_failed",
+                 "articles_deactivated", "error")
+        return dict(zip(names, rows[0]))
+
+    def start_ingestion_run(self, sitemap_url: str) -> int:
+        rows = self._run(
+            "INSERT INTO ingestion_runs (status, sitemap_url) VALUES ('running', :url) RETURNING run_id",
+            url=sitemap_url,
+        )
+        return int(rows[0][0])
+
+    def finish_ingestion_run(self, run_id: int, status: str, source: dict, deactivated: int, error: str | None = None) -> None:
+        self._run(
+            "UPDATE ingestion_runs SET status=:status, finished_at=now(), article_urls_found=:found, "
+            "articles_crawled=:crawled, articles_ok=:ok, articles_failed=:failed, "
+            "articles_deactivated=:deactivated, error=:error WHERE run_id=:id",
+            status=status, found=source.get("article_urls_found", 0), crawled=source.get("articles_crawled", 0),
+            ok=source.get("articles_ok", 0), failed=source.get("articles_failed", 0),
+            deactivated=deactivated, error=error, id=run_id,
         )
 
     def search_similar(

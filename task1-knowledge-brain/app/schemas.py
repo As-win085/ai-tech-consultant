@@ -94,6 +94,17 @@ class AskResponse(BaseModel):
     retrieved_chunks: list[RetrievedChunk] | None = None
     model: str | None = None
     request_id: str
+    escalation_id: str | None = None
+
+
+class EscalationCreateRequest(BaseModel):
+    question: str = Field(min_length=1, max_length=2000)
+    reason: str = Field(min_length=1, max_length=1000)
+
+
+class EscalationResolveRequest(BaseModel):
+    answer: str = Field(min_length=1, max_length=12000)
+    reviewer: str = Field(min_length=1, max_length=200)
 
 
 class DependencyStatus(BaseModel):

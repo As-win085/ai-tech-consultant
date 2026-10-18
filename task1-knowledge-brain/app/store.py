@@ -43,6 +43,21 @@ class KnowledgeStore(Protocol):
     def record_embedding_failure(self, chunk_id: str, error: str) -> None:
         ...
 
+    def deactivate_missing_articles(self, active_article_ids: set[str]) -> int:
+        ...
+
+    def create_escalation(self, question: str, reason: str, request_id: str | None = None) -> dict:
+        ...
+
+    def list_escalations(self, limit: int = 100) -> list[dict]:
+        ...
+
+    def get_escalation(self, escalation_id: str) -> dict | None:
+        ...
+
+    def resolve_escalation(self, escalation_id: str, answer: str, reviewer: str, version: int) -> dict:
+        ...
+
 
 class RetrievalStore(Protocol):
     """Read side used by retrieval (implemented by both stores)."""
@@ -70,6 +85,9 @@ class InMemoryKnowledgeStore:
         self.chunk_errors: dict[str, str] = {}
         self.runs: dict[int, dict] = {}
         self._next_run_id = 1
+        self.ingestion_runs: list[dict] = []
+        self._next_ingestion_run_id = 1
+        self.escalations: dict[str, dict] = {}
 
     def start_run(self, model: str, dimensions: int) -> int:
         run_id = self._next_run_id
@@ -111,6 +129,64 @@ class InMemoryKnowledgeStore:
 
     def record_embedding_failure(self, chunk_id: str, error: str) -> None:
         self.chunk_errors[chunk_id] = error
+
+    def deactivate_missing_articles(self, active_article_ids: set[str]) -> int:
+        count = 0
+        for article in self.articles.values():
+            if article.is_active and article.article_id not in active_article_ids:
+                article.is_active = False
+                count += 1
+        return count
+
+    def create_escalation(self, question: str, reason: str, request_id: str | None = None) -> dict:
+        import uuid
+        from datetime import datetime, timezone
+
+        row = {
+            "escalation_id": uuid.uuid4().hex,
+            "question": question,
+            "reason": reason,
+            "request_id": request_id,
+            "status": "pending",
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
+            "answers": [],
+        }
+        self.escalations[row["escalation_id"]] = row
+        return dict(row)
+
+    def list_escalations(self, limit: int = 100) -> list[dict]:
+        return list(reversed(list(self.escalations.values())))[0:limit]
+
+    def get_escalation(self, escalation_id: str) -> dict | None:
+        return self.escalations.get(escalation_id)
+
+    def resolve_escalation(self, escalation_id: str, answer: str, reviewer: str, version: int) -> dict:
+        from datetime import datetime, timezone
+
+        row = self.escalations.get(escalation_id)
+        if row is None:
+            raise KeyError(escalation_id)
+        article_id = f"reviewed-escalation-{escalation_id}-v{version}"
+        record = {"version": version, "answer": answer, "reviewer": reviewer, "article_id": article_id,
+                  "created_at": datetime.now(timezone.utc).isoformat()}
+        row["answers"].append(record)
+        row["status"] = "resolved"
+        row["updated_at"] = record["created_at"]
+        return dict(row)
+
+    def start_ingestion_run(self, sitemap_url: str) -> int:
+        run_id = self._next_ingestion_run_id
+        self._next_ingestion_run_id += 1
+        self.ingestion_runs.append({"run_id": run_id, "status": "running", "sitemap_url": sitemap_url})
+        return run_id
+
+    def finish_ingestion_run(self, run_id: int, status: str, source: dict, deactivated: int, error: str | None = None) -> None:
+        row = next(item for item in self.ingestion_runs if item["run_id"] == run_id)
+        row.update(status=status, source=source, articles_deactivated=deactivated, error=error)
+
+    def latest_ingestion_run(self) -> dict | None:
+        return self.ingestion_runs[-1] if self.ingestion_runs else None
 
     def chunks_for_article(self, article_id: str) -> list[ChunkRecord]:
         return [

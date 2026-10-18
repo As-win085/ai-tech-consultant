@@ -38,8 +38,9 @@ def parse_database_url(url: str) -> dict:
     }
 
 
-def connect(database_url: str) -> pg8000.native.Connection:
-    return pg8000.native.Connection(**parse_database_url(database_url))
+def connect(database_url: str, timeout: float = 10.0) -> pg8000.native.Connection:
+    """Connect with a finite socket timeout for startup and request paths."""
+    return pg8000.native.Connection(**parse_database_url(database_url), timeout=timeout)
 
 
 def apply_migrations(

@@ -13,6 +13,7 @@ backoff. Failures raise so callers can return a safe, visible failure instead of
 pretending an answer was produced. No secrets are logged or embedded in errors.
 """
 
+import base64
 import time
 from typing import Callable, Protocol, runtime_checkable
 
@@ -59,6 +60,9 @@ class ChatProvider(Protocol):
     ) -> str:
         ...
 
+    def describe_image(self, image_url: str, context: str = "") -> str:
+        ...
+
 
 class FakeChatProvider:
     """Deterministic chat provider for tests and dry runs.
@@ -98,6 +102,9 @@ class FakeChatProvider:
         if self.responder is not None:
             return self.responder(system, user)
         return self.response
+
+    def describe_image(self, image_url: str, context: str = "") -> str:
+        return "[test double] image description unavailable from fake provider"
 
 
 class _HTTPChatProvider:
@@ -208,6 +215,33 @@ class AnthropicChatProvider(_HTTPChatProvider):
         }
         return self._post("/messages", json=body, headers=headers)
 
+    def describe_image(self, image_url: str, context: str = "") -> str:
+        parsed = httpx.URL(image_url)
+        if parsed.scheme != "https":
+            raise ChatRequestError("vision image URL must use HTTPS")
+        response = httpx.get(image_url, timeout=self.timeout, follow_redirects=False)
+        if response.status_code != 200:
+            raise ChatResponseError(f"vision image fetch failed with HTTP {response.status_code}")
+        response.raise_for_status()
+        if len(response.content) > 5_000_000:
+            raise ChatResponseError("vision image exceeds 5 MB")
+        media_type = response.headers.get("content-type", "image/jpeg").split(";", 1)[0]
+        if media_type not in {"image/jpeg", "image/png", "image/gif", "image/webp"}:
+            raise ChatResponseError("unsupported image type for vision")
+        body = {
+            "model": self.model_name,
+            "max_tokens": self.max_tokens,
+            "system": "Describe only visible, relevant UI details. Do not infer hidden behavior.",
+            "messages": [{"role": "user", "content": [
+                {"type": "text", "text": f"Describe this support image. Context: {context}"},
+                {"type": "image", "source": {"type": "base64", "media_type": media_type, "data": base64.b64encode(response.content).decode("ascii")}},
+            ]}],
+        }
+        return self._post("/messages", json=body, headers={
+            "Content-Type": "application/json", "x-api-key": self.api_key,
+            "anthropic-version": ANTHROPIC_VERSION,
+        })
+
     def _extract(self, payload: object) -> str:
         blocks = payload.get("content") if isinstance(payload, dict) else None
         if not isinstance(blocks, list):
@@ -260,6 +294,24 @@ class OpenAICompatibleChatProvider(_HTTPChatProvider):
             ],
             "max_tokens": int(max_tokens or self.max_tokens),
             "temperature": self.temperature if temperature is None else temperature,
+        }
+        return self._post("/chat/completions", json=body, headers=headers)
+
+    def describe_image(self, image_url: str, context: str = "") -> str:
+        headers = {"Content-Type": "application/json"}
+        if self.api_key:
+            headers["Authorization"] = f"Bearer {self.api_key}"
+        body = {
+            "model": self.model_name,
+            "messages": [
+                {"role": "system", "content": "Describe only visible details. Do not infer hidden behavior."},
+                {"role": "user", "content": [
+                    {"type": "text", "text": f"Describe this support image. Context: {context}"},
+                    {"type": "image_url", "image_url": {"url": image_url}},
+                ]},
+            ],
+            "max_tokens": self.max_tokens,
+            "temperature": 0,
         }
         return self._post("/chat/completions", json=body, headers=headers)
 

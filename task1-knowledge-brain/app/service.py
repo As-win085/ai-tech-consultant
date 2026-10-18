@@ -7,6 +7,7 @@ not ready without crashing the process or leaking secrets.
 """
 
 import uuid
+from datetime import datetime, timezone
 
 from app.answer import AnswerConfig, generate_answer
 from app.chat import ChatError, ChatProvider
@@ -70,7 +71,9 @@ class KnowledgeService:
                     min_score=request.min_score,
                 )
             except IndexModelMismatch as exc:
-                return self._unavailable_answer(request, str(exc), request_id)
+                response = self._unavailable_answer(request, str(exc), request_id)
+                self._record_escalation(store, request, response, request_id)
+                return response
             except EmbeddingError as exc:
                 raise ServiceUnavailable(
                     "embedding_provider",
@@ -83,7 +86,7 @@ class KnowledgeService:
                 else self.retrieval_config.min_score
             )
             try:
-                return generate_answer(
+                response = generate_answer(
                     request,
                     retrieval,
                     self.chat_provider,
@@ -91,11 +94,74 @@ class KnowledgeService:
                     min_score,
                     request_id,
                 )
+                self._record_escalation(store, request, response, request_id)
+                return response
             except ChatError as exc:
                 raise ServiceUnavailable(
                     "chat_provider",
                     f"the chat provider failed: {type(exc).__name__}",
                 ) from exc
+        finally:
+            store.close()
+
+    @staticmethod
+    def _record_escalation(store, request: AskRequest, response: AskResponse, request_id: str) -> None:
+        if not response.needs_escalation and response.evidence_status == "sufficient":
+            return
+        response.needs_escalation = True
+        if not response.escalation_reason:
+            response.escalation_reason = "The available evidence was insufficient or conflicting."
+        escalation = store.create_escalation(
+            request.question, response.escalation_reason, request_id
+        )
+        response.escalation_id = escalation["escalation_id"]
+
+    def list_escalations(self, limit: int = 100) -> list[dict]:
+        store = self._open_store()
+        try:
+            return store.list_escalations(limit)
+        finally:
+            store.close()
+
+    def create_escalation(self, question: str, reason: str) -> dict:
+        store = self._open_store()
+        try:
+            return store.create_escalation(question, reason)
+        finally:
+            store.close()
+
+    def resolve_escalation(self, escalation_id: str, answer: str, reviewer: str) -> dict:
+        if self.embedding_provider is None:
+            raise ServiceUnavailable("embedding_provider", self.embedding_detail)
+        store = self._open_store()
+        try:
+            escalation = store.get_escalation(escalation_id)
+            if escalation is None:
+                raise KeyError(escalation_id)
+            version = 1 + max((item["version"] for item in escalation["answers"]), default=0)
+            from app.crawler import compute_content_hash
+            from app.indexer import IndexConfig, index_document
+
+            article_id = f"reviewed-escalation-{escalation_id}-v{version}"
+            text = f"Question: {escalation['question']}\n\nReviewed answer: {answer.strip()}"
+            article = {
+                "id": article_id,
+                "url": f"https://knowledge-brain.local/escalations/{escalation_id}/v{version}",
+                "canonical_url": f"https://knowledge-brain.local/escalations/{escalation_id}/v{version}",
+                "title": f"Reviewed answer: {escalation['question'][:120]}",
+                "text": text,
+                "headings": [{"level": 1, "text": "Reviewed answer"}],
+                "char_count": len(text),
+                "content_hash": compute_content_hash(text),
+                "fetched_at": datetime.now(timezone.utc).isoformat(),
+                "http_status": 200,
+                "status": "ok",
+                "error": None,
+            }
+            report = index_document(store, self.embedding_provider, {"articles": [article]}, IndexConfig())
+            if report.status != "ok":
+                raise ServiceUnavailable("embedding_provider", "the reviewed answer could not be indexed")
+            return store.resolve_escalation(escalation_id, answer.strip(), reviewer.strip(), version)
         finally:
             store.close()
 

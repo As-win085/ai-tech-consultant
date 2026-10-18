@@ -1,5 +1,6 @@
 import httpx
 import pytest
+import json
 
 from app.chat import (
     AnthropicChatProvider,
@@ -70,6 +71,20 @@ def test_openai_compatible_provider_parses_message_content():
         "llama", base_url="http://localhost:11434/v1", client=make_client(handler)
     )
     assert provider.complete("s", "u") == "hi"
+
+
+def test_openai_compatible_vision_sends_image_url_and_context():
+    seen = {}
+
+    def handler(request):
+        seen.update(json.loads(request.read()))
+        return httpx.Response(200, json={"choices": [{"message": {"content": "A blue save button."}}]})
+
+    provider = OpenAICompatibleChatProvider("vision-model", "https://model.example/v1", client=make_client(handler))
+    assert provider.describe_image("https://support.example/save.png", "Settings page") == "A blue save button."
+    user = seen["messages"][1]["content"]
+    assert user[0]["text"].endswith("Settings page")
+    assert user[1]["image_url"]["url"] == "https://support.example/save.png"
 
 
 def test_provider_retries_retryable_then_succeeds():
