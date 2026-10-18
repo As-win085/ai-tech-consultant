@@ -39,8 +39,9 @@ def build_extraction_user_prompt(transcript: Transcript, *, max_chars: int = 200
         f"Date: {transcript.meeting_date or 'unknown'}",
         "Participants: " + ", ".join(f"{p.name} ({p.side})" for p in transcript.participants),
     ]
-    if transcript.context and transcript.context.notes:
-        lines.append(f"Context: {transcript.context.notes}")
+    context = getattr(transcript, "context", None)
+    if context and getattr(context, "notes", None):
+        lines.append(f"Context: {context.notes}")
     lines.append("")
     lines.append("Segments:")
     text = transcript.combined_text()

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from app.extractor import RuleBasedExtractor, detect_conflicts
+from app.prompt import build_extraction_user_prompt
 from app.schemas import Requirement, SourceRef, utcnow
 from app.transcript import new_transcript
 
@@ -13,6 +14,18 @@ CONSULTANT = {"name": "Sam", "side": "consultant"}
 def _extract(segments):
     t = new_transcript(transcript_id="t1", project_id="p1", participants=[CUSTOMER, CONSULTANT], segments=segments)
     return RuleBasedExtractor().extract(t)
+
+
+def test_llm_prompt_accepts_transcript_without_optional_context():
+    transcript = new_transcript(
+        transcript_id="t1",
+        project_id="p1",
+        participants=[CUSTOMER, CONSULTANT],
+        segments=[{"speaker": "Dana", "text": "We need SAML SSO."}],
+    )
+    prompt = build_extraction_user_prompt(transcript)
+    assert "Segments:" in prompt
+    assert "We need SAML SSO." in prompt
 
 
 def test_explicit_customer_requirement():
