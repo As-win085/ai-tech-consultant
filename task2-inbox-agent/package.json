@@ -14,7 +14,8 @@
     "test:watch": "jest --maxWorkers=2 --watch",
     "test:integration": "jest --runInBand --cacheDirectory ./.jest-cache --testPathPattern=integration",
     "evals": "ts-node evals/runEvals.ts",
-    "evals:holdout": "ts-node evals/runHoldout.ts"
+    "evals:holdout": "ts-node evals/runHoldout.ts",
+    "evals:holdout:rules": "ts-node evals/runHoldoutRules.ts"
   },
   "dependencies": {
     "axios": "^1.7.7",
