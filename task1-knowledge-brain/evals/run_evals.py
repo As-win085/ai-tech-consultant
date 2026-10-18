@@ -24,9 +24,16 @@ Exit code is 0 only when every case passes.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
+import time
+from datetime import datetime, timezone
 from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from app.answer import SYSTEM_PROMPT, AnswerConfig
 from app.chat import build_chat_provider
@@ -37,7 +44,6 @@ from app.schemas import AskRequest, AskResponse
 from app.service import KnowledgeService, ServiceUnavailable, build_default_service
 from app.store import InMemoryKnowledgeStore
 
-ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_CASES = ROOT / "evals" / "cases.json"
 DEFAULT_SAMPLE = ROOT / "data" / "articles-sample.json"
 
@@ -125,14 +131,18 @@ def main() -> int:
     results: list[dict] = []
     passed = 0
     for case in cases:
+        started = time.perf_counter()
+        error = None
         try:
             response = service.ask(AskRequest(question=case["question"]))
             problems = score(case, response)
         except ServiceUnavailable as exc:
             problems = [f"service unavailable ({exc.dependency})"]
+            error = {"type": "ServiceUnavailable", "dependency": exc.dependency}
             response = None
         except Exception as exc:  # noqa: BLE001 - report, never crash the harness
             problems = [f"unexpected error: {type(exc).__name__}"]
+            error = {"type": type(exc).__name__}
             response = None
 
         ok = not problems
@@ -149,6 +159,9 @@ def main() -> int:
                 if response is None
                 else [c.article_id for c in response.citations],
                 "escalate": None if response is None else response.needs_escalation,
+                "elapsed_ms": round((time.perf_counter() - started) * 1000, 2),
+                "error": error,
+                "raw_response": None if response is None else response.model_dump(mode="json"),
             }
         )
 
@@ -164,8 +177,22 @@ def main() -> int:
     total = len(results)
     print(f"\n{passed}/{total} cases passed")
     if args.json_report:
+        case_bytes = args.cases.read_bytes()
+        embedding = getattr(service, "embedding_provider", None)
+        chat = getattr(service, "chat_provider", None)
         args.json_report.write_text(
-            json.dumps({"passed": passed, "total": total, "results": results}, indent=2),
+            json.dumps({
+                "generated_at": datetime.now(timezone.utc).isoformat(),
+                "cases_file": str(args.cases),
+                "cases_sha256": hashlib.sha256(case_bytes).hexdigest(),
+                "store_mode": args.store,
+                "embedding_model": getattr(embedding, "model_name", None),
+                "chat_model": getattr(chat, "model_name", None),
+                "response_source": "actual configured providers for this run; inspect model fields and raw responses",
+                "passed": passed,
+                "total": total,
+                "results": results,
+            }, indent=2),
             encoding="utf-8",
         )
         print(f"wrote report to {args.json_report}")
