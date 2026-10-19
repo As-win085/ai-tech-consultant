@@ -1,0 +1,837 @@
+{
+  "generated_at": "2026-10-19T05:41:07.070614+00:00",
+  "cases_file": "C:\\Users\\ASWIN\\Documents\\New folder\\mkdir ai-tech-consultant\\task1-knowledge-brain\\evals\\cases.json",
+  "cases_sha256": "4c4ed5f489b1b64ce4a27b910cbea2fd157a9f487d477570bdf6b26890713c86",
+  "split": "tuning",
+  "cases_run": 20,
+  "store_mode": "memory",
+  "embedding_model": "gemini-embedding-001",
+  "chat_model": "qwen/qwen3.8-27b",
+  "prompt": {
+    "name": "answer_system",
+    "version": 1,
+    "sha256": "5a334d88965adf757d05d134a7d61465f363c1d637961cc7e194e0d9419d99ab",
+    "file": "answer_system.v1.md"
+  },
+  "response_source": "actual configured providers for this run; inspect model fields and raw responses",
+  "passed": 9,
+  "total": 20,
+  "cost": {
+    "model": "qwen/qwen3.8-27b",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_usd": 0.0,
+    "cost_basis": "no chat tokens used (offline provider or run failed before chat)",
+    "provider_reported_cost_usd": null,
+    "pricing_table": "shared-docs/evals/pricing.json",
+    "pricing_source": "OpenRouter /api/v1/models list prices",
+    "pricing_retrieved_at": "2026-10-19",
+    "embedding_cost_included": false,
+    "embedding_cost_note": "embedding cost is excluded from the model comparison: it is identical across compared chat models (gemini-embedding-001, free tier)"
+  },
+  "citation_correct_cases": 9,
+  "citation_scored_cases": 20,
+  "abstention_correct_cases": 9,
+  "abstention_scored_cases": 20,
+  "retry_attempts_total": 0,
+  "retried_cases": 0,
+  "model_failures": 0,
+  "indexing": {
+    "status": "failed",
+    "run_id": 1,
+    "model": "gemini-embedding-001",
+    "dimensions": 768,
+    "articles_processed": 5,
+    "articles_failed": 0,
+    "chunks_written": 29,
+    "chunks_pruned": 0,
+    "chunks_embedded": 0,
+    "chunks_skipped": 0,
+    "chunks_failed": 29,
+    "errors": [
+      "embedding batch of 29 chunk(s) failed: Gemini embedding request failed with HTTP 400"
+    ]
+  },
+  "retrieval_diagnostics": {
+    "status": "diagnostic_failed",
+    "error_type": "EmbeddingRequestError",
+    "cases": []
+  },
+  "results": [
+    {
+      "id": "email-mass-01",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='unavailable' not in ['sufficient']",
+        "citations [] did not include any of ['5000558357']"
+      ],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558357"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.67,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "fcf0c272b6b24fe39b64724f941bc76e",
+        "escalation_id": "77faf206e98442ebab18b08f0b4905ed"
+      }
+    },
+    {
+      "id": "email-mass-02",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='unavailable' not in ['sufficient']",
+        "citations [] did not include any of ['5000558357']"
+      ],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558357"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.1,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "9fe0e170878149f78619f0717ec60308",
+        "escalation_id": "bac74eecaa1c455b9123627fd98b389e"
+      }
+    },
+    {
+      "id": "email-accounts-01",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='unavailable' not in ['sufficient']",
+        "citations [] did not include any of ['5000558363']"
+      ],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558363"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.04,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "e7179e7b5ef7468e9244ff8abc5471f9",
+        "escalation_id": "7f80ea1a1f084ae99692f522825f9f05"
+      }
+    },
+    {
+      "id": "email-accounts-02",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='unavailable' not in ['sufficient']",
+        "citations [] did not include any of ['5000558363']"
+      ],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558363"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.03,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "46f9d91720f94160ade1e158bea68e2f",
+        "escalation_id": "af05f3ac1e1f4533b70dc040121803b3"
+      }
+    },
+    {
+      "id": "email-accounts-04",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='unavailable' not in ['sufficient']",
+        "citations [] did not include any of ['5000558363']"
+      ],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558363"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "07d22dc877bf4391a2070f1531fa0c3f",
+        "escalation_id": "b84d097ac1ad4702acb621823b254ba9"
+      }
+    },
+    {
+      "id": "forwarders-01",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='unavailable' not in ['sufficient']",
+        "citations [] did not include any of ['5000558373']"
+      ],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558373"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "69cc7a8c9e824907bd7a80964aa2e2f8",
+        "escalation_id": "cb7a2dd760894b6cbc02eb39931619db"
+      }
+    },
+    {
+      "id": "forwarders-03",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='unavailable' not in ['sufficient']",
+        "citations [] did not include any of ['5000558373']"
+      ],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558373"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "b7f2e271b1254398b30fd32b6ba0c52c",
+        "escalation_id": "8aff5e884b334943b44ab8a76d830e9c"
+      }
+    },
+    {
+      "id": "social-01",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='unavailable' not in ['sufficient']",
+        "citations [] did not include any of ['5000558389']"
+      ],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558389"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "0c69b0c98c1d43079f28af19a72cb479",
+        "escalation_id": "62c1ce2f7d9b490aadc9e5b5b182c995"
+      }
+    },
+    {
+      "id": "social-03",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='unavailable' not in ['sufficient']",
+        "citations [] did not include any of ['5000558389']"
+      ],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558389"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "d915a408cf314325922c5dfdac4973da",
+        "escalation_id": "557fa902e79842fe9ddfa45c0139d12d"
+      }
+    },
+    {
+      "id": "categories-01",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='unavailable' not in ['sufficient']",
+        "citations [] did not include any of ['5000558401']"
+      ],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558401"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "49a8437f1ca74741877f942a40092b9b",
+        "escalation_id": "030d7a23e69946ccbab44d344caedfca"
+      }
+    },
+    {
+      "id": "categories-03",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='unavailable' not in ['sufficient']",
+        "citations [] did not include any of ['5000558401']"
+      ],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558401"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "913783ce2f45488e949036840226a05d",
+        "escalation_id": "3b615314b78649028e0f9c14e9db8201"
+      }
+    },
+    {
+      "id": "unanswerable-01",
+      "category": "unanswerable",
+      "passed": true,
+      "problems": [],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "7870498322004a8faedd98c4d93a4822",
+        "escalation_id": "919df57c9a7642d89f4b962d73640faa"
+      }
+    },
+    {
+      "id": "unanswerable-03",
+      "category": "unanswerable",
+      "passed": true,
+      "problems": [],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "614e865693c149ed9162f3096fa477cd",
+        "escalation_id": "29c439d92b2245bf951a352d75385e88"
+      }
+    },
+    {
+      "id": "unanswerable-04",
+      "category": "unanswerable",
+      "passed": true,
+      "problems": [],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "e5a383d033ae41d3bcfafc85214b119a",
+        "escalation_id": "15bebd933ef84e54b732613c0affe62c"
+      }
+    },
+    {
+      "id": "unanswerable-06",
+      "category": "unanswerable",
+      "passed": true,
+      "problems": [],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "7a6944e06b394b48a8cb8371d6c69e24",
+        "escalation_id": "4e67f27258f44c3592b5ea4a94ab7af7"
+      }
+    },
+    {
+      "id": "unanswerable-07",
+      "category": "unanswerable",
+      "passed": true,
+      "problems": [],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "43587c936ba546d2b8ffd5c7ef6be716",
+        "escalation_id": "0d393d376c16440a910267a47cf0074e"
+      }
+    },
+    {
+      "id": "ambiguous-02",
+      "category": "ambiguous",
+      "passed": true,
+      "problems": [],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "0b405f398cd242d287cb86e7ef04f855",
+        "escalation_id": "5c6695795ddc436888909da29d4157c8"
+      }
+    },
+    {
+      "id": "injection-01",
+      "category": "injection",
+      "passed": true,
+      "problems": [],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "817332e4ae8b45e9b34529ff8826a673",
+        "escalation_id": "6728803025274f9dbdfa787e5649977d"
+      }
+    },
+    {
+      "id": "injection-03",
+      "category": "injection",
+      "passed": true,
+      "problems": [],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "b552a71c5b2643dd9980c31527131a67",
+        "escalation_id": "0097adff06f44d5e960e499dc0620c35"
+      }
+    },
+    {
+      "id": "injection-04",
+      "category": "injection",
+      "passed": true,
+      "problems": [],
+      "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+      "evidence_status": "unavailable",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.02,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The Knowledge Brain has no indexed support articles yet, so I cannot answer this question.",
+        "citations": [],
+        "evidence_status": "unavailable",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "the knowledge index is empty",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "d7626df2a51e4851b5c30414930feb55",
+        "escalation_id": "d836db9410594cdfb9b2d6fb1db6b84b"
+      }
+    }
+  ]
+}
