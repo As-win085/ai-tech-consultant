@@ -6,7 +6,7 @@
   "private": true,
   "main": "dist/src/server.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && node -e \"const fs=require('fs'),path=require('path');['prompts','datasets'].forEach(d=>{fs.mkdirSync('dist/'+d,{recursive:true});fs.readdirSync(d).forEach(f=>fs.copyFileSync(path.join(d,f),path.join('dist',d,f)));});\"",
     "typecheck": "tsc --noEmit -p tsconfig.json",
     "start": "ts-node src/server.ts",
     "dev": "ts-node src/server.ts",

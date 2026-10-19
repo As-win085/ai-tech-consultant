@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-19T03:16:43.649991+00:00",
+  "generated_at": "2026-10-19T03:19:34.068898+00:00",
   "evaluation": "Task 3 extraction and feasibility behavior; live llm extractor (anthropic/claude-haiku-4.5); scripted fake Task 1 responses; in-memory persistence",
   "cases_file_sha256": "196f60de22f45f7c1ad1768342c8c471cab6cca5f07956c6badae0a87f1f35cb",
   "split": "tuning",
@@ -28,8 +28,8 @@
   },
   "metrics": {
     "case_pass_rate": 0.9285714285714286,
-    "median_latency_ms": 2010.783,
-    "p95_latency_ms": 2923.212,
+    "median_latency_ms": 1836.039,
+    "p95_latency_ms": 2332.902,
     "model_tokens": {
       "input_tokens": 4932,
       "output_tokens": 1468
@@ -46,7 +46,7 @@
     {
       "id": "req-scale-01",
       "passed": true,
-      "latency_ms": 2923.212,
+      "latency_ms": 1931.177,
       "retry_count": 0,
       "problems": [],
       "input": {
@@ -121,8 +121,8 @@
             "supersedes": null,
             "notes": null,
             "revision": 1,
-            "created_at": "2026-10-19T03:16:18.724811+00:00",
-            "updated_at": "2026-10-19T03:16:18.724847+00:00"
+            "created_at": "2026-10-19T03:19:10.260189+00:00",
+            "updated_at": "2026-10-19T03:19:10.260243+00:00"
           }
         ],
         "assessments": {
@@ -147,7 +147,7 @@
             "kb_model": "scripted-fake",
             "basis": "knowledge base evidence (high confidence)",
             "error": null,
-            "assessed_at": "2026-10-19T03:16:18.725459+00:00"
+            "assessed_at": "2026-10-19T03:19:10.261237+00:00"
           }
         },
         "proposal": {
@@ -248,7 +248,7 @@
             "eval-req-scale-01-R01"
           ],
           "based_on_baseline_version": null,
-          "created_at": "2026-10-19T03:16:18.726961+00:00",
+          "created_at": "2026-10-19T03:19:10.263280+00:00",
           "approved_at": null,
           "approved_by": null
         },
@@ -272,7 +272,7 @@
     {
       "id": "req-sso-02",
       "passed": true,
-      "latency_ms": 2038.039,
+      "latency_ms": 2137.559,
       "retry_count": 0,
       "problems": [],
       "input": {
@@ -345,8 +345,8 @@
             "supersedes": null,
             "notes": null,
             "revision": 1,
-            "created_at": "2026-10-19T03:16:20.766135+00:00",
-            "updated_at": "2026-10-19T03:16:20.766184+00:00"
+            "created_at": "2026-10-19T03:19:12.402193+00:00",
+            "updated_at": "2026-10-19T03:19:12.402233+00:00"
           }
         ],
         "assessments": {
@@ -362,7 +362,7 @@
             "kb_model": "scripted-fake",
             "basis": "knowledge base found no sufficient evidence; docs are silent (not proof of impossibility)",
             "error": null,
-            "assessed_at": "2026-10-19T03:16:20.766606+00:00"
+            "assessed_at": "2026-10-19T03:19:12.402791+00:00"
           }
         },
         "proposal": {
@@ -519,7 +519,7 @@
             "eval-req-sso-02-R01"
           ],
           "based_on_baseline_version": null,
-          "created_at": "2026-10-19T03:16:20.767197+00:00",
+          "created_at": "2026-10-19T03:19:12.403559+00:00",
           "approved_at": null,
           "approved_by": null
         },
@@ -543,7 +543,7 @@
     {
       "id": "req-security-04",
       "passed": true,
-      "latency_ms": 2215.248,
+      "latency_ms": 1985.723,
       "retry_count": 0,
       "problems": [],
       "input": {
@@ -616,8 +616,8 @@
             "supersedes": null,
             "notes": null,
             "revision": 1,
-            "created_at": "2026-10-19T03:16:22.982102+00:00",
-            "updated_at": "2026-10-19T03:16:22.982129+00:00"
+            "created_at": "2026-10-19T03:19:14.388637+00:00",
+            "updated_at": "2026-10-19T03:19:14.388676+00:00"
           }
         ],
         "assessments": {
@@ -633,7 +633,7 @@
             "kb_model": "scripted-fake",
             "basis": "knowledge base reports conflicting evidence",
             "error": null,
-            "assessed_at": "2026-10-19T03:16:22.982511+00:00"
+            "assessed_at": "2026-10-19T03:19:14.389174+00:00"
           }
         },
         "proposal": {
@@ -741,7 +741,7 @@
             "eval-req-security-04-R01"
           ],
           "based_on_baseline_version": null,
-          "created_at": "2026-10-19T03:16:22.982859+00:00",
+          "created_at": "2026-10-19T03:19:14.389808+00:00",
           "approved_at": null,
           "approved_by": null
         },
@@ -767,7 +767,7 @@
     {
       "id": "question-photo-05",
       "passed": true,
-      "latency_ms": 1608.917,
+      "latency_ms": 2095.685,
       "retry_count": 0,
       "problems": [],
       "input": {
@@ -840,8 +840,8 @@
             "supersedes": null,
             "notes": null,
             "revision": 1,
-            "created_at": "2026-10-19T03:16:24.590661+00:00",
-            "updated_at": "2026-10-19T03:16:24.590699+00:00"
+            "created_at": "2026-10-19T03:19:16.484718+00:00",
+            "updated_at": "2026-10-19T03:19:16.484758+00:00"
           }
         ],
         "assessments": {
@@ -857,7 +857,7 @@
             "kb_model": null,
             "basis": "requirement is an open question, assumption, or too vague to assess",
             "error": null,
-            "assessed_at": "2026-10-19T03:16:24.591130+00:00"
+            "assessed_at": "2026-10-19T03:19:16.485279+00:00"
           }
         },
         "proposal": {
@@ -950,7 +950,7 @@
             "eval-question-photo-05-R01"
           ],
           "based_on_baseline_version": null,
-          "created_at": "2026-10-19T03:16:24.591657+00:00",
+          "created_at": "2026-10-19T03:19:16.485798+00:00",
           "approved_at": null,
           "approved_by": null
         },
@@ -974,7 +974,7 @@
     {
       "id": "req-stripe-07",
       "passed": true,
-      "latency_ms": 1656.398,
+      "latency_ms": 1450.659,
       "retry_count": 0,
       "problems": [],
       "input": {
@@ -1047,8 +1047,8 @@
             "supersedes": null,
             "notes": null,
             "revision": 1,
-            "created_at": "2026-10-19T03:16:26.247072+00:00",
-            "updated_at": "2026-10-19T03:16:26.247251+00:00"
+            "created_at": "2026-10-19T03:19:17.935466+00:00",
+            "updated_at": "2026-10-19T03:19:17.935506+00:00"
           }
         ],
         "assessments": {
@@ -1073,7 +1073,7 @@
             "kb_model": "scripted-fake",
             "basis": "knowledge base evidence (high confidence)",
             "error": null,
-            "assessed_at": "2026-10-19T03:16:26.247747+00:00"
+            "assessed_at": "2026-10-19T03:19:17.935953+00:00"
           }
         },
         "proposal": {
@@ -1221,7 +1221,7 @@
             "eval-req-stripe-07-R01"
           ],
           "based_on_baseline_version": null,
-          "created_at": "2026-10-19T03:16:26.248455+00:00",
+          "created_at": "2026-10-19T03:19:17.936754+00:00",
           "approved_at": null,
           "approved_by": null
         },
@@ -1245,7 +1245,7 @@
     {
       "id": "scope-mobile-08",
       "passed": true,
-      "latency_ms": 2502.81,
+      "latency_ms": 1540.211,
       "retry_count": 0,
       "problems": [],
       "input": {
@@ -1318,8 +1318,8 @@
             "supersedes": null,
             "notes": null,
             "revision": 1,
-            "created_at": "2026-10-19T03:16:28.751293+00:00",
-            "updated_at": "2026-10-19T03:16:28.751315+00:00"
+            "created_at": "2026-10-19T03:19:19.476264+00:00",
+            "updated_at": "2026-10-19T03:19:19.476303+00:00"
           }
         ],
         "assessments": {
@@ -1335,7 +1335,7 @@
             "kb_model": "scripted-fake",
             "basis": "knowledge base found no sufficient evidence; docs are silent (not proof of impossibility)",
             "error": null,
-            "assessed_at": "2026-10-19T03:16:28.751556+00:00"
+            "assessed_at": "2026-10-19T03:19:19.476714+00:00"
           }
         },
         "proposal": {
@@ -1443,7 +1443,7 @@
             "eval-scope-mobile-08-R01"
           ],
           "based_on_baseline_version": null,
-          "created_at": "2026-10-19T03:16:28.751891+00:00",
+          "created_at": "2026-10-19T03:19:19.477407+00:00",
           "approved_at": null,
           "approved_by": null
         },
@@ -1467,7 +1467,7 @@
     {
       "id": "constraint-deadline-10",
       "passed": true,
-      "latency_ms": 1983.527,
+      "latency_ms": 1524.04,
       "retry_count": 0,
       "problems": [],
       "input": {
@@ -1542,8 +1542,8 @@
             "supersedes": null,
             "notes": null,
             "revision": 1,
-            "created_at": "2026-10-19T03:16:30.734615+00:00",
-            "updated_at": "2026-10-19T03:16:30.734640+00:00"
+            "created_at": "2026-10-19T03:19:21.000324+00:00",
+            "updated_at": "2026-10-19T03:19:21.000367+00:00"
           }
         ],
         "assessments": {
@@ -1559,7 +1559,7 @@
             "kb_model": null,
             "basis": "knowledge base call failed; no feasibility claim made",
             "error": "KbUnavailable: simulated Task 1 outage",
-            "assessed_at": "2026-10-19T03:16:30.734983+00:00"
+            "assessed_at": "2026-10-19T03:19:21.001045+00:00"
           }
         },
         "proposal": {
@@ -1669,7 +1669,7 @@
             "eval-constraint-deadline-10-R01"
           ],
           "based_on_baseline_version": null,
-          "created_at": "2026-10-19T03:16:30.735559+00:00",
+          "created_at": "2026-10-19T03:19:21.001812+00:00",
           "approved_at": null,
           "approved_by": null
         },
@@ -1693,7 +1693,7 @@
     {
       "id": "duplicate-11",
       "passed": false,
-      "latency_ms": 2272.905,
+      "latency_ms": 1896.267,
       "retry_count": 0,
       "problems": [
         "requirements above maximum 1"
@@ -1774,8 +1774,8 @@
             "supersedes": null,
             "notes": null,
             "revision": 1,
-            "created_at": "2026-10-19T03:16:33.006932+00:00",
-            "updated_at": "2026-10-19T03:16:33.006976+00:00"
+            "created_at": "2026-10-19T03:19:22.896978+00:00",
+            "updated_at": "2026-10-19T03:19:22.897031+00:00"
           },
           {
             "requirement_id": "eval-duplicate-11-R02",
@@ -1810,8 +1810,8 @@
             "supersedes": null,
             "notes": null,
             "revision": 1,
-            "created_at": "2026-10-19T03:16:33.007317+00:00",
-            "updated_at": "2026-10-19T03:16:33.007347+00:00"
+            "created_at": "2026-10-19T03:19:22.897164+00:00",
+            "updated_at": "2026-10-19T03:19:22.897172+00:00"
           }
         ],
         "assessments": {
@@ -1836,7 +1836,7 @@
             "kb_model": "scripted-fake",
             "basis": "knowledge base evidence (high confidence)",
             "error": null,
-            "assessed_at": "2026-10-19T03:16:33.007944+00:00"
+            "assessed_at": "2026-10-19T03:19:22.897700+00:00"
           },
           "eval-duplicate-11-R02": {
             "requirement_id": "eval-duplicate-11-R02",
@@ -1859,7 +1859,7 @@
             "kb_model": "scripted-fake",
             "basis": "knowledge base evidence (high confidence)",
             "error": null,
-            "assessed_at": "2026-10-19T03:16:33.008051+00:00"
+            "assessed_at": "2026-10-19T03:19:22.897828+00:00"
           }
         },
         "proposal": {
@@ -2022,7 +2022,7 @@
             "eval-duplicate-11-R02"
           ],
           "based_on_baseline_version": null,
-          "created_at": "2026-10-19T03:16:33.008723+00:00",
+          "created_at": "2026-10-19T03:19:22.898548+00:00",
           "approved_at": null,
           "approved_by": null
         },
@@ -2046,7 +2046,7 @@
     {
       "id": "no-requirement-13",
       "passed": true,
-      "latency_ms": 1105.441,
+      "latency_ms": 1541.806,
       "retry_count": 0,
       "problems": [],
       "input": {
@@ -2102,7 +2102,7 @@
     {
       "id": "injection-14",
       "passed": true,
-      "latency_ms": 1533.558,
+      "latency_ms": 1553.764,
       "retry_count": 0,
       "problems": [],
       "input": {
@@ -2175,8 +2175,8 @@
             "supersedes": null,
             "notes": null,
             "revision": 1,
-            "created_at": "2026-10-19T03:16:35.647822+00:00",
-            "updated_at": "2026-10-19T03:16:35.647853+00:00"
+            "created_at": "2026-10-19T03:19:25.994032+00:00",
+            "updated_at": "2026-10-19T03:19:25.994066+00:00"
           }
         ],
         "assessments": {
@@ -2201,7 +2201,7 @@
             "kb_model": "scripted-fake",
             "basis": "knowledge base evidence (high confidence)",
             "error": null,
-            "assessed_at": "2026-10-19T03:16:35.648074+00:00"
+            "assessed_at": "2026-10-19T03:19:25.994405+00:00"
           }
         },
         "proposal": {
@@ -2300,7 +2300,7 @@
             "eval-injection-14-R01"
           ],
           "based_on_baseline_version": null,
-          "created_at": "2026-10-19T03:16:35.648381+00:00",
+          "created_at": "2026-10-19T03:19:25.995034+00:00",
           "approved_at": null,
           "approved_by": null
         },
@@ -2324,7 +2324,7 @@
     {
       "id": "retention-16",
       "passed": true,
-      "latency_ms": 1865.871,
+      "latency_ms": 2332.902,
       "retry_count": 0,
       "problems": [],
       "input": {
@@ -2400,8 +2400,8 @@
             "supersedes": null,
             "notes": null,
             "revision": 1,
-            "created_at": "2026-10-19T03:16:37.513162+00:00",
-            "updated_at": "2026-10-19T03:16:37.513191+00:00"
+            "created_at": "2026-10-19T03:19:28.328052+00:00",
+            "updated_at": "2026-10-19T03:19:28.328070+00:00"
           }
         ],
         "assessments": {
@@ -2426,7 +2426,7 @@
             "kb_model": "scripted-fake",
             "basis": "knowledge base evidence (high confidence)",
             "error": null,
-            "assessed_at": "2026-10-19T03:16:37.513646+00:00"
+            "assessed_at": "2026-10-19T03:19:28.328248+00:00"
           }
         },
         "proposal": {
@@ -2528,7 +2528,7 @@
             "eval-retention-16-R01"
           ],
           "based_on_baseline_version": null,
-          "created_at": "2026-10-19T03:16:37.514250+00:00",
+          "created_at": "2026-10-19T03:19:28.328534+00:00",
           "approved_at": null,
           "approved_by": null
         },
@@ -2552,7 +2552,7 @@
     {
       "id": "gdpr-17",
       "passed": true,
-      "latency_ms": 2210.857,
+      "latency_ms": 1640.997,
       "retry_count": 0,
       "problems": [],
       "input": {
@@ -2625,8 +2625,8 @@
             "supersedes": null,
             "notes": null,
             "revision": 1,
-            "created_at": "2026-10-19T03:16:39.725142+00:00",
-            "updated_at": "2026-10-19T03:16:39.725236+00:00"
+            "created_at": "2026-10-19T03:19:29.969419+00:00",
+            "updated_at": "2026-10-19T03:19:29.969435+00:00"
           }
         ],
         "assessments": {
@@ -2651,7 +2651,7 @@
             "kb_model": "scripted-fake",
             "basis": "knowledge base evidence (high confidence)",
             "error": null,
-            "assessed_at": "2026-10-19T03:16:39.725746+00:00"
+            "assessed_at": "2026-10-19T03:19:29.969559+00:00"
           }
         },
         "proposal": {
@@ -2750,7 +2750,7 @@
             "eval-gdpr-17-R01"
           ],
           "based_on_baseline_version": null,
-          "created_at": "2026-10-19T03:16:39.726256+00:00",
+          "created_at": "2026-10-19T03:19:29.969728+00:00",
           "approved_at": null,
           "approved_by": null
         },
@@ -2776,7 +2776,7 @@
     {
       "id": "latency-19",
       "passed": true,
-      "latency_ms": 1581.493,
+      "latency_ms": 2318.896,
       "retry_count": 0,
       "problems": [],
       "input": {
@@ -2851,8 +2851,8 @@
             "supersedes": null,
             "notes": null,
             "revision": 1,
-            "created_at": "2026-10-19T03:16:41.306593+00:00",
-            "updated_at": "2026-10-19T03:16:41.306629+00:00"
+            "created_at": "2026-10-19T03:19:32.287771+00:00",
+            "updated_at": "2026-10-19T03:19:32.287794+00:00"
           }
         ],
         "assessments": {
@@ -2868,7 +2868,7 @@
             "kb_model": null,
             "basis": "knowledge base call failed; no feasibility claim made",
             "error": "KbUnavailable: simulated Task 1 outage",
-            "assessed_at": "2026-10-19T03:16:41.307073+00:00"
+            "assessed_at": "2026-10-19T03:19:32.288160+00:00"
           }
         },
         "proposal": {
@@ -2978,7 +2978,7 @@
             "eval-latency-19-R01"
           ],
           "based_on_baseline_version": null,
-          "created_at": "2026-10-19T03:16:41.307684+00:00",
+          "created_at": "2026-10-19T03:19:32.288546+00:00",
           "approved_at": null,
           "approved_by": null
         },
@@ -3002,7 +3002,7 @@
     {
       "id": "multi-20",
       "passed": true,
-      "latency_ms": 2334.76,
+      "latency_ms": 1775.811,
       "retry_count": 0,
       "problems": [],
       "input": {
@@ -3081,8 +3081,8 @@
             "supersedes": null,
             "notes": null,
             "revision": 1,
-            "created_at": "2026-10-19T03:16:43.642118+00:00",
-            "updated_at": "2026-10-19T03:16:43.642144+00:00"
+            "created_at": "2026-10-19T03:19:34.060439+00:00",
+            "updated_at": "2026-10-19T03:19:34.060552+00:00"
           },
           {
             "requirement_id": "eval-multi-20-R02",
@@ -3117,8 +3117,8 @@
             "supersedes": null,
             "notes": null,
             "revision": 1,
-            "created_at": "2026-10-19T03:16:43.642235+00:00",
-            "updated_at": "2026-10-19T03:16:43.642242+00:00"
+            "created_at": "2026-10-19T03:19:34.060737+00:00",
+            "updated_at": "2026-10-19T03:19:34.060743+00:00"
           }
         ],
         "assessments": {
@@ -3143,7 +3143,7 @@
             "kb_model": "scripted-fake",
             "basis": "knowledge base evidence (high confidence)",
             "error": null,
-            "assessed_at": "2026-10-19T03:16:43.642546+00:00"
+            "assessed_at": "2026-10-19T03:19:34.062047+00:00"
           },
           "eval-multi-20-R02": {
             "requirement_id": "eval-multi-20-R02",
@@ -3166,7 +3166,7 @@
             "kb_model": "scripted-fake",
             "basis": "knowledge base evidence (high confidence)",
             "error": null,
-            "assessed_at": "2026-10-19T03:16:43.642635+00:00"
+            "assessed_at": "2026-10-19T03:19:34.062458+00:00"
           }
         },
         "proposal": {
@@ -3277,7 +3277,7 @@
             "eval-multi-20-R02"
           ],
           "based_on_baseline_version": null,
-          "created_at": "2026-10-19T03:16:43.643054+00:00",
+          "created_at": "2026-10-19T03:19:34.063638+00:00",
           "approved_at": null,
           "approved_by": null
         },
