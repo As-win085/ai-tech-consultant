@@ -4,7 +4,6 @@ import { ApiError } from "@/api/http";
 import { WorkspaceShell } from "@/components/layout/WorkspaceShell";
 import { DashboardView } from "@/features/dashboard/DashboardView";
 import { KnowledgeBrainView } from "@/features/knowledge/KnowledgeBrainView";
-import { InboxAgentView } from "@/features/inbox/InboxAgentView";
 import { MeetingToScopeView } from "@/features/meeting/MeetingToScopeView";
 import { KnowledgeManagementView } from "@/features/kmgmt/KnowledgeManagementView";
 import { EscalationsView } from "@/features/escalations/EscalationsView";
@@ -40,7 +39,7 @@ export function App() {
             <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="/dashboard" element={<DashboardView />} />
             <Route path="/knowledge-brain" element={<KnowledgeBrainView />} />
-            <Route path="/inbox-agent" element={<InboxAgentView />} />
+            <Route path="/inbox-agent" element={<InboxPage />} />
             <Route path="/meeting-to-scope" element={<MeetingToScopeView />} />
             <Route path="/knowledge-management" element={<KnowledgeManagementView />} />
             <Route path="/escalations" element={<EscalationsView />} />

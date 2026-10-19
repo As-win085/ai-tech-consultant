@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Inbox as InboxIcon, RefreshCw, Sparkles } from "lucide-react";
+import { Inbox as InboxIcon, RefreshCw, Settings2, Sparkles, X } from "lucide-react";
 import { inboxApi } from "@/api/inbox";
 import { ApiError } from "@/api/http";
 import { PageHeader } from "@/components/shared/PageHeader";
@@ -75,10 +75,69 @@ export function InboxPage() {
   const kbReachable = ready.data?.knowledgeBrain?.reachable;
   const automation = ready.data?.automation;
 
+  const [showSettings, setShowSettings] = useState(false);
+
+  const stats = useQuery({
+    queryKey: ["inbox", "stats"],
+    queryFn: ({ signal }) => inboxApi.stats(signal),
+    enabled: showSettings,
+  });
+
   const hasFilters = Boolean(filters.search || filters.state || filters.category || filters.urgency);
 
   return (
     <div>
+      {showSettings && (
+        <div className="fixed inset-0 z-50 flex items-start justify-end bg-black/30" onClick={() => setShowSettings(false)}>
+          <div className="m-4 w-80 rounded-xl border border-border bg-card p-5 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="font-semibold">Queue settings</h3>
+              <Button variant="ghost" size="sm" onClick={() => setShowSettings(false)}><X className="size-4" /></Button>
+            </div>
+            {stats.isLoading && <p className="text-sm text-muted-foreground">Loading stats…</p>}
+            {stats.isError && <p className="text-sm text-destructive">Could not load stats.</p>}
+            {stats.data && (
+              <div className="space-y-3 text-sm">
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="rounded-lg border border-border p-3">
+                    <p className="text-xs text-muted-foreground">Total emails</p>
+                    <p className="text-xl font-bold">{stats.data.total}</p>
+                  </div>
+                  <div className="rounded-lg border border-border p-3">
+                    <p className="text-xs text-muted-foreground">Unedited approvals</p>
+                    <p className="text-xl font-bold">{stats.data.automation.consecutiveUneditedApprovals}<span className="text-xs text-muted-foreground">/{stats.data.automation.threshold}</span></p>
+                  </div>
+                </div>
+                <div>
+                  <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">By state</p>
+                  <div className="space-y-1">
+                    {Object.entries(stats.data.byState).map(([state, count]) => (
+                      <div key={state} className="flex justify-between text-xs">
+                        <span className="text-muted-foreground">{state.replace(/_/g, " ")}</span>
+                        <span className="font-medium">{count}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground">By category</p>
+                  <div className="space-y-1">
+                    {Object.entries(stats.data.byCategory).map(([cat, count]) => (
+                      <div key={cat} className="flex justify-between text-xs">
+                        <span className="text-muted-foreground">{cat.replace(/_/g, " ")}</span>
+                        <span className="font-medium">{count}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Automation eligible: <strong>{stats.data.automation.automationEligible ? "Yes" : "No"}</strong>. A human still approves every reply.
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       <PageHeader
         title="Inbox Agent"
         description="Classify customer emails, ground drafts in Knowledge Brain evidence, and approve, edit, reject, or escalate every reply. No email is ever sent automatically."
@@ -87,6 +146,9 @@ export function InboxPage() {
             <ConnectivityBadge online={ready.data ? kbReachable !== false : null} label={kbReachable ? "KB reachable" : ready.data ? "KB unreachable" : "Checking…"} />
             <Button variant="outline" size="sm" onClick={() => list.refetch()} disabled={list.isFetching}>
               <RefreshCw className={list.isFetching ? "size-4 animate-spin" : "size-4"} /> Refresh
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => setShowSettings(true)}>
+              <Settings2 className="size-4" /> Queue settings
             </Button>
           </div>
         }
