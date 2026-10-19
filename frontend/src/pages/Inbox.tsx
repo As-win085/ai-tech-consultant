@@ -73,15 +73,15 @@ export function InboxPage() {
 
   const selected = detail.data ?? null;
   const kbReachable = ready.data?.knowledgeBrain?.reachable;
+  const automation = ready.data?.automation;
 
   // Auto-generate draft when an email with no draft is selected
   useEffect(() => {
-    if (selected && !selected.draft && selected.state === "pending_review" && !draft.isPending) {
-      draft.mutate(selected.id);
+    const item = detail.data;
+    if (item && !item.draft && item.state === "pending_review" && !draft.isPending) {
+      draft.mutate(item.id);
     }
-  }, [selected?.id, selected?.draft, selected?.state]);
-
-  const automation = ready.data?.automation;
+  }, [detail.data?.id, detail.data?.draft, detail.data?.state]);
 
   const [showSettings, setShowSettings] = useState(false);
 
