@@ -1,0 +1,21 @@
+12175a2a91321fd321ae71d631b6c6e4
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const throttle_1 = require("../src/throttle");
+describe('global model request throttle', () => {
+    it('parses Retry-After seconds and preserves provider delays', () => {
+        expect((0, throttle_1.parseRetryAfterMs)('7')).toBe(7000);
+        expect((0, throttle_1.retryDelayMs)(0, 7000)).toBe(7000);
+    });
+    it('serializes concurrent requests', async () => {
+        let active = 0;
+        let maxActive = 0;
+        await Promise.all([1, 2, 3].map(() => (0, throttle_1.withGlobalModelThrottle)(async () => {
+            active++;
+            maxActive = Math.max(maxActive, active);
+            await new Promise((resolve) => setTimeout(resolve, 2));
+            active--;
+        }, 0)));
+        expect(maxActive).toBe(1);
+    });
+});

@@ -81,6 +81,10 @@ class ChatSettings(BaseSettings):
     provider: str = Field(default="gemini", validation_alias=AliasChoices("LLM_PROVIDER", "CHAT_PROVIDER"))
     model: str | None = Field(default=None, validation_alias=AliasChoices("LLM_MODEL", "CHAT_MODEL"))
     api_key: str | None = Field(default=None, validation_alias=AliasChoices("LLM_API_KEY", "CHAT_API_KEY", "ANTHROPIC_API_KEY", "GEMINI_API_KEY"))
+    openrouter_api_key: str | None = Field(default=None, validation_alias="OPENROUTER_API_KEY")
+    groq_api_key: str | None = Field(default=None, validation_alias="GROQ_API_KEY")
+    gemini_api_key: str | None = Field(default=None, validation_alias="GEMINI_API_KEY")
+    anthropic_api_key: str | None = Field(default=None, validation_alias="ANTHROPIC_API_KEY")
     base_url: str | None = Field(default=None, validation_alias=AliasChoices("LLM_BASE_URL", "CHAT_BASE_URL"))
     timeout: float = 60.0
     max_retries: int = 2
@@ -93,8 +97,15 @@ class ChatSettings(BaseSettings):
                 or ("gemini-3.8-flash" if self.provider.lower() in {"gemini", "google"} else None))
 
     def resolved_api_key(self) -> str | None:
-        return (os.environ.get("LLM_API_KEY") or self.api_key
-                or os.environ.get("ANTHROPIC_API_KEY"))
+        provider = (os.environ.get("LLM_PROVIDER") or self.provider).lower()
+        provider_key = {
+            "openrouter": os.environ.get("OPENROUTER_API_KEY") or self.openrouter_api_key,
+            "groq": os.environ.get("GROQ_API_KEY") or self.groq_api_key,
+            "gemini": os.environ.get("GEMINI_API_KEY") or self.gemini_api_key,
+            "google": os.environ.get("GEMINI_API_KEY") or self.gemini_api_key,
+            "anthropic": os.environ.get("ANTHROPIC_API_KEY") or self.anthropic_api_key,
+        }.get(provider)
+        return provider_key or os.environ.get("LLM_API_KEY") or self.api_key
 
     def effective_base_url(self) -> str | None:
         if self.base_url:

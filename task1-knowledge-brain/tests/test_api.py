@@ -1,7 +1,9 @@
 import json
 
+import asyncio
+
+import httpx
 import pytest
-from fastapi.testclient import TestClient
 
 from app.main import app, get_service
 from app.answer import AnswerConfig
@@ -65,7 +67,21 @@ class StubService:
 
 @pytest.fixture
 def client():
-    return TestClient(app, raise_server_exceptions=False)
+    class SyncASGIClient:
+        def request(self, method, url, **kwargs):
+            async def send():
+                transport = httpx.ASGITransport(app=app, raise_app_exceptions=False)
+                async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as session:
+                    return await session.request(method, url, **kwargs)
+            return asyncio.run(send())
+
+        def get(self, url, **kwargs):
+            return self.request("GET", url, **kwargs)
+
+        def post(self, url, **kwargs):
+            return self.request("POST", url, **kwargs)
+
+    return SyncASGIClient()
 
 
 def use_service(client, service):

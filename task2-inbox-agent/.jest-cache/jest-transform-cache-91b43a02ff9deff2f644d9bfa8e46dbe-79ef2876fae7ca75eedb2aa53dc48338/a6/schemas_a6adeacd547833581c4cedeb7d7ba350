@@ -1,0 +1,67 @@
+63ac08a1a049482e7901f7b679931d85
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.ingestRequestSchema = exports.reviewActionSchema = exports.kbAnswerSchema = exports.citationSchema = exports.classificationSchema = exports.datasetSchema = exports.datasetEmailSchema = exports.expectedLabelSchema = exports.emailSchema = void 0;
+const zod_1 = require("zod");
+const types_1 = require("./types");
+exports.emailSchema = zod_1.z.object({
+    id: zod_1.z.string().min(1).max(200).optional(),
+    from: zod_1.z.string().min(1).max(320),
+    to: zod_1.z.array(zod_1.z.string().min(1).max(320)).max(50).optional(),
+    subject: zod_1.z.string().min(1).max(500),
+    body: zod_1.z.string().min(1).max(20000),
+    receivedAt: zod_1.z.string().min(1).optional(),
+    threadId: zod_1.z.string().max(200).nullable().optional(),
+});
+exports.expectedLabelSchema = zod_1.z.object({
+    category: zod_1.z.enum(types_1.CATEGORIES),
+    urgency: zod_1.z.enum(types_1.URGENCIES),
+    riskFlags: zod_1.z.array(zod_1.z.enum(types_1.RISK_FLAGS)).default([]),
+    answerability: zod_1.z.enum(types_1.ANSWERABILITY),
+    escalate: zod_1.z.boolean(),
+    notes: zod_1.z.string().optional(),
+});
+exports.datasetEmailSchema = exports.emailSchema.extend({
+    expected: exports.expectedLabelSchema.optional(),
+});
+exports.datasetSchema = zod_1.z.object({
+    product: zod_1.z.string().optional(),
+    emails: zod_1.z.array(exports.datasetEmailSchema),
+});
+exports.classificationSchema = zod_1.z.object({
+    category: zod_1.z.enum(types_1.CATEGORIES),
+    urgency: zod_1.z.enum(types_1.URGENCIES),
+    ambiguity: zod_1.z.enum(['clear', 'ambiguous']).default('clear'),
+    confidence: zod_1.z.number().min(0).max(1).default(0.5),
+    riskFlags: zod_1.z.array(zod_1.z.enum(types_1.RISK_FLAGS)).default([]),
+    needsEscalation: zod_1.z.boolean().default(false),
+    reasoning: zod_1.z.string().optional(),
+});
+exports.citationSchema = zod_1.z.object({
+    chunk_id: zod_1.z.string(),
+    article_id: zod_1.z.string().nullable().optional(),
+    title: zod_1.z.string().nullable().optional(),
+    canonical_url: zod_1.z.string().nullable().optional(),
+    heading: zod_1.z.string().nullable().optional(),
+    score: zod_1.z.number().nullable().optional(),
+});
+exports.kbAnswerSchema = zod_1.z.object({
+    answer: zod_1.z.string(),
+    citations: zod_1.z.array(exports.citationSchema).default([]),
+    evidence_status: zod_1.z.string(),
+    needs_escalation: zod_1.z.boolean(),
+    escalation_reason: zod_1.z.string().nullable().optional(),
+    request_id: zod_1.z.string(),
+    model: zod_1.z.string().nullable().optional(),
+});
+exports.reviewActionSchema = zod_1.z.object({
+    action: zod_1.z.enum(['approve', 'edit', 'reject', 'escalate']),
+    editedDraft: zod_1.z.string().min(1).max(20000).optional(),
+    rejectionReason: zod_1.z.string().max(2000).optional(),
+    escalationReason: zod_1.z.string().max(2000).optional(),
+    feedback: zod_1.z.string().max(2000).optional(),
+    reviewerId: zod_1.z.string().max(200).optional(),
+});
+exports.ingestRequestSchema = zod_1.z.object({
+    emails: zod_1.z.array(exports.emailSchema).min(1).max(500),
+});

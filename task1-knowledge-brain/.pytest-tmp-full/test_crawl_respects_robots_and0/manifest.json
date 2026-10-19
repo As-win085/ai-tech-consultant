@@ -1,0 +1,36 @@
+{
+  "sitemap_url": "https://support.brilliantdirectories.com/sitemap.xml",
+  "articles": [
+    {
+      "id": "11",
+      "url": "https://support.brilliantdirectories.com/support/solutions/articles/11-image",
+      "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/11-image",
+      "title": "T",
+      "text": "T\nFirst Heading\nPage body.\nSub Heading\nMore detail.",
+      "headings": [
+        {
+          "level": 1,
+          "text": "T"
+        },
+        {
+          "level": 2,
+          "text": "First Heading"
+        },
+        {
+          "level": 3,
+          "text": "Sub Heading"
+        }
+      ],
+      "images": [],
+      "char_count": 51,
+      "content_hash": "f50ccaa052e3682d246d23741b85e91976e4fe061ccf7d003267ec35801081f6",
+      "last_modified": "2026-01-01",
+      "change_frequency": null,
+      "priority": null,
+      "fetched_at": "2026-10-18T07:52:10.246075+00:00",
+      "http_status": 200,
+      "status": "ok",
+      "error": null
+    }
+  ]
+}

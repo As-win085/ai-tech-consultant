@@ -1,0 +1,65 @@
+da8d9f4f2745a42315f33a007c85f49e
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.InvalidTransitionError = void 0;
+exports.applyReviewAction = applyReviewAction;
+exports.evaluateAutomationExclusion = evaluateAutomationExclusion;
+class InvalidTransitionError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = 'InvalidTransitionError';
+    }
+}
+exports.InvalidTransitionError = InvalidTransitionError;
+const ALLOWED_TRANSITIONS = {
+    pending_review: ['approve', 'edit', 'reject', 'escalate'],
+    approved: [],
+    edited_and_approved: [],
+    rejected: [],
+    escalated: [],
+};
+function applyReviewAction(current, action) {
+    if (!ALLOWED_TRANSITIONS[current].includes(action)) {
+        throw new InvalidTransitionError(`Action "${action}" is not valid from state "${current}"`);
+    }
+    switch (action) {
+        case 'approve':
+            return 'approved';
+        case 'edit':
+            return 'edited_and_approved';
+        case 'reject':
+            return 'rejected';
+        case 'escalate':
+            return 'escalated';
+    }
+}
+const DEFAULT_MIN_CONFIDENCE = 0.6;
+function evaluateAutomationExclusion(classification, draft, minConfidence = DEFAULT_MIN_CONFIDENCE) {
+    const reasons = [];
+    if (classification.riskFlags.length > 0) {
+        reasons.push(`risk flags present: ${classification.riskFlags.join(', ')}`);
+    }
+    if (classification.category === 'billing_account')
+        reasons.push('billing/account category');
+    if (classification.category === 'complaint')
+        reasons.push('complaint category');
+    if (classification.category === 'unsupported_unclear')
+        reasons.push('unsupported/unclear category');
+    if (classification.ambiguity === 'ambiguous')
+        reasons.push('ambiguous request');
+    if (classification.confidence < minConfidence)
+        reasons.push(`low confidence (${classification.confidence})`);
+    if (classification.needsEscalation)
+        reasons.push('classification flagged for escalation');
+    if (!draft)
+        reasons.push('no draft available');
+    else {
+        if (!draft.grounded)
+            reasons.push('draft not grounded in evidence');
+        if (!draft.citations || draft.citations.length === 0)
+            reasons.push('draft has no citations');
+        if (draft.kbEvidenceStatus !== 'sufficient')
+            reasons.push(`inadequate evidence (${draft.kbEvidenceStatus})`);
+    }
+    return { excluded: reasons.length > 0, reasons };
+}

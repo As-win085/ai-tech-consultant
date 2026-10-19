@@ -1,0 +1,85 @@
+{
+  "source": {
+    "sitemap_url": "https://support.brilliantdirectories.com/sitemap.xml",
+    "site": "support.brilliantdirectories.com",
+    "crawled_at": "2026-10-18T07:52:10.235417+00:00",
+    "article_urls_found": 5,
+    "articles_crawled": 2,
+    "articles_ok": 2,
+    "articles_failed": 0,
+    "articles_skipped": 0,
+    "article_ids_in_sitemap": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5"
+    ],
+    "vision_described": 0,
+    "vision_failed": 0
+  },
+  "articles": [
+    {
+      "id": "1",
+      "url": "https://support.brilliantdirectories.com/support/solutions/articles/1-x1",
+      "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/1-x1",
+      "title": "T",
+      "text": "T\nFirst Heading\nbody\nSub Heading\nMore detail.",
+      "headings": [
+        {
+          "level": 1,
+          "text": "T"
+        },
+        {
+          "level": 2,
+          "text": "First Heading"
+        },
+        {
+          "level": 3,
+          "text": "Sub Heading"
+        }
+      ],
+      "images": [],
+      "char_count": 45,
+      "content_hash": "c96dddb4a11e3e5bc09276eb3bab890fe364b8e86ef608c77c4745d2fb0a7f27",
+      "last_modified": null,
+      "change_frequency": null,
+      "priority": null,
+      "fetched_at": "2026-10-18T07:52:10.234640+00:00",
+      "http_status": 200,
+      "status": "ok",
+      "error": null
+    },
+    {
+      "id": "2",
+      "url": "https://support.brilliantdirectories.com/support/solutions/articles/2-x2",
+      "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/2-x2",
+      "title": "T",
+      "text": "T\nFirst Heading\nbody\nSub Heading\nMore detail.",
+      "headings": [
+        {
+          "level": 1,
+          "text": "T"
+        },
+        {
+          "level": 2,
+          "text": "First Heading"
+        },
+        {
+          "level": 3,
+          "text": "Sub Heading"
+        }
+      ],
+      "images": [],
+      "char_count": 45,
+      "content_hash": "c96dddb4a11e3e5bc09276eb3bab890fe364b8e86ef608c77c4745d2fb0a7f27",
+      "last_modified": null,
+      "change_frequency": null,
+      "priority": null,
+      "fetched_at": "2026-10-18T07:52:10.235408+00:00",
+      "http_status": 200,
+      "status": "ok",
+      "error": null
+    }
+  ]
+}
