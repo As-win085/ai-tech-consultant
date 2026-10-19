@@ -185,7 +185,7 @@ async function start(): Promise<void> {
     }
   }
 
-  await app.listen({ port: config.port, host: '0.0.0.0' });
+  await app.listen({ port: config.port, host: '::' });
   app.log.info({ port: config.port, store: storeKind, classifier: config.classifier }, 'inbox-agent started');
 }
 

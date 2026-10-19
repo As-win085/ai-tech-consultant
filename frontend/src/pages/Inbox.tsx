@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Inbox as InboxIcon, RefreshCw, Settings2, Sparkles, X } from "lucide-react";
 import { inboxApi } from "@/api/inbox";
@@ -48,6 +48,18 @@ export function InboxPage() {
       queryClient.invalidateQueries({ queryKey: ["inbox", "list"] });
     },
   });
+
+  // Auto-generate draft when an email with no draft is selected
+  useEffect(() => {
+    if (
+      selected &&
+      !selected.draft &&
+      selected.state === "pending_review" &&
+      !draft.isPending
+    ) {
+      draft.mutate(selected.id);
+    }
+  }, [selected?.id, selected?.draft, selected?.state]);
 
   const review = useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: ReviewActionPayload }) => inboxApi.review(id, payload),

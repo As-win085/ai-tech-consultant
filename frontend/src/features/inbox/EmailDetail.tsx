@@ -282,12 +282,12 @@ export function EmailDetail({
             </>
           )}
 
-          {item.automationExcluded && (
+          {item.automationExcluded && item.draft && (
             <Alert variant="info">
               <ShieldAlert />
               <AlertTitle>Excluded from automation eligibility</AlertTitle>
               <AlertDescription>
-                {item.automationExclusionReasons.join("; ") || "Configured safety exclusion."}
+                {item.automationExclusionReasons.filter((r) => r !== "no draft available").join("; ") || "Configured safety exclusion."}
               </AlertDescription>
             </Alert>
           )}
