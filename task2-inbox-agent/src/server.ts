@@ -21,7 +21,9 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
     logger: config.logLevel === 'silent' ? false : { level: config.logLevel },
   });
 
-  const corsOrigins = new Set(['http://localhost:5173', 'http://127.0.0.1:5173']);
+  const rawOrigins = process.env.ALLOWED_ORIGINS ?? '';
+  const extraOrigins = rawOrigins.split(',').map((o) => o.trim()).filter(Boolean);
+  const corsOrigins = new Set(['http://localhost:5173', 'http://127.0.0.1:5173', ...extraOrigins]);
   app.addHook('onRequest', (request, reply, done) => {
     const origin = request.headers.origin;
     if (origin && corsOrigins.has(origin)) {
