@@ -8,6 +8,7 @@ import { KnowledgeBrainError } from '../src/kbClient';
 import { loadConfig } from '../src/config';
 import { CATEGORIES, Category, Classification, Email, KbAnswer } from '../src/types';
 import { MockKbClient } from '../tests/helpers';
+import { loadPricing, priceCost } from './pricing';
 
 interface ClassificationCase {
   id: string;
@@ -81,6 +82,20 @@ function makeKbResponse(kb: Record<string, unknown>): KbAnswer {
   };
 }
 
+const usageTotals = { input_tokens: 0, output_tokens: 0 };
+
+function capturingFetch(): typeof fetch {
+  return (async (input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
+    const response = await fetch(input, init);
+    try {
+      const body = await response.clone().json() as { usage?: { input_tokens?: unknown; output_tokens?: unknown; prompt_tokens?: unknown; completion_tokens?: unknown } };
+      usageTotals.input_tokens += Number(body?.usage?.input_tokens ?? body?.usage?.prompt_tokens ?? 0);
+      usageTotals.output_tokens += Number(body?.usage?.output_tokens ?? body?.usage?.completion_tokens ?? 0);
+    } catch { /* non-JSON response; classifier handles status and fallback */ }
+    return response;
+  }) as typeof fetch;
+}
+
 function selectClassifier(): Classifier {
   if (!useLlm) return new RuleBasedClassifier();
   const config = loadConfig();
@@ -91,6 +106,7 @@ function selectClassifier(): Classifier {
     apiKey: config.llmApiKey,
     timeoutMs: config.llmTimeoutMs,
     retries: config.llmRetries,
+    fetchImpl: capturingFetch(),
   });
 }
 
@@ -289,6 +305,20 @@ async function main() {
   const allPass = Object.values(checks).every((c) => c.pass);
   report.passed = allPass;
 
+  const llmModel = useLlm ? loadConfig().llmModel : null;
+  const pricing = loadPricing();
+  const { costUsd, basis } = priceCost(pricing, llmModel, usageTotals.input_tokens, usageTotals.output_tokens);
+  report.cost = {
+    model: llmModel,
+    input_tokens: usageTotals.input_tokens,
+    output_tokens: usageTotals.output_tokens,
+    cost_usd: costUsd,
+    cost_basis: basis,
+    pricing_table: 'shared-docs/evals/pricing.json',
+    pricing_source: pricing?.source ?? null,
+    pricing_retrieved_at: pricing?.retrieved_at ?? null,
+  };
+
   const slug = useLlm ? 'llm' : 'rules';
   writeFileSync(resolve(__dirname, 'report.json'), JSON.stringify(report, null, 2));
   writeFileSync(resolve(__dirname, `report-${slug}.json`), JSON.stringify(report, null, 2));
@@ -297,6 +327,7 @@ async function main() {
     console.log(JSON.stringify(report, null, 2));
   } else {
     console.log(`Task 2 evals — classifier=${classifier.name}`);
+    console.log(`cost: model=${llmModel ?? 'n/a'} input_tokens=${usageTotals.input_tokens} output_tokens=${usageTotals.output_tokens} cost_usd=${costUsd}`);
     console.log(`classification: ${JSON.stringify(report.classification)}`);
     console.log(`drafts: ${report.drafts && (report.drafts as { passed: number }).passed}/${(report.drafts as { cases: number }).cases} passed`);
     console.log(`safety:  ${(report.safety as { passed: number }).passed}/${(report.safety as { cases: number }).cases} passed`);

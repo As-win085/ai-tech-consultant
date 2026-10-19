@@ -5,6 +5,7 @@ import { performance } from 'node:perf_hooks';
 import * as dotenv from 'dotenv';
 import { LlmClassifier } from '../src/classifier';
 import { Email } from '../src/types';
+import { loadPricing, priceCost } from './pricing';
 
 dotenv.config();
 
@@ -13,8 +14,8 @@ const DATA = path.resolve(__dirname, '../datasets/holdout-20.json');
 const OUTPUT = path.resolve(__dirname, 'reports');
 const PROVIDER = (process.env.LLM_PROVIDER ?? 'gemini').toLowerCase();
 const MODELS = [
-  { id: process.env.EVAL_MODEL_CHEAP ?? 'gemini-3.1-flash-lite', label: 'Lower-cost model', inputPerMillion: 0.25, outputPerMillion: 1.50 },
-  { id: process.env.EVAL_MODEL_STRONG ?? 'gemini-3.8-flash', label: 'Stronger model', inputPerMillion: 0.75, outputPerMillion: 3.75 },
+  { id: process.env.EVAL_MODEL_CHEAP ?? 'gemini-3.1-flash-lite', label: 'Lower-cost model' },
+  { id: process.env.EVAL_MODEL_STRONG ?? 'gemini-3.8-flash', label: 'Stronger model' },
 ];
 const BASE_URLS: Record<string, string> = {
   gemini: 'https://generativelanguage.googleapis.com/v1beta/openai',
@@ -188,9 +189,8 @@ async function main(): Promise<void> {
     const fn = results.filter((r) => !r.classification.needsEscalation && r.expected.needsEscalation).length;
     const inputTokens = results.reduce((sum, row) => sum + row.usage.input_tokens, 0);
     const outputTokens = results.reduce((sum, row) => sum + row.usage.output_tokens, 0);
-    const totalCost = PROVIDER === 'gemini'
-      ? (inputTokens * model.inputPerMillion + outputTokens * model.outputPerMillion) / 1_000_000
-      : null;
+    const pricing = loadPricing();
+    const { costUsd: totalCost, basis: costBasis } = priceCost(pricing, model.id, inputTokens, outputTokens);
     const failureCount = results.filter((row) => row.classification.fallback).length;
     const retryCount = results.filter((row) => row.did_retry).length;
     const latencies = results.map((row) => row.elapsed_ms);
@@ -210,9 +210,10 @@ async function main(): Promise<void> {
         http_failures: results.reduce((sum, row) => sum + row.failed_http_responses, 0),
         transport_failures: results.reduce((sum, row) => sum + row.transport_failures, 0),
         input_tokens: inputTokens, output_tokens: outputTokens, estimated_cost_usd: totalCost,
-        cost_basis: PROVIDER === 'gemini'
-          ? `Published Gemini paid-tier list rates (USD/MTok): input $${model.inputPerMillion}, output $${model.outputPerMillion}; estimated from provider-reported usage, not an invoice. Eligible free-tier usage may have zero billed cost.`
-          : 'Not estimated: provider/model pricing metadata was not captured for this run.'
+        cost_basis: costBasis,
+        pricing_table: 'shared-docs/evals/pricing.json',
+        pricing_source: pricing?.source ?? null,
+        pricing_retrieved_at: pricing?.retrieved_at ?? null,
       }, results,
     };
     const target = path.join(OUTPUT, reportFileName(model.id));
@@ -224,8 +225,8 @@ async function main(): Promise<void> {
     if (modelsToRun.includes(model)) continue;
     if (model.id === 'gemini-3.8-flash') {
       comparisonRows.push({
-        model: model.id, source: 'not evaluated: Gemini free-tier quota exhausted',
-        status: 'not evaluated: quota exhausted', category_accuracy: null, category_macro_f1: null,
+        model: model.id, source: 'not selected for this run',
+        status: 'not evaluated in this run', category_accuracy: null, category_macro_f1: null,
         urgency_accuracy: null, escalation_precision: null, escalation_recall: null,
         median_latency_ms: null, p95_latency_ms: null, estimated_cost_usd: null,
         failures: null, failure_rate: null, retried_cases: null, retry_rate: null,
@@ -251,7 +252,7 @@ async function main(): Promise<void> {
   const comparisonPath = path.join(OUTPUT, 'comparison-holdout-20.json');
   fs.writeFileSync(comparisonPath, JSON.stringify({
     generated_at: new Date().toISOString(), dataset_sha256: createHash('sha256').update(bytes).digest('hex'),
-    note: 'Provider/model selection is from this run. Gemini 3.8 Flash was not evaluated in this run because its free-tier daily quota was exhausted. Set LLM_PROVIDER, LLM_BASE_URL, provider-specific key (OPENROUTER_API_KEY or GROQ_API_KEY), EVAL_MODEL_CHEAP and EVAL_MODEL_STRONG to select provider/models. Rule latency is local and not comparable to network latency. Partial reruns merge only named cases with earlier raw case results.', rows: comparisonRows,
+    note: 'Provider/model selection, pricing source, and costs are from this run. Pricing comes from shared-docs/evals/pricing.json (constant table with source and retrieval date). Set LLM_PROVIDER, LLM_BASE_URL, provider-specific key (OPENROUTER_API_KEY or GROQ_API_KEY), EVAL_MODEL_CHEAP and EVAL_MODEL_STRONG to select provider/models. Rule latency is local and not comparable to network latency. Partial reruns merge only named cases with earlier raw case results.', rows: comparisonRows,
   }, null, 2));
   console.log('\nModel comparison (20 fixed synthetic emails)');
   console.log('| Model | Source | Category acc. | Macro-F1 | Urgency acc. | Escalation P/R | Median / p95 ms | Cost USD | Failure / retry rate |');

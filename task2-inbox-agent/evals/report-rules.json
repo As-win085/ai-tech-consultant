@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-17T20:00:41.045Z",
+  "generatedAt": "2026-10-19T01:29:11.143Z",
   "classifier": "rules",
   "host": {
     "platform": "win32",
@@ -137,5 +137,15 @@
       "pass": true
     }
   },
-  "passed": true
+  "passed": true,
+  "cost": {
+    "model": null,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_usd": 0,
+    "cost_basis": "no chat tokens used (offline provider or run failed before chat)",
+    "pricing_table": "shared-docs/evals/pricing.json",
+    "pricing_source": "OpenRouter /api/v1/models list prices",
+    "pricing_retrieved_at": "2026-10-19"
+  }
 }
