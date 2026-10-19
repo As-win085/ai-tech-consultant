@@ -1,0 +1,20 @@
+{
+  "source": "OpenRouter /api/v1/models list prices",
+  "source_url": "https://openrouter.ai/api/v1/models",
+  "retrieved_at": "2026-10-19",
+  "currency": "USD",
+  "unit": "per_1M_tokens",
+  "note": "Cost basis for all eval cost fields: tokens x this table (provider-reported usage.cost recorded separately when available). Embedding cost excluded from model comparison because it is identical across compared chat models (gemini-embedding-001, free tier).",
+  "models": {
+    "anthropic/claude-haiku-4.5": {
+      "label": "cheap",
+      "input": 1.0,
+      "output": 5.0
+    },
+    "anthropic/claude-sonnet-4.6": {
+      "label": "strong",
+      "input": 3.0,
+      "output": 15.0
+    }
+  }
+}
