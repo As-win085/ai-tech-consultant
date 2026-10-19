@@ -67,6 +67,14 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
       status = 400;
       code = 'invalid_request';
       message = error.message;
+    } else if (error.message && /no draft generated yet/.test(error.message)) {
+      status = 409;
+      code = 'no_draft';
+      message = 'A draft must be generated before reviewing this item.';
+    } else if (error.message && /cannot review/.test(error.message)) {
+      status = 409;
+      code = 'review_precondition_failed';
+      message = error.message;
     } else if (typeof (error as { statusCode?: number }).statusCode === 'number') {
       const sc = (error as { statusCode?: number }).statusCode as number;
       if (sc >= 400 && sc < 500) {
