@@ -209,58 +209,74 @@ def main() -> int:
     cases = select_split(data["cases"], args.split)
     settings = Settings(extractor=args.extractor)
     extractor = build_extractor(settings)
-    results = [run_case(case, extractor, settings) for case in cases]
-    passed = sum(result["passed"] for result in results)
-    provider = getattr(extractor, "provider", None)
-    if args.extractor == "llm":
-        mode_text = f"live llm extractor ({getattr(provider, 'model_name', None)})"
-        provider_mode = (
-            f"llm extractor via {getattr(provider, 'model_name', None)}; "
-            "scripted Task 1 mock for feasibility; in-memory persistence"
+    try:
+        results = [run_case(case, extractor, settings) for case in cases]
+        passed = sum(result["passed"] for result in results)
+        provider = getattr(extractor, "provider", None)
+        if args.extractor == "llm":
+            mode_text = f"live llm extractor ({getattr(provider, 'model_name', None)})"
+            provider_mode = (
+                f"llm extractor via {getattr(provider, 'model_name', None)}; "
+                "scripted Task 1 mock for feasibility; in-memory persistence"
+            )
+            harness_mode = "live llm extraction"
+        else:
+            mode_text = "deterministic rules extractor"
+            provider_mode = "deterministic rules extractor + scripted Task 1 mock; zero live model calls"
+            harness_mode = "mock/offline"
+        pricing = load_pricing()
+        run_cost = cost_block(extractor, pricing)
+        report = {
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "evaluation": f"Task 3 extraction and feasibility behavior; {mode_text}; scripted fake Task 1 responses; in-memory persistence",
+            "cases_file_sha256": hashlib.sha256(case_bytes).hexdigest(),
+            "split": args.split,
+            "extractor": args.extractor,
+            "cases_run": len(results),
+            "passed": passed,
+            "total": len(results),
+            "cost": run_cost,
+            "metrics": {
+                "case_pass_rate": passed / len(results) if results else 0,
+                "median_latency_ms": statistics.median(r["latency_ms"] for r in results) if results else None,
+                "p95_latency_ms": sorted(r["latency_ms"] for r in results)[max(0, math.ceil(len(results) * .95) - 1)] if results else None,
+                "model_tokens": {"input_tokens": run_cost["input_tokens"], "output_tokens": run_cost["output_tokens"]},
+                "retry_count": sum(r["retry_count"] for r in results),
+                "failure_causes": {result["id"]: "; ".join(result["problems"]) for result in results if not result["passed"]},
+                "harness_mode": harness_mode,
+                "failures": len(results) - passed,
+                "provider_mode": provider_mode,
+            },
+            "results": results,
+        }
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
+        for result in results:
+            print(f"{'PASS' if result['passed'] else 'FAIL'} {result['id']}")
+            for problem in result["problems"]:
+                print(f"  - {problem}")
+        print(
+            f"{passed}/{len(results)} cases passed; "
+            f"cost_usd={run_cost['cost_usd']} "
+            f"(input_tokens={run_cost['input_tokens']}, output_tokens={run_cost['output_tokens']}); "
+            f"raw results: {args.report}"
         )
-        harness_mode = "live llm extraction"
-    else:
-        mode_text = "deterministic rules extractor"
-        provider_mode = "deterministic rules extractor + scripted Task 1 mock; zero live model calls"
-        harness_mode = "mock/offline"
-    pricing = load_pricing()
-    run_cost = cost_block(extractor, pricing)
-    report = {
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "evaluation": f"Task 3 extraction and feasibility behavior; {mode_text}; scripted fake Task 1 responses; in-memory persistence",
-        "cases_file_sha256": hashlib.sha256(case_bytes).hexdigest(),
-        "split": args.split,
-        "extractor": args.extractor,
-        "cases_run": len(results),
-        "passed": passed,
-        "total": len(results),
-        "cost": run_cost,
-        "metrics": {
-            "case_pass_rate": passed / len(results) if results else 0,
-            "median_latency_ms": statistics.median(r["latency_ms"] for r in results) if results else None,
-            "p95_latency_ms": sorted(r["latency_ms"] for r in results)[max(0, math.ceil(len(results) * .95) - 1)] if results else None,
-            "model_tokens": {"input_tokens": run_cost["input_tokens"], "output_tokens": run_cost["output_tokens"]},
-            "retry_count": sum(r["retry_count"] for r in results),
-            "failure_causes": {result["id"]: "; ".join(result["problems"]) for result in results if not result["passed"]},
-            "harness_mode": harness_mode,
-            "failures": len(results) - passed,
-            "provider_mode": provider_mode,
-        },
-        "results": results,
-    }
-    args.report.parent.mkdir(parents=True, exist_ok=True)
-    args.report.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
-    for result in results:
-        print(f"{'PASS' if result['passed'] else 'FAIL'} {result['id']}")
-        for problem in result["problems"]:
-            print(f"  - {problem}")
-    print(
-        f"{passed}/{len(results)} cases passed; "
-        f"cost_usd={run_cost['cost_usd']} "
-        f"(input_tokens={run_cost['input_tokens']}, output_tokens={run_cost['output_tokens']}); "
-        f"raw results: {args.report}"
-    )
-    return 0 if passed == len(results) else 1
+        return 0 if passed == len(results) else 1
+    except Exception as exc:
+        report = {
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "split": args.split,
+            "extractor": args.extractor,
+            "cases_file": str(args.cases),
+            "passed": None,
+            "total": len(cases) if "cases" in locals() else None,
+            "error": str(exc),
+            "cost": {"cost_usd": None, "input_tokens": 0, "output_tokens": 0, "cost_basis": "harness crash"},
+        }
+        args.report.parent.mkdir(parents=True, exist_ok=True)
+        args.report.write_text(json.dumps(report, indent=2), encoding="utf-8")
+        print(f"eval crashed: {exc}")
+        return 2
 
 
 if __name__ == "__main__":
