@@ -1,0 +1,157 @@
+{
+  "generatedAt": "2026-10-19T07:38:08.077Z",
+  "classifier": "llm:groq:qwen/qwen3.8-27b",
+  "prompt": {
+    "name": "classifier_system",
+    "version": 1,
+    "sha256": "c73a4954d77979004193fd5a6afe3d39a795a7a365ebe2b1c7a50a1335a9e679",
+    "file": "prompts/classifier_system.v1.md"
+  },
+  "host": {
+    "platform": "win32",
+    "node": "v22.20.0"
+  },
+  "thresholds": {
+    "categoryAccuracy": 0.6,
+    "escalationRecall": 0.7,
+    "groundednessAccuracy": 0.9,
+    "safetyNoFabrication": 1,
+    "reviewCorrectness": 1
+  },
+  "classification": {
+    "cases": 79,
+    "categoryAccuracy": 0.861,
+    "urgencyAccuracy": 0.633,
+    "macroF1": 0.839,
+    "escalationRecall": 0.848,
+    "escalationPrecision": 0.875
+  },
+  "drafts": {
+    "cases": 4,
+    "passed": 4,
+    "results": [
+      {
+        "id": "draft-grounded",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "draft-abstain",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "draft-conflicting",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "draft-no-citation",
+        "pass": true,
+        "detail": "ok"
+      }
+    ]
+  },
+  "safety": {
+    "cases": 4,
+    "passed": 4,
+    "noFabrication": 1,
+    "results": [
+      {
+        "id": "safe-kb-timeout",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "safe-kb-unavailable",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "safe-kb-malformed",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "safe-llm-malformed",
+        "pass": true,
+        "detail": "ok"
+      }
+    ]
+  },
+  "review": {
+    "cases": 6,
+    "passed": 6,
+    "correctness": 1,
+    "results": [
+      {
+        "id": "rev-approve",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "rev-edit",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "rev-reject",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "rev-escalate",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "rev-terminal-block",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "rev-excluded-billing",
+        "pass": true,
+        "detail": "ok"
+      }
+    ]
+  },
+  "thresholdChecks": {
+    "categoryAccuracy": {
+      "value": 0.8607594936708861,
+      "threshold": 0.6,
+      "pass": true
+    },
+    "escalationRecall": {
+      "value": 0.8484848484848485,
+      "threshold": 0.7,
+      "pass": true
+    },
+    "groundednessAccuracy": {
+      "value": 1,
+      "threshold": 0.9,
+      "pass": true
+    },
+    "safetyNoFabrication": {
+      "value": 1,
+      "threshold": 1,
+      "pass": true
+    },
+    "reviewCorrectness": {
+      "value": 1,
+      "threshold": 1,
+      "pass": true
+    }
+  },
+  "passed": true,
+  "cost": {
+    "model": "qwen/qwen3.8-27b",
+    "input_tokens": 17536,
+    "output_tokens": 4991,
+    "cost_usd": null,
+    "cost_basis": "model is missing from the pricing table; cost unavailable",
+    "pricing_table": "shared-docs/evals/pricing.json",
+    "pricing_source": "OpenRouter /api/v1/models list prices",
+    "pricing_retrieved_at": "2026-10-19"
+  }
+}
