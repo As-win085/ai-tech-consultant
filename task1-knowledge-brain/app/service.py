@@ -77,7 +77,7 @@ class KnowledgeService:
             except EmbeddingError as exc:
                 raise ServiceUnavailable(
                     "embedding_provider",
-                    f"the embedding provider failed: {type(exc).__name__}",
+                    f"the embedding provider failed: {type(exc).__name__}: {exc}",
                 ) from exc
 
             min_score = (
@@ -99,7 +99,7 @@ class KnowledgeService:
             except ChatError as exc:
                 raise ServiceUnavailable(
                     "chat_provider",
-                    f"the chat provider failed: {type(exc).__name__}",
+                    f"the chat provider failed: {type(exc).__name__}: {exc}",
                 ) from exc
         finally:
             store.close()

@@ -71,6 +71,43 @@ def test_openai_compatible_provider_parses_message_content():
         "llama", base_url="http://localhost:11434/v1", client=make_client(handler)
     )
     assert provider.complete("s", "u") == "hi"
+    assert provider.usage_totals == {"input_tokens": 0, "output_tokens": 0}
+
+
+def test_openai_compatible_provider_accumulates_usage_and_cost():
+    def handler(request):
+        return httpx.Response(
+            200,
+            json={
+                "choices": [{"message": {"content": "hi"}}],
+                "usage": {"prompt_tokens": 12, "completion_tokens": 5, "cost": 0.000031},
+            },
+        )
+
+    provider = OpenAICompatibleChatProvider(
+        "m", "http://x/v1", client=make_client(handler)
+    )
+    provider.complete("s", "u")
+    provider.complete("s", "u")
+    assert provider.usage_totals == {"input_tokens": 24, "output_tokens": 10}
+    assert provider.provider_reported_cost_usd == pytest.approx(0.000062)
+
+
+def test_anthropic_provider_accumulates_usage_with_anthropic_field_names():
+    def handler(request):
+        return httpx.Response(
+            200,
+            json={
+                "content": [{"type": "text", "text": "hello"}],
+                "usage": {"input_tokens": 7, "output_tokens": 3},
+            },
+        )
+
+    provider = AnthropicChatProvider("claude-x", "k", client=make_client(handler))
+    provider.complete("sys", "q")
+    provider.complete("sys", "q")
+    assert provider.usage_totals == {"input_tokens": 14, "output_tokens": 6}
+    assert provider.provider_reported_cost_usd is None
 
 
 def test_openai_compatible_vision_sends_image_url_and_context():

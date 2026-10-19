@@ -18,7 +18,13 @@ Usage (PowerShell)::
     # No database required
     python evals/run_evals.py --store memory
 
-Exit code is 0 only when every case passes.
+    # Tuning split only (holdout cases are never run during prompt tuning)
+    python evals/run_evals.py --store memory --split tuning
+
+Exit code is 0 only when every case passes (1 = some cases failed, report written).
+Cost fields are computed from the shared pricing table (shared-docs/evals/pricing.json,
+source and retrieval date recorded in the report); token usage is captured from the
+live chat provider responses.
 """
 
 from __future__ import annotations
@@ -46,6 +52,54 @@ from app.store import InMemoryKnowledgeStore
 
 DEFAULT_CASES = ROOT / "evals" / "cases.json"
 DEFAULT_SAMPLE = ROOT / "data" / "articles-sample.json"
+PRICING_TABLE = ROOT.parent / "shared-docs" / "evals" / "pricing.json"
+
+
+def load_pricing() -> dict:
+    if not PRICING_TABLE.exists():
+        return {}
+    return json.loads(PRICING_TABLE.read_text(encoding="utf-8"))
+
+
+def cost_block(chat, pricing: dict) -> dict:
+    """Token usage and cost for this run, priced from the shared pricing table."""
+    usage = getattr(chat, "usage_totals", None)
+    input_tokens = int(usage.get("input_tokens", 0)) if usage else 0
+    output_tokens = int(usage.get("output_tokens", 0)) if usage else 0
+    model = getattr(chat, "model_name", None)
+    entry = (pricing.get("models") or {}).get(model) if model else None
+    if entry is not None:
+        cost_usd = round(
+            (input_tokens / 1_000_000) * float(entry["input"])
+            + (output_tokens / 1_000_000) * float(entry["output"]),
+            6,
+        )
+        basis = (
+            f"tokens x pricing.json list prices (source: {pricing.get('source')}, "
+            f"retrieved: {pricing.get('retrieved_at')})"
+        )
+    elif input_tokens == 0 and output_tokens == 0:
+        cost_usd = 0.0
+        basis = "no chat tokens used (offline provider or run failed before chat)"
+    else:
+        cost_usd = None
+        basis = "model is missing from the pricing table; cost unavailable"
+    return {
+        "model": model,
+        "input_tokens": input_tokens,
+        "output_tokens": output_tokens,
+        "cost_usd": cost_usd,
+        "cost_basis": basis,
+        "provider_reported_cost_usd": getattr(chat, "provider_reported_cost_usd", None),
+        "pricing_table": "shared-docs/evals/pricing.json",
+        "pricing_source": pricing.get("source"),
+        "pricing_retrieved_at": pricing.get("retrieved_at"),
+        "embedding_cost_included": False,
+        "embedding_cost_note": (
+            "embedding cost is excluded from the model comparison: it is identical "
+            "across compared chat models (gemini-embedding-001, free tier)"
+        ),
+    }
 
 
 def load_cases(path: Path) -> list[dict]:
@@ -54,6 +108,16 @@ def load_cases(path: Path) -> list[dict]:
     if not isinstance(cases, list) or not cases:
         raise SystemExit(f"no cases found in {path}")
     return cases
+
+
+def select_split(cases: list[dict], split: str) -> list[dict]:
+    """Filter cases to one split; cases without a split field count as tuning."""
+    if split == "all":
+        return cases
+    selected = [case for case in cases if case.get("split", "tuning") == split]
+    if not selected:
+        raise SystemExit(f"no cases with split={split!r}")
+    return selected
 
 
 def build_memory_service(sample_path: Path) -> KnowledgeService:
@@ -153,6 +217,12 @@ def score(case: dict, response: AskResponse) -> list[str]:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Run Knowledge Brain eval cases.")
     parser.add_argument("--cases", type=Path, default=DEFAULT_CASES)
+    parser.add_argument(
+        "--split",
+        choices=["all", "tuning", "holdout"],
+        default="all",
+        help="run only cases from one split; cases without a split field count as tuning",
+    )
     parser.add_argument("--store", choices=["env", "memory"], default="env")
     parser.add_argument("--sample", type=Path, default=DEFAULT_SAMPLE)
     parser.add_argument("--limit", type=int, default=None)
@@ -161,6 +231,7 @@ def main() -> int:
     args = parser.parse_args()
 
     cases = load_cases(args.cases)
+    cases = select_split(cases, args.split)
     if args.limit:
         cases = cases[: args.limit]
 
@@ -179,11 +250,15 @@ def main() -> int:
             problems = score(case, response)
         except ServiceUnavailable as exc:
             problems = [f"service unavailable ({exc.dependency})"]
-            error = {"type": "ServiceUnavailable", "dependency": exc.dependency}
+            error = {
+                "type": "ServiceUnavailable",
+                "dependency": exc.dependency,
+                "detail": exc.message,
+            }
             response = None
         except Exception as exc:  # noqa: BLE001 - report, never crash the harness
             problems = [f"unexpected error: {type(exc).__name__}"]
-            error = {"type": type(exc).__name__}
+            error = {"type": type(exc).__name__, "detail": str(exc)[:500]}
             response = None
 
         ok = not problems
@@ -245,17 +320,28 @@ def main() -> int:
         case_bytes = args.cases.read_bytes()
         embedding = getattr(service, "embedding_provider", None)
         chat = getattr(service, "chat_provider", None)
+        pricing = load_pricing()
+        run_cost = cost_block(chat, pricing)
+        print(
+            f"cost: model={run_cost['model']} "
+            f"input_tokens={run_cost['input_tokens']} "
+            f"output_tokens={run_cost['output_tokens']} "
+            f"cost_usd={run_cost['cost_usd']}"
+        )
         args.json_report.write_text(
             json.dumps({
                 "generated_at": datetime.now(timezone.utc).isoformat(),
                 "cases_file": str(args.cases),
                 "cases_sha256": hashlib.sha256(case_bytes).hexdigest(),
+                "split": args.split,
+                "cases_run": total,
                 "store_mode": args.store,
                 "embedding_model": getattr(embedding, "model_name", None),
                 "chat_model": getattr(chat, "model_name", None),
                 "response_source": "actual configured providers for this run; inspect model fields and raw responses",
                 "passed": passed,
                 "total": total,
+                "cost": run_cost,
                 "citation_correct_cases": sum(r["citation_correctness"] is True for r in results),
                 "citation_scored_cases": sum(r["citation_correctness"] is not None for r in results),
                 "abstention_correct_cases": sum(r["abstention_correctness"] is True for r in results),

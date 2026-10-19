@@ -316,6 +316,7 @@ def test_embedding_failure_raises_service_unavailable():
     with pytest.raises(ServiceUnavailable) as info:
         service.ask(AskRequest(question=QUESTION))
     assert info.value.dependency == "embedding_provider"
+    assert "EmbeddingRequestError: provider down" in info.value.message
 
 
 def test_chat_failure_raises_service_unavailable():
@@ -323,6 +324,7 @@ def test_chat_failure_raises_service_unavailable():
     with pytest.raises(ServiceUnavailable) as info:
         service.ask(AskRequest(question=QUESTION))
     assert info.value.dependency == "chat_provider"
+    assert "ChatRequestError: chat provider down" in info.value.message
 
 
 def test_store_failure_raises_service_unavailable_without_leaking_url():

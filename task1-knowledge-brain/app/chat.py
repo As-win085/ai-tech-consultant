@@ -140,6 +140,27 @@ class _HTTPChatProvider:
         self._backoff_seconds = backoff_seconds
         self._request_delay_seconds = max(0.0, float(os.getenv("LLM_REQUEST_DELAY_MS", "0")) / 1000)
         self.retry_count = 0
+        self.usage_totals: dict[str, int] = {"input_tokens": 0, "output_tokens": 0}
+        self.provider_reported_cost_usd: float | None = None
+
+    def _record_usage(self, payload: object) -> None:
+        if not isinstance(payload, dict):
+            return
+        usage = payload.get("usage")
+        if not isinstance(usage, dict):
+            return
+        for target, names in (
+            ("input_tokens", ("input_tokens", "prompt_tokens")),
+            ("output_tokens", ("output_tokens", "completion_tokens")),
+        ):
+            for name in names:
+                value = usage.get(name)
+                if isinstance(value, (int, float)) and not isinstance(value, bool):
+                    self.usage_totals[target] += int(value)
+                    break
+        cost = usage.get("cost")
+        if isinstance(cost, (int, float)) and not isinstance(cost, bool):
+            self.provider_reported_cost_usd = (self.provider_reported_cost_usd or 0.0) + float(cost)
 
     def _post(self, path: str, *, json: dict, headers: dict) -> str:
         self.retry_count = 0
@@ -173,7 +194,9 @@ class _HTTPChatProvider:
             if response.status_code >= 400:
                 raise self._as_error(response)
 
-            return self._extract(response.json())
+            payload = response.json()
+            self._record_usage(payload)
+            return self._extract(payload)
 
         raise ChatRequestError(f"chat request failed: {last_error}")
 
