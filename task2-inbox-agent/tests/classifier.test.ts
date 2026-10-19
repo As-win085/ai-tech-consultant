@@ -23,9 +23,24 @@ describe('RuleBasedClassifier', () => {
     const result = await classifier.classify(
       sampleEmail({ subject: 'Charged twice', body: 'You charged my card twice, please refund the duplicate charge.' }) as never,
     );
-    expect(result.category).toBe('billing_account');
+    expect(result.category).toBe('refund');
     expect(result.riskFlags).toContain('billing_refund');
     expect(result.needsEscalation).toBe(true);
+  });
+
+  it('routes refund, quote, new-project and follow-up intents', async () => {
+    const quote = await classifier.classify(
+      sampleEmail({ subject: 'Request a quote', body: 'Could you send a quote for 200 seats on the annual plan?' }) as never,
+    );
+    expect(quote.category).toBe('quote');
+    const project = await classifier.classify(
+      sampleEmail({ subject: 'Statement of work', body: 'Please prepare a statement of work for a new project kickoff.' }) as never,
+    );
+    expect(project.category).toBe('new_project');
+    const followUp = await classifier.classify(
+      sampleEmail({ subject: 'Following up', body: 'Just checking in and following up on our open ticket. Any update?' }) as never,
+    );
+    expect(followUp.category).toBe('follow_up');
   });
 
   it('detects prompt injection as high risk', async () => {

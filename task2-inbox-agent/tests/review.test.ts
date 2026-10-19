@@ -1,5 +1,5 @@
-import { applyReviewAction, evaluateAutomationExclusion, InvalidTransitionError } from '../src/review';
-import { Classification, Draft } from '../src/types';
+import { applyReviewAction, evaluateAutomationExclusion, InvalidTransitionError, requiresHumanReview } from '../src/review';
+import { Classification, Category, Draft } from '../src/types';
 
 function classification(overrides: Partial<Classification> = {}): Classification {
   return {
@@ -59,6 +59,28 @@ describe('automation exclusion', () => {
     const check = evaluateAutomationExclusion(classification({ category: 'billing_account' }), draft());
     expect(check.excluded).toBe(true);
     expect(check.reasons.join(' ')).toMatch(/billing/);
+  });
+
+  it.each(['billing_account', 'refund', 'quote', 'new_project', 'complaint', 'unsupported_unclear'] as const)(
+    'always excludes the %s category from autonomous sending',
+    (category: Category) => {
+      const check = evaluateAutomationExclusion(classification({ category }), draft());
+      expect(check.excluded).toBe(true);
+      expect(check.reasons.join(' ')).toContain(category);
+    },
+  );
+
+  it('does not force-review a clean follow_up item', () => {
+    const check = evaluateAutomationExclusion(classification({ category: 'follow_up' }), draft());
+    expect(check.excluded).toBe(false);
+  });
+
+  it('requiresHumanReview matches the always-review set', () => {
+    for (const category of ['billing_account', 'refund', 'quote', 'new_project', 'complaint', 'unsupported_unclear'] as const) {
+      expect(requiresHumanReview(category)).toBe(true);
+    }
+    expect(requiresHumanReview('follow_up')).toBe(false);
+    expect(requiresHumanReview('product_howto')).toBe(false);
   });
 
   it('excludes items with risk flags', () => {

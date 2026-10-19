@@ -1,4 +1,4 @@
-import { AgentState, AuditEntry, Category, FeedbackRecord, InboxItem, ReviewState } from './types';
+import { AgentState, AuditEntry, CATEGORIES, Category, CategoryAutomationState, FeedbackRecord, InboxItem, ReviewState } from './types';
 
 export interface ItemFilter {
   state?: ReviewState;
@@ -19,8 +19,19 @@ export interface Store {
   setState(state: AgentState): Promise<void>;
 }
 
-export function defaultAgentState(): AgentState {
+export function emptyCategoryAutomationState(): CategoryAutomationState {
   return { consecutiveUneditedApprovals: 0, automationEligible: false, automationThresholdReachedAt: null };
+}
+
+export function defaultAgentState(): AgentState {
+  const categories = {} as Record<Category, CategoryAutomationState>;
+  for (const category of CATEGORIES) categories[category] = emptyCategoryAutomationState();
+  return {
+    consecutiveUneditedApprovals: 0,
+    automationEligible: false,
+    automationThresholdReachedAt: null,
+    categories,
+  };
 }
 
 export class InMemoryStore implements Store {
@@ -67,11 +78,11 @@ export class InMemoryStore implements Store {
   }
 
   async getState(): Promise<AgentState> {
-    return { ...this.state };
+    return clone(this.state);
   }
 
   async setState(state: AgentState): Promise<void> {
-    this.state = { ...state };
+    this.state = clone(state);
   }
 }
 

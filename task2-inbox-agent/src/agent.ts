@@ -4,12 +4,14 @@ import { v4 as uuidv4 } from 'uuid';
 import { Classifier } from './classifier';
 import { buildDraft } from './draft';
 import { KbClient, KnowledgeBrainError } from './kbClient';
-import { applyReviewAction, evaluateAutomationExclusion } from './review';
+import { applyReviewAction, evaluateAutomationExclusion, requiresHumanReview } from './review';
 import { datasetSchema } from './schemas';
 import { InMemoryStore, Store } from './store';
 import {
   AgentState,
   AuditEntry,
+  Category,
+  CategoryAutomationState,
   Classification,
   Email,
   ExpectedLabel,
@@ -19,6 +21,18 @@ import {
   ReviewActionInput,
   ReviewHistoryEntry,
 } from './types';
+
+function emptyCategoryState(): CategoryAutomationState {
+  return { consecutiveUneditedApprovals: 0, automationEligible: false, automationThresholdReachedAt: null };
+}
+
+function ensureCategoryState(state: AgentState, category: Category): CategoryAutomationState {
+  const existing = state.categories?.[category];
+  if (existing) return existing;
+  const fresh = emptyCategoryState();
+  state.categories = { ...(state.categories ?? {}), [category]: fresh } as AgentState['categories'];
+  return fresh;
+}
 
 export interface ReviewResult {
   item: InboxItem;
@@ -213,7 +227,7 @@ export class InboxAgent {
       category: classification.category,
     };
 
-    const automationState = await this.updateAutomationCounter(outcome, edited, exclusion.excluded);
+    const automationState = await this.updateAutomationCounter(outcome, edited, exclusion.excluded, classification.category);
 
     await this.store.saveItem(item);
     await this.store.addFeedback(feedback);
@@ -239,35 +253,46 @@ export class InboxAgent {
     outcome: FeedbackRecord['outcome'],
     edited: boolean,
     excluded: boolean,
+    category: Category,
   ): Promise<AgentState> {
     const state = await this.store.getState();
-    const isEligibleApproval = outcome === 'approved_without_edit' && !edited && !excluded;
+    const categoryState = ensureCategoryState(state, category);
+    const alwaysReview = requiresHumanReview(category);
+    const isEligibleApproval =
+      outcome === 'approved_without_edit' && !edited && !excluded && !alwaysReview;
 
     if (isEligibleApproval) {
-      state.consecutiveUneditedApprovals += 1;
+      categoryState.consecutiveUneditedApprovals += 1;
       if (
-        state.consecutiveUneditedApprovals >= this.maxConsecutive &&
-        !state.automationEligible
+        categoryState.consecutiveUneditedApprovals >= this.maxConsecutive &&
+        !categoryState.automationEligible
       ) {
-        state.automationEligible = true;
-        state.automationThresholdReachedAt = new Date().toISOString();
+        categoryState.automationEligible = true;
+        categoryState.automationThresholdReachedAt = new Date().toISOString();
         await this.audit(null, 'automation_eligible_threshold_reached', {
-          count: state.consecutiveUneditedApprovals,
+          category,
+          count: categoryState.consecutiveUneditedApprovals,
           threshold: this.maxConsecutive,
         });
       }
     } else {
-      if (state.consecutiveUneditedApprovals > 0 || state.automationEligible) {
+      if (categoryState.consecutiveUneditedApprovals > 0 || categoryState.automationEligible) {
         await this.audit(null, 'automation_counter_reset', {
-          previousCount: state.consecutiveUneditedApprovals,
-          previousEligible: state.automationEligible,
+          category,
+          previousCount: categoryState.consecutiveUneditedApprovals,
+          previousEligible: categoryState.automationEligible,
           reason: `outcome=${outcome} edited=${edited} excluded=${excluded}`,
         });
       }
-      state.consecutiveUneditedApprovals = 0;
-      state.automationEligible = false;
-      state.automationThresholdReachedAt = null;
+      categoryState.consecutiveUneditedApprovals = 0;
+      categoryState.automationEligible = false;
+      categoryState.automationThresholdReachedAt = null;
     }
+
+    state.categories = { ...state.categories, [category]: categoryState };
+    state.consecutiveUneditedApprovals = categoryState.consecutiveUneditedApprovals;
+    state.automationEligible = categoryState.automationEligible;
+    state.automationThresholdReachedAt = categoryState.automationThresholdReachedAt;
 
     await this.store.setState(state);
     return state;

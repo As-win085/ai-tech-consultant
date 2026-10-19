@@ -6,6 +6,12 @@
   "verified_against_url": "https://www.anthropic.com/pricing#api",
   "verified_at": "2026-10-19",
   "verification_note": "Anthropic list prices match this table exactly: Haiku 4.5 Input $1/MTok Output $5/MTok; Sonnet 4.6 Input $3/MTok Output $15/MTok. OpenRouter passes Anthropic list prices through for these two models (confirmed live: 1 MTok in + 0.2 MTok out returned usage.cost 3.1e-05 on haiku-4.5 -> $1/$5 per MTok).",
+  "secondary_source": "Groq model list prices",
+  "secondary_source_url": "https://groq.com/pricing",
+  "secondary_retrieved_at": "2026-10-18",
+  "secondary_verified_against": "Groq pricing / model list pages (checked 2026-10-18): qwen/qwen3.8-27b $0.80 in / $4.00 out per 1M tokens (preview rate); allam-2-7b $0 in / $0 out per 1M tokens",
+  "secondary_verified_against_url": "https://groq.com/pricing",
+  "secondary_verified_at": "2026-10-18",
   "currency": "USD",
   "unit": "per_1M_tokens",
   "note": "Cost basis for all eval cost fields: tokens x this table (provider-reported usage.cost recorded separately when available). Embedding cost excluded from model comparison because it is identical across compared chat models (gemini-embedding-001, free tier).",
@@ -19,6 +25,16 @@
       "label": "strong",
       "input": 3.0,
       "output": 15.0
+    },
+    "qwen/qwen3.8-27b": {
+      "label": "groq-strong",
+      "input": 0.8,
+      "output": 4.0
+    },
+    "allam-2-7b": {
+      "label": "groq-cheap",
+      "input": 0.0,
+      "output": 0.0
     }
   }
 }

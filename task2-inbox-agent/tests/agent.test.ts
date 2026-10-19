@@ -173,3 +173,55 @@ describe('automation threshold', () => {
     expect(res.automationState.consecutiveUneditedApprovals).toBe(0);
   });
 });
+
+describe('per-category automation counter', () => {
+  it('counts per category and is not reset by activity in another category', async () => {
+    const { agent, store } = makeAgent(new MockKbClient([groundedAnswer()]), 20);
+    const [howto] = await agent.ingestEmails([sampleEmail({ id: 'howto-1' }) as never]);
+    await agent.generateDraft(howto.id);
+    await agent.review(howto.id, { action: 'approve' });
+
+    const [refund] = await agent.ingestEmails([
+      sampleEmail({ id: 'refund-1', subject: 'Cancel our subscription', body: 'Please cancel our subscription.' }) as never,
+    ]);
+    await agent.generateDraft(refund.id);
+    await agent.review(refund.id, { action: 'approve' });
+
+    const state = await store.getState();
+    expect(state.categories.product_howto.consecutiveUneditedApprovals).toBe(1);
+    expect(state.categories.refund.consecutiveUneditedApprovals).toBe(0);
+    expect(state.categories.refund.automationEligible).toBe(false);
+  });
+
+  it('resets only the edited category when a review is edited', async () => {
+    const { agent, store } = makeAgent(new MockKbClient([groundedAnswer(), groundedAnswer(), groundedAnswer()]), 20);
+    const [first] = await agent.ingestEmails([sampleEmail({ id: 'howto-a' }) as never]);
+    const [second] = await agent.ingestEmails([sampleEmail({ id: 'howto-b' }) as never]);
+    await agent.generateDraft(first.id);
+    await agent.generateDraft(second.id);
+    await agent.review(first.id, { action: 'approve' });
+    await agent.review(second.id, { action: 'approve' });
+    expect((await store.getState()).categories.product_howto.consecutiveUneditedApprovals).toBe(2);
+
+    const [third] = await agent.ingestEmails([sampleEmail({ id: 'howto-c' }) as never]);
+    await agent.generateDraft(third.id);
+    await agent.review(third.id, { action: 'edit', editedDraft: 'edited' });
+    expect((await store.getState()).categories.product_howto.consecutiveUneditedApprovals).toBe(0);
+  });
+
+  it('never makes an always-review category eligible, even past the threshold', async () => {
+    const { agent, store } = makeAgent(new MockKbClient([groundedAnswer(), groundedAnswer(), groundedAnswer()]), 2);
+    const emails = [1, 2, 3].map((n) =>
+      sampleEmail({ id: `quote-${n}`, subject: 'Request a quote', body: 'Could you send a quote for 100 seats?' }) as never,
+    );
+    const items = await agent.ingestEmails(emails);
+    for (const item of items) {
+      await agent.generateDraft(item.id);
+      const res = await agent.review(item.id, { action: 'approve' });
+      expect(res.automationExcluded).toBe(true);
+    }
+    const state = await store.getState();
+    expect(state.categories.quote.automationEligible).toBe(false);
+    expect(state.categories.quote.consecutiveUneditedApprovals).toBe(0);
+  });
+});

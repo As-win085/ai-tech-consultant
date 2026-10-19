@@ -62,11 +62,23 @@ export class RuleBasedClassifier implements Classifier {
     if (/bill|invoice|payment|charge|refund|subscription|card on file|seats|upgrade|cancel our (account|subscription)|trial/.test(text)) {
       category = 'billing_account';
     }
+    if (/refund|money back|charged twice|double charge|duplicate (charge|payment)|cancellations?\b|cancel (our|my) (account|subscription|plan)|dispute it with my bank|dispute (the|this) charge/.test(text)) {
+      category = 'refund';
+    }
     if (/complain|unacceptable|rude|missed (our|the) sla|price increase with no warning|evaluating alternatives|no reply|dismissive/.test(text)) {
       category = 'complaint';
     }
     if (/feature|request|would like|suggest|improve|dark mode|rate limit|custom fields|zapier|audit log|roadmap/.test(text)) {
       if (category === 'unsupported_unclear') category = 'feature_request';
+    }
+    if (/request a quote|get a quote|quote for|pricing (for|details|quote)|cost estimate|how much (would|does) .* cost|purchase order/.test(text)) {
+      category = 'quote';
+    }
+    if (/new project|start (a )?project|kick ?off|statement of work|\bsow\b|implementation project|onboard(ing)? (a )?new (client|project)|scoping call/.test(text)) {
+      category = 'new_project';
+    }
+    if (/follow(ing)? up|just checking|checking in|any update|circling back|as discussed|per our (call|conversation)/.test(text)) {
+      category = 'follow_up';
     }
 
     const riskFlags = detectRiskFlags(text);
@@ -80,14 +92,17 @@ export class RuleBasedClassifier implements Classifier {
     let urgency: Urgency = 'medium';
     if (/urgent|asap|critical|down|outage|blocked|immediately|today/.test(text)) urgency = 'urgent';
     else if (riskFlags.some((f) => ['billing_refund', 'account_security', 'legal_threat', 'pii_exposure'].includes(f))) urgency = 'high';
-    else if (category === 'complaint') urgency = 'high';
-    else if (category === 'feature_request' || category === 'product_howto') urgency = 'low';
+    else if (category === 'complaint' || category === 'refund') urgency = 'high';
+    else if (category === 'feature_request' || category === 'product_howto' || category === 'follow_up') urgency = 'low';
 
     const needsEscalation =
       urgency === 'urgent' ||
       urgency === 'high' ||
       riskFlags.length > 0 ||
       category === 'complaint' ||
+      category === 'refund' ||
+      category === 'quote' ||
+      category === 'new_project' ||
       ambiguity === 'ambiguous' ||
       category === 'unsupported_unclear';
 

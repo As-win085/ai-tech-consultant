@@ -1400,6 +1400,162 @@
         "escalate": true,
         "notes": "Security incident; automation-excluded."
       }
+    },
+    {
+      "id": "e072",
+      "from": "quinn.ortiz@brightpath.example",
+      "to": [
+        "support@supportflow.example"
+      ],
+      "subject": "Refund for duplicate charge",
+      "body": "We were charged twice for this month and I need a refund for the duplicate payment on our card.",
+      "receivedAt": "2026-01-22T09:00:00.000Z",
+      "threadId": null,
+      "expected": {
+        "category": "refund",
+        "urgency": "high",
+        "riskFlags": [
+          "billing_refund"
+        ],
+        "answerability": "answerable",
+        "escalate": true,
+        "notes": "Duplicate charge: refund/cancellation workflow, always human-reviewed."
+      }
+    },
+    {
+      "id": "e073",
+      "from": "quinn.ortiz@brightpath.example",
+      "to": [
+        "support@supportflow.example"
+      ],
+      "subject": "Cancel our subscription",
+      "body": "Please cancel our subscription at the end of the current billing period and confirm the final invoice.",
+      "receivedAt": "2026-01-22T09:00:00.000Z",
+      "threadId": null,
+      "expected": {
+        "category": "refund",
+        "urgency": "high",
+        "riskFlags": [
+          "billing_refund"
+        ],
+        "answerability": "answerable",
+        "escalate": true,
+        "notes": "Cancellation request maps to refund/cancellation, always human-reviewed."
+      }
+    },
+    {
+      "id": "e074",
+      "from": "quinn.ortiz@brightpath.example",
+      "to": [
+        "support@supportflow.example"
+      ],
+      "subject": "Request a quote for 200 seats",
+      "body": "Could you send a quote for 200 seats on the annual plan? We need pricing details to budget.",
+      "receivedAt": "2026-01-22T09:00:00.000Z",
+      "threadId": null,
+      "expected": {
+        "category": "quote",
+        "urgency": "medium",
+        "riskFlags": [],
+        "answerability": "answerable",
+        "escalate": true,
+        "notes": "Quote request: always human-reviewed."
+      }
+    },
+    {
+      "id": "e075",
+      "from": "quinn.ortiz@brightpath.example",
+      "to": [
+        "support@supportflow.example"
+      ],
+      "subject": "Cost estimate for migration",
+      "body": "We would like a cost estimate and a quote for migrating our workspace. How much would that cost?",
+      "receivedAt": "2026-01-22T09:00:00.000Z",
+      "threadId": null,
+      "expected": {
+        "category": "quote",
+        "urgency": "medium",
+        "riskFlags": [],
+        "answerability": "answerable",
+        "escalate": true,
+        "notes": "Quote/cost estimate request: always human-reviewed."
+      }
+    },
+    {
+      "id": "e076",
+      "from": "quinn.ortiz@brightpath.example",
+      "to": [
+        "support@supportflow.example"
+      ],
+      "subject": "Start a new project with your team",
+      "body": "We want to start a project to roll out your product across our company and would like a kickoff plan.",
+      "receivedAt": "2026-01-22T09:00:00.000Z",
+      "threadId": null,
+      "expected": {
+        "category": "new_project",
+        "urgency": "medium",
+        "riskFlags": [],
+        "answerability": "answerable",
+        "escalate": true,
+        "notes": "New-project request: always human-reviewed."
+      }
+    },
+    {
+      "id": "e077",
+      "from": "quinn.ortiz@brightpath.example",
+      "to": [
+        "support@supportflow.example"
+      ],
+      "subject": "Statement of work for onboarding",
+      "body": "Please prepare a statement of work for onboarding a new client onto the platform.",
+      "receivedAt": "2026-01-22T09:00:00.000Z",
+      "threadId": null,
+      "expected": {
+        "category": "new_project",
+        "urgency": "medium",
+        "riskFlags": [],
+        "answerability": "answerable",
+        "escalate": true,
+        "notes": "New-project/SOW request: always human-reviewed."
+      }
+    },
+    {
+      "id": "e078",
+      "from": "quinn.ortiz@brightpath.example",
+      "to": [
+        "support@supportflow.example"
+      ],
+      "subject": "Following up on our ticket",
+      "body": "Just checking in and following up on our open ticket from last week. Any update?",
+      "receivedAt": "2026-01-22T09:00:00.000Z",
+      "threadId": null,
+      "expected": {
+        "category": "follow_up",
+        "urgency": "low",
+        "riskFlags": [],
+        "answerability": "answerable",
+        "escalate": false,
+        "notes": "Follow-up nudge on an existing thread; not always-review."
+      }
+    },
+    {
+      "id": "e079",
+      "from": "quinn.ortiz@brightpath.example",
+      "to": [
+        "support@supportflow.example"
+      ],
+      "subject": "Checking in after our call",
+      "body": "As discussed on our call, I am circling back to see if there is any update on the export.",
+      "receivedAt": "2026-01-22T09:00:00.000Z",
+      "threadId": null,
+      "expected": {
+        "category": "follow_up",
+        "urgency": "low",
+        "riskFlags": [],
+        "answerability": "answerable",
+        "escalate": false,
+        "notes": "Follow-up after a call; not always-review."
+      }
     }
   ]
 }

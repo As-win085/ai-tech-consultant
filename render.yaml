@@ -30,9 +30,20 @@ services:
         value: production
       - key: CLASSIFIER
         value: rules
-      - key: LLM_API_KEY
-        sync: false
+      # Task 1 is a sibling service in this blueprint; RENDER_EXTERNAL_URL is
+      # injected by Render as "https://knowledge-brain.onrender.com".
       - key: KNOWLEDGE_BRAIN_URL
+        fromService:
+          name: knowledge-brain
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+      # Bind all interfaces. If unset the server probes "::" then "0.0.0.0".
+      - key: HOST
+        value: 0.0.0.0
+      # Render terminates TLS at its edge; needed for correct client IPs.
+      - key: TRUST_PROXY
+        value: "true"
+      - key: LLM_API_KEY
         sync: false
       - key: DATABASE_URL
         fromDatabase:
@@ -44,6 +55,8 @@ services:
         value: datasets/emails-sample.json
       - key: MAX_CONSECUTIVE_UNEDITED_APPROVALS
         value: "20"
+      # Comma-separated origins of the deployed frontend (Vercel). Wildcards are
+      # supported, e.g. https://*.vercel.app. Localhost is always allowed.
       - key: ALLOWED_ORIGINS
         sync: false
 

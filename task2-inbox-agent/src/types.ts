@@ -2,8 +2,12 @@ export const CATEGORIES = [
   'product_howto',
   'troubleshooting',
   'billing_account',
+  'refund',
   'feature_request',
+  'quote',
+  'new_project',
   'complaint',
+  'follow_up',
   'unsupported_unclear',
 ] as const;
 export type Category = (typeof CATEGORIES)[number];
@@ -170,8 +174,15 @@ export interface InboxItem {
   updatedAt: string;
 }
 
+export interface CategoryAutomationState {
+  consecutiveUneditedApprovals: number;
+  automationEligible: boolean;
+  automationThresholdReachedAt: string | null;
+}
+
 export interface AgentState {
   consecutiveUneditedApprovals: number;
   automationEligible: boolean;
   automationThresholdReachedAt: string | null;
+  categories: Record<Category, CategoryAutomationState>;
 }

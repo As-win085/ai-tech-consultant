@@ -1,4 +1,17 @@
-import { Classification, Draft, ReviewActionType, ReviewState } from './types';
+import { Category, Classification, Draft, ReviewActionType, ReviewState } from './types';
+
+export const ALWAYS_REVIEW_CATEGORIES: ReadonlyArray<Category> = [
+  'billing_account',
+  'refund',
+  'quote',
+  'new_project',
+  'complaint',
+  'unsupported_unclear',
+];
+
+export function requiresHumanReview(category: Category): boolean {
+  return ALWAYS_REVIEW_CATEGORIES.includes(category);
+}
 
 export class InvalidTransitionError extends Error {
   constructor(message: string) {
@@ -47,9 +60,9 @@ export function evaluateAutomationExclusion(
   if (classification.riskFlags.length > 0) {
     reasons.push(`risk flags present: ${classification.riskFlags.join(', ')}`);
   }
-  if (classification.category === 'billing_account') reasons.push('billing/account category');
-  if (classification.category === 'complaint') reasons.push('complaint category');
-  if (classification.category === 'unsupported_unclear') reasons.push('unsupported/unclear category');
+  if (requiresHumanReview(classification.category)) {
+    reasons.push(`${classification.category} category always requires human review`);
+  }
   if (classification.ambiguity === 'ambiguous') reasons.push('ambiguous request');
   if (classification.confidence < minConfidence) reasons.push(`low confidence (${classification.confidence})`);
   if (classification.needsEscalation) reasons.push('classification flagged for escalation');

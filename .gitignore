@@ -18,6 +18,9 @@ htmlcov/
 .env
 .env.*
 !.env.example
+# Frontend build-time API URLs are public (no secrets) and Vercel builds from a
+# clean clone — without this file the bundle falls back to localhost.
+!frontend/.env.production
 .vscode/
 .idea/
 Thumbs.db

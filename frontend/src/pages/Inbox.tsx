@@ -49,18 +49,6 @@ export function InboxPage() {
     },
   });
 
-  // Auto-generate draft when an email with no draft is selected
-  useEffect(() => {
-    if (
-      selected &&
-      !selected.draft &&
-      selected.state === "pending_review" &&
-      !draft.isPending
-    ) {
-      draft.mutate(selected.id);
-    }
-  }, [selected?.id, selected?.draft, selected?.state]);
-
   const review = useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: ReviewActionPayload }) => inboxApi.review(id, payload),
     onSuccess: (result) => {
@@ -85,6 +73,14 @@ export function InboxPage() {
 
   const selected = detail.data ?? null;
   const kbReachable = ready.data?.knowledgeBrain?.reachable;
+
+  // Auto-generate draft when an email with no draft is selected
+  useEffect(() => {
+    if (selected && !selected.draft && selected.state === "pending_review" && !draft.isPending) {
+      draft.mutate(selected.id);
+    }
+  }, [selected?.id, selected?.draft, selected?.state]);
+
   const automation = ready.data?.automation;
 
   const [showSettings, setShowSettings] = useState(false);

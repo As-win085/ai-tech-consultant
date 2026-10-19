@@ -1,5 +1,41 @@
 import { loadConfig } from '../src/config';
 
+describe('host, proxy and CORS configuration', () => {
+  it('defaults to auto host, no trusted proxy and no extra origins', () => {
+    const previous = { host: process.env.HOST, trust: process.env.TRUST_PROXY, origins: process.env.ALLOWED_ORIGINS };
+    delete process.env.HOST;
+    delete process.env.TRUST_PROXY;
+    delete process.env.ALLOWED_ORIGINS;
+    try {
+      const config = loadConfig();
+      expect(config.host).toBe('');
+      expect(config.trustProxy).toBe(false);
+      expect(config.allowedOrigins).toEqual([]);
+    } finally {
+      if (previous.host === undefined) delete process.env.HOST; else process.env.HOST = previous.host;
+      if (previous.trust === undefined) delete process.env.TRUST_PROXY; else process.env.TRUST_PROXY = previous.trust;
+      if (previous.origins === undefined) delete process.env.ALLOWED_ORIGINS; else process.env.ALLOWED_ORIGINS = previous.origins;
+    }
+  });
+
+  it('reads HOST, TRUST_PROXY and comma-separated ALLOWED_ORIGINS', () => {
+    const previous = { host: process.env.HOST, trust: process.env.TRUST_PROXY, origins: process.env.ALLOWED_ORIGINS };
+    process.env.HOST = '0.0.0.0';
+    process.env.TRUST_PROXY = 'true';
+    process.env.ALLOWED_ORIGINS = 'https://app.example.com, https://*.vercel.app';
+    try {
+      const config = loadConfig();
+      expect(config.host).toBe('0.0.0.0');
+      expect(config.trustProxy).toBe(true);
+      expect(config.allowedOrigins).toEqual(['https://app.example.com', 'https://*.vercel.app']);
+    } finally {
+      if (previous.host === undefined) delete process.env.HOST; else process.env.HOST = previous.host;
+      if (previous.trust === undefined) delete process.env.TRUST_PROXY; else process.env.TRUST_PROXY = previous.trust;
+      if (previous.origins === undefined) delete process.env.ALLOWED_ORIGINS; else process.env.ALLOWED_ORIGINS = previous.origins;
+    }
+  });
+});
+
 describe('provider-specific generation credentials', () => {
   it('uses the OpenRouter key before the generic key when OpenRouter is selected', () => {
     const previous = {

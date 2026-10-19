@@ -51,14 +51,31 @@ app = FastAPI(
 )
 
 import os as _os
+import re as _re
+
 _raw_origins = _os.getenv("ALLOWED_ORIGINS", "")
 _extra = [o.strip() for o in _raw_origins.split(",") if o.strip()]
-_cors_origins = ["http://localhost:5173", "http://127.0.0.1:5173"] + _extra
+
+if "*" in _extra:
+    _cors_origins, _cors_origin_regex = ["*"], None
+else:
+    # Starlette matches origins exactly, so wildcard entries
+    # (e.g. https://*.vercel.app) are compiled into a regex instead.
+    _cors_origins = ["http://localhost:5173", "http://127.0.0.1:5173"] + [
+        o for o in _extra if "*" not in o
+    ]
+    _wildcards = [o for o in _extra if "*" in o]
+    _cors_origin_regex = (
+        "^" + "|".join(
+            _re.escape(w).replace(r"\*", ".*") for w in _wildcards
+        ) + "$"
+    ) if _wildcards else None
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=_cors_origins,
-    allow_credentials=True,
+    allow_origin_regex=_cors_origin_regex,
+    allow_credentials="*" not in _extra,
     allow_methods=["*"],
     allow_headers=["*"],
 )

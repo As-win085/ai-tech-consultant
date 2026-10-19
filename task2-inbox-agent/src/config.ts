@@ -4,6 +4,9 @@ dotenv.config();
 
 export interface AppConfig {
   port: number;
+  host: string;
+  trustProxy: boolean;
+  allowedOrigins: string[];
   knowledgeBrainUrl: string;
   knowledgeBrainTimeoutMs: number;
   knowledgeBrainRetries: number;
@@ -34,6 +37,18 @@ function intEnv(name: string, fallback: number): number {
   return n;
 }
 
+function listEnv(name: string): string[] {
+  const raw = process.env[name];
+  if (!raw) return [];
+  return raw.split(',').map((entry) => entry.trim()).filter(Boolean);
+}
+
+function boolEnv(name: string, fallback: boolean): boolean {
+  const raw = process.env[name];
+  if (raw === undefined || raw === '') return fallback;
+  return ['1', 'true', 'yes', 'on'].includes(raw.trim().toLowerCase());
+}
+
 export function loadConfig(overrides: Partial<AppConfig> = {}): AppConfig {
   const classifier = (process.env.CLASSIFIER ?? 'rules').toLowerCase();
   if (classifier !== 'rules' && classifier !== 'llm') {
@@ -50,6 +65,9 @@ export function loadConfig(overrides: Partial<AppConfig> = {}): AppConfig {
 
   const config: AppConfig = {
     port: intEnv('PORT', 8080),
+    host: process.env.HOST?.trim() || '',
+    trustProxy: boolEnv('TRUST_PROXY', false),
+    allowedOrigins: listEnv('ALLOWED_ORIGINS'),
     knowledgeBrainUrl: process.env.KNOWLEDGE_BRAIN_URL ?? 'http://localhost:8000',
     knowledgeBrainTimeoutMs: intEnv('KNOWLEDGE_BRAIN_TIMEOUT_MS', 30000),
     knowledgeBrainRetries: intEnv('KNOWLEDGE_BRAIN_RETRIES', 2),

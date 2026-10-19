@@ -64,13 +64,15 @@ export function buildMigrations(schema: string): Migration[] {
            category TEXT NOT NULL
          )`,
         `CREATE INDEX IF NOT EXISTS idx_feedback_item ON ${s}.feedback (item_id)`,
-        `CREATE TABLE IF NOT EXISTS ${s}.agent_state (
+         `CREATE TABLE IF NOT EXISTS ${s}.agent_state (
            id INTEGER PRIMARY KEY CHECK (id = 1),
            consecutive_unedited_approvals INTEGER NOT NULL DEFAULT 0,
            automation_eligible BOOLEAN NOT NULL DEFAULT FALSE,
-           automation_threshold_reached_at TIMESTAMPTZ
+           automation_threshold_reached_at TIMESTAMPTZ,
+           categories JSONB NOT NULL DEFAULT '{}'::jsonb
          )`,
-        `INSERT INTO ${s}.agent_state (id) VALUES (1) ON CONFLICT (id) DO NOTHING`,
+         `ALTER TABLE ${s}.agent_state ADD COLUMN IF NOT EXISTS categories JSONB NOT NULL DEFAULT '{}'::jsonb`,
+         `INSERT INTO ${s}.agent_state (id) VALUES (1) ON CONFLICT (id) DO NOTHING`,
       ],
     },
   ];
@@ -240,22 +242,26 @@ export class PostgresStore implements Store {
     const res = await this.pool.query(`SELECT * FROM ${this.qualified}.agent_state WHERE id = 1`);
     const row = res.rows[0];
     if (!row) return defaultAgentState();
+    const defaults = defaultAgentState();
+    const stored = (row.categories ?? {}) as Partial<typeof defaults.categories>;
     return {
       consecutiveUneditedApprovals: row.consecutive_unedited_approvals,
       automationEligible: row.automation_eligible,
       automationThresholdReachedAt: row.automation_threshold_reached_at ? toIso(row.automation_threshold_reached_at) : null,
+      categories: { ...defaults.categories, ...stored },
     };
   }
 
   async setState(state: AgentState): Promise<void> {
     await this.pool.query(
-      `INSERT INTO ${this.qualified}.agent_state (id, consecutive_unedited_approvals, automation_eligible, automation_threshold_reached_at)
-       VALUES (1,$1,$2,$3)
+      `INSERT INTO ${this.qualified}.agent_state (id, consecutive_unedited_approvals, automation_eligible, automation_threshold_reached_at, categories)
+       VALUES (1,$1,$2,$3,$4)
        ON CONFLICT (id) DO UPDATE SET
          consecutive_unedited_approvals = EXCLUDED.consecutive_unedited_approvals,
          automation_eligible = EXCLUDED.automation_eligible,
-         automation_threshold_reached_at = EXCLUDED.automation_threshold_reached_at`,
-      [state.consecutiveUneditedApprovals, state.automationEligible, state.automationThresholdReachedAt],
+         automation_threshold_reached_at = EXCLUDED.automation_threshold_reached_at,
+         categories = EXCLUDED.categories`,
+      [state.consecutiveUneditedApprovals, state.automationEligible, state.automationThresholdReachedAt, JSON.stringify(state.categories)],
     );
   }
 }

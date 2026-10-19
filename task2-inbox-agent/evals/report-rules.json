@@ -1,6 +1,7 @@
 {
-  "generatedAt": "2026-10-19T01:48:17.763Z",
+  "generatedAt": "2026-10-19T09:49:03.637Z",
   "classifier": "rules",
+  "prompt": null,
   "host": {
     "platform": "win32",
     "node": "v22.20.0"
@@ -13,12 +14,12 @@
     "reviewCorrectness": 1
   },
   "classification": {
-    "cases": 79,
-    "categoryAccuracy": 0.709,
-    "urgencyAccuracy": 0.595,
-    "macroF1": 0.714,
-    "escalationRecall": 0.848,
-    "escalationPrecision": 0.667
+    "cases": 87,
+    "categoryAccuracy": 0.655,
+    "urgencyAccuracy": 0.632,
+    "macroF1": 0.735,
+    "escalationRecall": 0.872,
+    "escalationPrecision": 0.708
   },
   "drafts": {
     "cases": 4,
@@ -112,12 +113,12 @@
   },
   "thresholdChecks": {
     "categoryAccuracy": {
-      "value": 0.7088607594936709,
+      "value": 0.6551724137931034,
       "threshold": 0.6,
       "pass": true
     },
     "escalationRecall": {
-      "value": 0.8484848484848485,
+      "value": 0.8717948717948718,
       "threshold": 0.7,
       "pass": true
     },

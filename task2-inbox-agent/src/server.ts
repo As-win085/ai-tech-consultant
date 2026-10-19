@@ -7,6 +7,7 @@ import { KnowledgeBrainError } from './kbClient';
 import { ingestRequestSchema, reviewActionSchema } from './schemas';
 import { reviewUiHtml } from './ui';
 import { createAgentBundle } from './factory';
+import { isOriginAllowed, parseOrigins } from './cors';
 
 const VERSION = '0.1.0';
 
@@ -19,18 +20,19 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
   const { agent, config } = deps;
   const app = Fastify({
     logger: config.logLevel === 'silent' ? false : { level: config.logLevel },
+    trustProxy: config.trustProxy,
   });
 
-  const rawOrigins = process.env.ALLOWED_ORIGINS ?? '';
-  const extraOrigins = rawOrigins.split(',').map((o) => o.trim()).filter(Boolean);
-  const corsOrigins = new Set(['http://localhost:5173', 'http://127.0.0.1:5173', ...extraOrigins]);
+  const corsPolicy = parseOrigins(config.allowedOrigins);
   app.addHook('onRequest', (request, reply, done) => {
     const origin = request.headers.origin;
-    if (origin && corsOrigins.has(origin)) {
+    if (origin && isOriginAllowed(origin, corsPolicy)) {
       reply.header('Access-Control-Allow-Origin', origin);
+      reply.header('Vary', 'Origin');
       reply.header('Access-Control-Allow-Credentials', 'true');
       reply.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
       reply.header('Access-Control-Allow-Headers', 'content-type,authorization');
+      reply.header('Access-Control-Max-Age', '600');
     }
     if (request.method === 'OPTIONS') {
       reply.code(204).send();
@@ -185,8 +187,33 @@ async function start(): Promise<void> {
     }
   }
 
-  await app.listen({ port: config.port, host: '::' });
-  app.log.info({ port: config.port, store: storeKind, classifier: config.classifier }, 'inbox-agent started');
+  await listenWithFallback(app, config);
+  app.log.info(
+    { port: config.port, host: config.host || 'auto', store: storeKind, classifier: config.classifier },
+    'inbox-agent started',
+  );
+}
+
+/**
+ * Bind to the configured host, or try dual-stack first when no HOST is set.
+ * Cloud runtimes supply PORT and typically accept `0.0.0.0`; local browsers
+ * often resolve `localhost` to IPv6, so we prefer `::` and fall back to IPv4
+ * rather than crashing when the platform has no IPv6.
+ */
+async function listenWithFallback(app: FastifyInstance, config: AppConfig): Promise<void> {
+  const candidates = config.host ? [config.host] : ['::', '0.0.0.0'];
+  for (const [index, host] of candidates.entries()) {
+    const isLast = index === candidates.length - 1;
+    try {
+      await app.listen({ port: config.port, host });
+      return;
+    } catch (err) {
+      const code = (err as NodeJS.ErrnoException)?.code;
+      const retryable = code === 'EAFNOSUPPORT' || code === 'EADDRNOTAVAIL' || code === 'ENETUNREACH';
+      if (!retryable || isLast) throw err;
+      app.log.warn({ host, code }, 'listen failed, trying next bind address');
+    }
+  }
 }
 
 if (require.main === module) {

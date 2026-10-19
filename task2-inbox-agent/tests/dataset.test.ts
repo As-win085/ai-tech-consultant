@@ -29,8 +29,12 @@ describe('synthetic email dataset', () => {
       'product_howto',
       'troubleshooting',
       'billing_account',
+      'refund',
       'feature_request',
+      'quote',
+      'new_project',
       'complaint',
+      'follow_up',
       'unsupported_unclear',
     ]) {
       expect(categories).toContain(expected);
