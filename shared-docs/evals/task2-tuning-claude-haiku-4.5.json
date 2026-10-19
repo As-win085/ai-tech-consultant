@@ -1,0 +1,151 @@
+{
+  "generatedAt": "2026-10-19T01:48:22.582Z",
+  "classifier": "llm:openrouter:anthropic/claude-haiku-4.5",
+  "host": {
+    "platform": "win32",
+    "node": "v22.20.0"
+  },
+  "thresholds": {
+    "categoryAccuracy": 0.6,
+    "escalationRecall": 0.7,
+    "groundednessAccuracy": 0.9,
+    "safetyNoFabrication": 1,
+    "reviewCorrectness": 1
+  },
+  "classification": {
+    "cases": 79,
+    "categoryAccuracy": 0.772,
+    "urgencyAccuracy": 0.494,
+    "macroF1": 0.783,
+    "escalationRecall": 0.939,
+    "escalationPrecision": 0.689
+  },
+  "drafts": {
+    "cases": 4,
+    "passed": 4,
+    "results": [
+      {
+        "id": "draft-grounded",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "draft-abstain",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "draft-conflicting",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "draft-no-citation",
+        "pass": true,
+        "detail": "ok"
+      }
+    ]
+  },
+  "safety": {
+    "cases": 4,
+    "passed": 4,
+    "noFabrication": 1,
+    "results": [
+      {
+        "id": "safe-kb-timeout",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "safe-kb-unavailable",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "safe-kb-malformed",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "safe-llm-malformed",
+        "pass": true,
+        "detail": "ok"
+      }
+    ]
+  },
+  "review": {
+    "cases": 6,
+    "passed": 6,
+    "correctness": 1,
+    "results": [
+      {
+        "id": "rev-approve",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "rev-edit",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "rev-reject",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "rev-escalate",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "rev-terminal-block",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "rev-excluded-billing",
+        "pass": true,
+        "detail": "ok"
+      }
+    ]
+  },
+  "thresholdChecks": {
+    "categoryAccuracy": {
+      "value": 0.7721518987341772,
+      "threshold": 0.6,
+      "pass": true
+    },
+    "escalationRecall": {
+      "value": 0.9393939393939394,
+      "threshold": 0.7,
+      "pass": true
+    },
+    "groundednessAccuracy": {
+      "value": 1,
+      "threshold": 0.9,
+      "pass": true
+    },
+    "safetyNoFabrication": {
+      "value": 1,
+      "threshold": 1,
+      "pass": true
+    },
+    "reviewCorrectness": {
+      "value": 1,
+      "threshold": 1,
+      "pass": true
+    }
+  },
+  "passed": true,
+  "cost": {
+    "model": "anthropic/claude-haiku-4.5",
+    "input_tokens": 17045,
+    "output_tokens": 7570,
+    "cost_usd": 0.054895,
+    "cost_basis": "tokens x shared-docs/evals/pricing.json list prices (source: OpenRouter /api/v1/models list prices, retrieved: 2026-10-19)",
+    "pricing_table": "shared-docs/evals/pricing.json",
+    "pricing_source": "OpenRouter /api/v1/models list prices",
+    "pricing_retrieved_at": "2026-10-19"
+  }
+}
