@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-19T01:38:57.462Z",
-  "classifier": "rules",
+  "generatedAt": "2026-10-19T01:50:43.958Z",
+  "classifier": "llm:openrouter:anthropic/claude-sonnet-4.6",
   "host": {
     "platform": "win32",
     "node": "v22.20.0"
@@ -14,11 +14,11 @@
   },
   "classification": {
     "cases": 79,
-    "categoryAccuracy": 0.709,
-    "urgencyAccuracy": 0.595,
-    "macroF1": 0.714,
-    "escalationRecall": 0.848,
-    "escalationPrecision": 0.667
+    "categoryAccuracy": 0.241,
+    "urgencyAccuracy": 0.253,
+    "macroF1": 0.065,
+    "escalationRecall": 1,
+    "escalationPrecision": 0.418
   },
   "drafts": {
     "cases": 4,
@@ -112,12 +112,12 @@
   },
   "thresholdChecks": {
     "categoryAccuracy": {
-      "value": 0.7088607594936709,
+      "value": 0.24050632911392406,
       "threshold": 0.6,
-      "pass": true
+      "pass": false
     },
     "escalationRecall": {
-      "value": 0.8484848484848485,
+      "value": 1,
       "threshold": 0.7,
       "pass": true
     },
@@ -137,13 +137,13 @@
       "pass": true
     }
   },
-  "passed": true,
+  "passed": false,
   "cost": {
-    "model": null,
+    "model": "anthropic/claude-sonnet-4.6",
     "input_tokens": 0,
     "output_tokens": 0,
     "cost_usd": 0,
-    "cost_basis": "no chat tokens used (offline provider or run failed before chat)",
+    "cost_basis": "tokens x shared-docs/evals/pricing.json list prices (source: OpenRouter /api/v1/models list prices, retrieved: 2026-10-19)",
     "pricing_table": "shared-docs/evals/pricing.json",
     "pricing_source": "OpenRouter /api/v1/models list prices",
     "pricing_retrieved_at": "2026-10-19"

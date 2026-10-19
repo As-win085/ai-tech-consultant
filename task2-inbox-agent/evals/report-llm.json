@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-17T14:36:53.667Z",
-  "classifier": "llm:openai_compatible:llama3.2:1b",
+  "generatedAt": "2026-10-19T01:50:43.958Z",
+  "classifier": "llm:openrouter:anthropic/claude-sonnet-4.6",
   "host": {
     "platform": "win32",
     "node": "v22.20.0"
@@ -13,12 +13,12 @@
     "reviewCorrectness": 1
   },
   "classification": {
-    "cases": 8,
-    "categoryAccuracy": 0.25,
-    "urgencyAccuracy": 0.5,
-    "macroF1": 0.131,
-    "escalationRecall": 0.4,
-    "escalationPrecision": 1
+    "cases": 79,
+    "categoryAccuracy": 0.241,
+    "urgencyAccuracy": 0.253,
+    "macroF1": 0.065,
+    "escalationRecall": 1,
+    "escalationPrecision": 0.418
   },
   "drafts": {
     "cases": 4,
@@ -112,14 +112,14 @@
   },
   "thresholdChecks": {
     "categoryAccuracy": {
-      "value": 0.25,
+      "value": 0.24050632911392406,
       "threshold": 0.6,
       "pass": false
     },
     "escalationRecall": {
-      "value": 0.4,
+      "value": 1,
       "threshold": 0.7,
-      "pass": false
+      "pass": true
     },
     "groundednessAccuracy": {
       "value": 1,
@@ -137,5 +137,15 @@
       "pass": true
     }
   },
-  "passed": false
+  "passed": false,
+  "cost": {
+    "model": "anthropic/claude-sonnet-4.6",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_usd": 0,
+    "cost_basis": "tokens x shared-docs/evals/pricing.json list prices (source: OpenRouter /api/v1/models list prices, retrieved: 2026-10-19)",
+    "pricing_table": "shared-docs/evals/pricing.json",
+    "pricing_source": "OpenRouter /api/v1/models list prices",
+    "pricing_retrieved_at": "2026-10-19"
+  }
 }
