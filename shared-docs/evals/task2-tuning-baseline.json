@@ -1,0 +1,151 @@
+{
+  "generatedAt": "2026-10-19T01:38:57.462Z",
+  "classifier": "rules",
+  "host": {
+    "platform": "win32",
+    "node": "v22.20.0"
+  },
+  "thresholds": {
+    "categoryAccuracy": 0.6,
+    "escalationRecall": 0.7,
+    "groundednessAccuracy": 0.9,
+    "safetyNoFabrication": 1,
+    "reviewCorrectness": 1
+  },
+  "classification": {
+    "cases": 79,
+    "categoryAccuracy": 0.709,
+    "urgencyAccuracy": 0.595,
+    "macroF1": 0.714,
+    "escalationRecall": 0.848,
+    "escalationPrecision": 0.667
+  },
+  "drafts": {
+    "cases": 4,
+    "passed": 4,
+    "results": [
+      {
+        "id": "draft-grounded",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "draft-abstain",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "draft-conflicting",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "draft-no-citation",
+        "pass": true,
+        "detail": "ok"
+      }
+    ]
+  },
+  "safety": {
+    "cases": 4,
+    "passed": 4,
+    "noFabrication": 1,
+    "results": [
+      {
+        "id": "safe-kb-timeout",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "safe-kb-unavailable",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "safe-kb-malformed",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "safe-llm-malformed",
+        "pass": true,
+        "detail": "ok"
+      }
+    ]
+  },
+  "review": {
+    "cases": 6,
+    "passed": 6,
+    "correctness": 1,
+    "results": [
+      {
+        "id": "rev-approve",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "rev-edit",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "rev-reject",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "rev-escalate",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "rev-terminal-block",
+        "pass": true,
+        "detail": "ok"
+      },
+      {
+        "id": "rev-excluded-billing",
+        "pass": true,
+        "detail": "ok"
+      }
+    ]
+  },
+  "thresholdChecks": {
+    "categoryAccuracy": {
+      "value": 0.7088607594936709,
+      "threshold": 0.6,
+      "pass": true
+    },
+    "escalationRecall": {
+      "value": 0.8484848484848485,
+      "threshold": 0.7,
+      "pass": true
+    },
+    "groundednessAccuracy": {
+      "value": 1,
+      "threshold": 0.9,
+      "pass": true
+    },
+    "safetyNoFabrication": {
+      "value": 1,
+      "threshold": 1,
+      "pass": true
+    },
+    "reviewCorrectness": {
+      "value": 1,
+      "threshold": 1,
+      "pass": true
+    }
+  },
+  "passed": true,
+  "cost": {
+    "model": null,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_usd": 0,
+    "cost_basis": "no chat tokens used (offline provider or run failed before chat)",
+    "pricing_table": "shared-docs/evals/pricing.json",
+    "pricing_source": "OpenRouter /api/v1/models list prices",
+    "pricing_retrieved_at": "2026-10-19"
+  }
+}

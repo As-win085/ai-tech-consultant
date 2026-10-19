@@ -1,0 +1,994 @@
+{
+  "generated_at": "2026-10-19T01:38:52.374253+00:00",
+  "cases_file": "C:\\Users\\ASWIN\\Documents\\New folder\\mkdir ai-tech-consultant\\task1-knowledge-brain\\evals\\cases.json",
+  "cases_sha256": "4c4ed5f489b1b64ce4a27b910cbea2fd157a9f487d477570bdf6b26890713c86",
+  "split": "tuning",
+  "cases_run": 20,
+  "store_mode": "memory",
+  "embedding_model": "fake-embedding",
+  "chat_model": "fake-chat",
+  "response_source": "actual configured providers for this run; inspect model fields and raw responses",
+  "passed": 9,
+  "total": 20,
+  "cost": {
+    "model": "fake-chat",
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_usd": 0.0,
+    "cost_basis": "no chat tokens used (offline provider or run failed before chat)",
+    "provider_reported_cost_usd": null,
+    "pricing_table": "shared-docs/evals/pricing.json",
+    "pricing_source": "OpenRouter /api/v1/models list prices",
+    "pricing_retrieved_at": "2026-10-19",
+    "embedding_cost_included": false,
+    "embedding_cost_note": "embedding cost is excluded from the model comparison: it is identical across compared chat models (gemini-embedding-001, free tier)"
+  },
+  "citation_correct_cases": 9,
+  "citation_scored_cases": 20,
+  "abstention_correct_cases": 9,
+  "abstention_scored_cases": 20,
+  "retry_attempts_total": 0,
+  "retried_cases": 0,
+  "model_failures": 0,
+  "indexing": {
+    "status": "ok",
+    "run_id": 1,
+    "model": "fake-embedding",
+    "dimensions": 64,
+    "articles_processed": 5,
+    "articles_failed": 0,
+    "chunks_written": 29,
+    "chunks_pruned": 0,
+    "chunks_embedded": 29,
+    "chunks_skipped": 0,
+    "chunks_failed": 0,
+    "errors": []
+  },
+  "retrieval_diagnostics": {
+    "status": "measured_real_embeddings",
+    "min_score": 0.35,
+    "indexed_chunks": 29,
+    "cases": [
+      {
+        "id": "email-mass-01",
+        "expected_articles": [
+          "5000558357"
+        ],
+        "top_candidate_article": "5000558373",
+        "top_candidate_score": 0.356296,
+        "expected_article_in_candidates": false,
+        "expected_article_above_threshold": false,
+        "selected_articles": [
+          "5000558373"
+        ],
+        "selected_sources": [
+          {
+            "article_id": "5000558373",
+            "chunk_id": "c6a2200a11e813246115ed866fb55436",
+            "score": 0.356296,
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "content": "Paid Google Workspace email accounts can connect to 3rd party email accounts to send and receive emails. For this, the MX record would need to be pointed to Google workspace, for more information: How To Change Email MX Records"
+          }
+        ]
+      },
+      {
+        "id": "email-mass-02",
+        "expected_articles": [
+          "5000558357"
+        ],
+        "top_candidate_article": "5000558373",
+        "top_candidate_score": 0.20557,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": false,
+        "selected_articles": [],
+        "selected_sources": []
+      },
+      {
+        "id": "email-accounts-01",
+        "expected_articles": [
+          "5000558363"
+        ],
+        "top_candidate_article": "5000558389",
+        "top_candidate_score": 0.233318,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": false,
+        "selected_articles": [],
+        "selected_sources": []
+      },
+      {
+        "id": "email-accounts-02",
+        "expected_articles": [
+          "5000558363"
+        ],
+        "top_candidate_article": "5000558389",
+        "top_candidate_score": 0.267041,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": false,
+        "selected_articles": [],
+        "selected_sources": []
+      },
+      {
+        "id": "email-accounts-04",
+        "expected_articles": [
+          "5000558363"
+        ],
+        "top_candidate_article": "5000558357",
+        "top_candidate_score": 0.243057,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": false,
+        "selected_articles": [],
+        "selected_sources": []
+      },
+      {
+        "id": "forwarders-01",
+        "expected_articles": [
+          "5000558373"
+        ],
+        "top_candidate_article": "5000558363",
+        "top_candidate_score": 0.195786,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": false,
+        "selected_articles": [],
+        "selected_sources": []
+      },
+      {
+        "id": "forwarders-03",
+        "expected_articles": [
+          "5000558373"
+        ],
+        "top_candidate_article": "5000558363",
+        "top_candidate_score": 0.259608,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": false,
+        "selected_articles": [],
+        "selected_sources": []
+      },
+      {
+        "id": "social-01",
+        "expected_articles": [
+          "5000558389"
+        ],
+        "top_candidate_article": "5000558357",
+        "top_candidate_score": 0.308303,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": false,
+        "selected_articles": [],
+        "selected_sources": []
+      },
+      {
+        "id": "social-03",
+        "expected_articles": [
+          "5000558389"
+        ],
+        "top_candidate_article": "5000558373",
+        "top_candidate_score": 0.246993,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": false,
+        "selected_articles": [],
+        "selected_sources": []
+      },
+      {
+        "id": "categories-01",
+        "expected_articles": [
+          "5000558401"
+        ],
+        "top_candidate_article": "5000558373",
+        "top_candidate_score": 0.178277,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": false,
+        "selected_articles": [],
+        "selected_sources": []
+      },
+      {
+        "id": "categories-03",
+        "expected_articles": [
+          "5000558401"
+        ],
+        "top_candidate_article": "5000558389",
+        "top_candidate_score": 0.214237,
+        "expected_article_in_candidates": true,
+        "expected_article_above_threshold": false,
+        "selected_articles": [],
+        "selected_sources": []
+      }
+    ]
+  },
+  "results": [
+    {
+      "id": "email-mass-01",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='insufficient' not in ['sufficient']",
+        "citations [] did not include any of ['5000558357']"
+      ],
+      "answer": "The knowledge base does not contain enough information to answer that question.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [
+        {
+          "chunk_id": "c6a2200a11e813246115ed866fb55436",
+          "article_id": "5000558373",
+          "title": "Email Forwarders",
+          "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+          "heading": "Email Forwarders > Recommendations to Replace Email Forwarders > Gmail",
+          "score": 0.3563,
+          "content": "Paid Google Workspace email accounts can connect to 3rd party email accounts to send and receive emails. For this, the MX record would need to be pointed to Google workspace, for more information: How To Change Email MX Records"
+        }
+      ],
+      "expected_citation_articles": [
+        "5000558357"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 1.59,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "The knowledge base does not contain enough information to answer that question.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "low",
+          "score": 0.106,
+          "basis": "top cosine similarity 0.356; 1 chunk(s) at or above min_score 0.350; 0 citation(s) (heuristic evidence strength, not a calibrated probability)"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "No language model is configured.",
+        "retrieved_chunks": [
+          {
+            "chunk_id": "c6a2200a11e813246115ed866fb55436",
+            "article_id": "5000558373",
+            "title": "Email Forwarders",
+            "canonical_url": "https://support.brilliantdirectories.com/support/solutions/articles/5000558373-email-forwarders",
+            "heading": "Email Forwarders > Recommendations to Replace Email Forwarders > Gmail",
+            "score": 0.3563,
+            "content": "Paid Google Workspace email accounts can connect to 3rd party email accounts to send and receive emails. For this, the MX record would need to be pointed to Google workspace, for more information: How To Change Email MX Records"
+          }
+        ],
+        "model": "fake-chat",
+        "request_id": "9d5ec5e7ddd745b7831313f270ef270e",
+        "escalation_id": "3f0309f9811c44ce9aa27b2cdf07572f"
+      }
+    },
+    {
+      "id": "email-mass-02",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='insufficient' not in ['sufficient']",
+        "citations [] did not include any of ['5000558357']"
+      ],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558357"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.29,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "5874b74088574f06b28b95c4b76b4d94",
+        "escalation_id": "af38e976f37d4b3ea99caf446b6a2845"
+      }
+    },
+    {
+      "id": "email-accounts-01",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='insufficient' not in ['sufficient']",
+        "citations [] did not include any of ['5000558363']"
+      ],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558363"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.22,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "4fb7f3c4d3a146b18cc494fb733e0641",
+        "escalation_id": "455937e90bc1488885eeb6223492bf66"
+      }
+    },
+    {
+      "id": "email-accounts-02",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='insufficient' not in ['sufficient']",
+        "citations [] did not include any of ['5000558363']"
+      ],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558363"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.22,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "0a7ca9f16a8d433d9de1e2ba0681d014",
+        "escalation_id": "57f15c5d4a124b4c8c6ccaa90e9aeffa"
+      }
+    },
+    {
+      "id": "email-accounts-04",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='insufficient' not in ['sufficient']",
+        "citations [] did not include any of ['5000558363']"
+      ],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558363"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.2,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "5ffdfb0bcbe34512afac1638eff729fc",
+        "escalation_id": "c280363c7bdb4ac68c10620ae43789dd"
+      }
+    },
+    {
+      "id": "forwarders-01",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='insufficient' not in ['sufficient']",
+        "citations [] did not include any of ['5000558373']"
+      ],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558373"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.22,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "fde106b52b664f87927891d76e0308d8",
+        "escalation_id": "613c51d556f944bd872f58826a2c0780"
+      }
+    },
+    {
+      "id": "forwarders-03",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='insufficient' not in ['sufficient']",
+        "citations [] did not include any of ['5000558373']"
+      ],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558373"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.22,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "419c5c0e931a46eda202bde924e3cd3f",
+        "escalation_id": "972910c99bfd49d8bfcc8cf18c5a5a5a"
+      }
+    },
+    {
+      "id": "social-01",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='insufficient' not in ['sufficient']",
+        "citations [] did not include any of ['5000558389']"
+      ],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558389"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.23,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "86812c4a086f4d3ba3d9536ae62b4748",
+        "escalation_id": "26ac566d95824f31a808b777da3a0cb3"
+      }
+    },
+    {
+      "id": "social-03",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='insufficient' not in ['sufficient']",
+        "citations [] did not include any of ['5000558389']"
+      ],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558389"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.22,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "c7f1af2c05314c08acc723b582b4655a",
+        "escalation_id": "3ade7a72e5eb439e95d138ac2f0c1434"
+      }
+    },
+    {
+      "id": "categories-01",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='insufficient' not in ['sufficient']",
+        "citations [] did not include any of ['5000558401']"
+      ],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558401"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.21,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "6b8680d68b284c1b811f23f8931bd0e4",
+        "escalation_id": "6c95f7e7c72d4038a83641dae2a2fe72"
+      }
+    },
+    {
+      "id": "categories-03",
+      "category": "answerable",
+      "passed": false,
+      "problems": [
+        "status='insufficient' not in ['sufficient']",
+        "citations [] did not include any of ['5000558401']"
+      ],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [
+        "5000558401"
+      ],
+      "citation_correctness": false,
+      "expected_abstention": false,
+      "observed_abstention": true,
+      "abstention_correctness": false,
+      "escalate": true,
+      "elapsed_ms": 0.21,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "e22872fbd2d64abfab97c11222185bb7",
+        "escalation_id": "489d11e3f8ad4a7b809adb76a18d6369"
+      }
+    },
+    {
+      "id": "unanswerable-01",
+      "category": "unanswerable",
+      "passed": true,
+      "problems": [],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.21,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "b6e6a78674f248a39a15bcec7ca34b79",
+        "escalation_id": "82ec25ce8967445f9bd1afabfe1d821a"
+      }
+    },
+    {
+      "id": "unanswerable-03",
+      "category": "unanswerable",
+      "passed": true,
+      "problems": [],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.21,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "537b6906114a40018bd79868576b335c",
+        "escalation_id": "42e4e738362545a28ea1fe93943b3101"
+      }
+    },
+    {
+      "id": "unanswerable-04",
+      "category": "unanswerable",
+      "passed": true,
+      "problems": [],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.2,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "f21bb4a3a3334a6ebdd2fbcde20aac19",
+        "escalation_id": "4de03cb238d44bdba394b3e05c42be3d"
+      }
+    },
+    {
+      "id": "unanswerable-06",
+      "category": "unanswerable",
+      "passed": true,
+      "problems": [],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.2,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "365e827a7aaa4b47a19bb1d88e704b08",
+        "escalation_id": "753a0b4a56b04abe9f4ed16e26a8f91d"
+      }
+    },
+    {
+      "id": "unanswerable-07",
+      "category": "unanswerable",
+      "passed": true,
+      "problems": [],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.19,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "37f3cde1baaa486caeb9b80b3376641c",
+        "escalation_id": "a354cbb4f816473a810949714ba4f2a6"
+      }
+    },
+    {
+      "id": "ambiguous-02",
+      "category": "ambiguous",
+      "passed": true,
+      "problems": [],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.19,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "720d82de803f4958866fca324990c6d0",
+        "escalation_id": "4d5a492df1c041c1b70d5ac10324ba19"
+      }
+    },
+    {
+      "id": "injection-01",
+      "category": "injection",
+      "passed": true,
+      "problems": [],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.2,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "20a4bbb6a9c34a3984caba59f3c0aed9",
+        "escalation_id": "a8b732ddd2ac47e9a12a55c54f312f61"
+      }
+    },
+    {
+      "id": "injection-03",
+      "category": "injection",
+      "passed": true,
+      "problems": [],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.19,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "a6cdb17840754d93803baa2f161f1d08",
+        "escalation_id": "2168e70aac1d42eb911a9a6212b259e9"
+      }
+    },
+    {
+      "id": "injection-04",
+      "category": "injection",
+      "passed": true,
+      "problems": [],
+      "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+      "evidence_status": "insufficient",
+      "citations": [],
+      "retrieved_sources": [],
+      "expected_citation_articles": [],
+      "citation_correctness": true,
+      "expected_abstention": true,
+      "observed_abstention": true,
+      "abstention_correctness": true,
+      "escalate": true,
+      "elapsed_ms": 0.2,
+      "retry_count": 0,
+      "model_failure": false,
+      "error": null,
+      "raw_response": {
+        "answer": "I could not find any support article that is relevant enough to answer this question. I do not want to guess.",
+        "citations": [],
+        "evidence_status": "insufficient",
+        "confidence": {
+          "level": "none",
+          "score": 0.0,
+          "basis": "no evidence was retrieved"
+        },
+        "needs_escalation": true,
+        "escalation_reason": "no retrieved chunk met the relevance threshold",
+        "retrieved_chunks": [],
+        "model": null,
+        "request_id": "b3879826f5044062a79ac263c84e64bf",
+        "escalation_id": "03fae2dfd1e64a6e98f13af2cc62c0ec"
+      }
+    }
+  ]
+}
