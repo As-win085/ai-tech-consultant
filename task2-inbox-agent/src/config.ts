@@ -43,6 +43,10 @@ export function loadConfig(overrides: Partial<AppConfig> = {}): AppConfig {
   if (!['openai_compatible', 'anthropic', 'gemini', 'google', 'groq', 'openrouter', 'ollama'].includes(llmProvider)) {
     throw new Error(`Unsupported LLM_PROVIDER: ${llmProvider}`);
   }
+  const providerKey = llmProvider === 'openrouter' ? process.env.OPENROUTER_API_KEY
+    : llmProvider === 'groq' ? process.env.GROQ_API_KEY
+      : llmProvider === 'gemini' || llmProvider === 'google' ? process.env.GEMINI_API_KEY
+        : llmProvider === 'anthropic' ? process.env.ANTHROPIC_API_KEY : undefined;
 
   const config: AppConfig = {
     port: intEnv('PORT', 8080),
@@ -52,13 +56,13 @@ export function loadConfig(overrides: Partial<AppConfig> = {}): AppConfig {
     classifier: classifier as AppConfig['classifier'],
     llmProvider: llmProvider as AppConfig['llmProvider'],
     llmModel: process.env.LLM_MODEL ?? process.env.CHAT_MODEL ?? 'gemini-3.8-flash',
-    llmBaseUrl: process.env.LLM_BASE_URL ?? process.env.CHAT_BASE_URL ?? ({
+    llmBaseUrl: (process.env.LLM_BASE_URL || process.env.CHAT_BASE_URL || ({
       gemini: 'https://generativelanguage.googleapis.com/v1beta/openai',
       google: 'https://generativelanguage.googleapis.com/v1beta/openai',
       groq: 'https://api.groq.com/openai/v1', openrouter: 'https://openrouter.ai/api/v1',
       ollama: 'http://localhost:11434/v1',
-    } as Record<string, string>)[llmProvider] ?? null,
-    llmApiKey: process.env.LLM_API_KEY ?? null,
+    } as Record<string, string>)[llmProvider]) ?? null,
+    llmApiKey: providerKey ?? process.env.LLM_API_KEY ?? null,
     llmTimeoutMs: intEnv('LLM_TIMEOUT_MS', 60000),
     llmRetries: intEnv('LLM_RETRIES', 1),
     llmRequestDelayMs: intEnv('LLM_MIN_DELAY_MS', intEnv('LLM_REQUEST_DELAY_MS', 8000)),

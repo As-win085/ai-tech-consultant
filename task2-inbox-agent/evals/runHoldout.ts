@@ -23,6 +23,10 @@ const BASE_URLS: Record<string, string> = {
   ollama: 'http://localhost:11434/v1', anthropic: 'https://api.anthropic.com/v1',
 };
 
+function reportFileName(modelId: string): string {
+  return `holdout-20-${modelId.replace(/[^A-Za-z0-9_.-]/g, '_')}.json`;
+}
+
 function median(values: number[]): number {
   const sorted = [...values].sort((a, b) => a - b);
   if (!sorted.length) return 0;
@@ -55,7 +59,11 @@ function macroF1(expected: string[], actual: Array<string | null>): number {
 }
 
 async function main(): Promise<void> {
-  const apiKey = process.env.LLM_API_KEY;
+  const providerKey = PROVIDER === 'openrouter' ? process.env.OPENROUTER_API_KEY
+    : PROVIDER === 'groq' ? process.env.GROQ_API_KEY
+      : PROVIDER === 'gemini' || PROVIDER === 'google' ? process.env.GEMINI_API_KEY
+        : PROVIDER === 'anthropic' ? process.env.ANTHROPIC_API_KEY : undefined;
+  const apiKey = providerKey ?? process.env.LLM_API_KEY;
   const bytes = fs.readFileSync(DATA);
   const allCases = (JSON.parse(bytes.toString('utf8')) as { cases: Case[] }).cases;
   const requestedCaseIds = process.env.EVAL_CASE_IDS?.split(',').map((id) => id.trim()).filter(Boolean);
@@ -100,7 +108,7 @@ async function main(): Promise<void> {
   const retries = Number.parseInt(process.env.LLM_RETRIES ?? '1', 10);
 
   for (const model of modelsToRun) {
-    const priorPath = path.join(OUTPUT, `holdout-20-${model.id}.json`);
+    const priorPath = path.join(OUTPUT, reportFileName(model.id));
     const priorResults = requestedCaseIds && fs.existsSync(priorPath)
       ? (JSON.parse(fs.readFileSync(priorPath, 'utf8')).results as any[])
       : [];
@@ -116,13 +124,22 @@ async function main(): Promise<void> {
     for (const item of cases) {
       const email: Email = { id: item.id, subject: item.subject, body: item.body } as Email;
       const calls: Array<{ raw: unknown; inputTokens: number; outputTokens: number; status: number }> = [];
+      const transportErrors: Array<{ type: string; code: string | null }> = [];
       let fetchAttempts = 0;
       let transportFailures = 0;
       const captureFetch: typeof fetch = async (input, init) => {
         fetchAttempts++;
         let response: Response;
         try { response = await fetch(input, init); }
-        catch (error) { transportFailures++; throw error; }
+        catch (error) {
+          transportFailures++;
+          const transportError = error as Error & { cause?: { code?: unknown } };
+          transportErrors.push({
+            type: transportError?.name ?? 'UnknownError',
+            code: typeof transportError?.cause?.code === 'string' ? transportError.cause.code : null,
+          });
+          throw error;
+        }
         let raw: unknown = null;
         let inputTokens = 0, outputTokens = 0;
         try {
@@ -149,6 +166,8 @@ async function main(): Promise<void> {
       freshResults.push({
         id: item.id, input: item, expected: { category: item.category, urgency: item.urgency, needsEscalation: item.needsEscalation },
         raw_model_response: successful?.raw ?? calls.at(-1)?.raw ?? null,
+        raw_attempts: calls.map((call) => ({ http_status: call.status, response: call.raw })),
+        transport_errors: transportErrors,
         raw_model_text: rawText, classification, elapsed_ms: elapsedMs,
         attempts: fetchAttempts, did_retry: fetchAttempts > 1, transport_failures: transportFailures, failed_http_responses: failedCalls,
         retry_count: classifier.lastRetryCount, model_failure: classification.fallback,
@@ -169,7 +188,9 @@ async function main(): Promise<void> {
     const fn = results.filter((r) => !r.classification.needsEscalation && r.expected.needsEscalation).length;
     const inputTokens = results.reduce((sum, row) => sum + row.usage.input_tokens, 0);
     const outputTokens = results.reduce((sum, row) => sum + row.usage.output_tokens, 0);
-    const totalCost = (inputTokens * model.inputPerMillion + outputTokens * model.outputPerMillion) / 1_000_000;
+    const totalCost = PROVIDER === 'gemini'
+      ? (inputTokens * model.inputPerMillion + outputTokens * model.outputPerMillion) / 1_000_000
+      : null;
     const failureCount = results.filter((row) => row.classification.fallback).length;
     const retryCount = results.filter((row) => row.did_retry).length;
     const latencies = results.map((row) => row.elapsed_ms);
@@ -189,17 +210,29 @@ async function main(): Promise<void> {
         http_failures: results.reduce((sum, row) => sum + row.failed_http_responses, 0),
         transport_failures: results.reduce((sum, row) => sum + row.transport_failures, 0),
         input_tokens: inputTokens, output_tokens: outputTokens, estimated_cost_usd: totalCost,
-        cost_basis: `Published Gemini paid-tier list rates (USD/MTok): input $${model.inputPerMillion}, output $${model.outputPerMillion}; estimated from provider-reported usage, not an invoice. Eligible free-tier usage may have zero billed cost.`
+        cost_basis: PROVIDER === 'gemini'
+          ? `Published Gemini paid-tier list rates (USD/MTok): input $${model.inputPerMillion}, output $${model.outputPerMillion}; estimated from provider-reported usage, not an invoice. Eligible free-tier usage may have zero billed cost.`
+          : 'Not estimated: provider/model pricing metadata was not captured for this run.'
       }, results,
     };
-    const target = path.join(OUTPUT, `holdout-20-${model.id}.json`);
+    const target = path.join(OUTPUT, reportFileName(model.id));
     fs.writeFileSync(target, JSON.stringify(report, null, 2));
     comparisonRows.push({ model: model.label, source: `live ${PROVIDER} API`, ...report.metrics });
-    console.log(`${model.id}: category accuracy=${report.metrics.category_accuracy}, urgency accuracy=${report.metrics.urgency_accuracy}, escalation precision=${report.metrics.escalation_precision}, recall=${report.metrics.escalation_recall}, median latency=${report.metrics.median_latency_ms} ms, p95=${report.metrics.p95_latency_ms} ms, failures=${report.metrics.failures}, retry rate=${report.metrics.retry_rate}, estimated cost=$${totalCost.toFixed(6)}; report=${target}`);
+    console.log(`${model.id}: category accuracy=${report.metrics.category_accuracy}, urgency accuracy=${report.metrics.urgency_accuracy}, escalation precision=${report.metrics.escalation_precision}, recall=${report.metrics.escalation_recall}, median latency=${report.metrics.median_latency_ms} ms, p95=${report.metrics.p95_latency_ms} ms, failures=${report.metrics.failures}, retry rate=${report.metrics.retry_rate}, estimated cost=${totalCost === null ? 'not estimated' : `$${totalCost.toFixed(6)}`}; report=${target}`);
   }
   for (const model of MODELS) {
     if (modelsToRun.includes(model)) continue;
-    const priorPath = path.join(OUTPUT, `holdout-20-${model.id}.json`);
+    if (model.id === 'gemini-3.8-flash') {
+      comparisonRows.push({
+        model: model.id, source: 'not evaluated: Gemini free-tier quota exhausted',
+        status: 'not evaluated: quota exhausted', category_accuracy: null, category_macro_f1: null,
+        urgency_accuracy: null, escalation_precision: null, escalation_recall: null,
+        median_latency_ms: null, p95_latency_ms: null, estimated_cost_usd: null,
+        failures: null, failure_rate: null, retried_cases: null, retry_rate: null,
+      });
+      continue;
+    }
+    const priorPath = path.join(OUTPUT, reportFileName(model.id));
     if (fs.existsSync(priorPath)) {
       const prior = JSON.parse(fs.readFileSync(priorPath, 'utf8'));
       comparisonRows.push({ model: model.label, source: `live ${PROVIDER} API`, ...prior.metrics });
@@ -218,7 +251,7 @@ async function main(): Promise<void> {
   const comparisonPath = path.join(OUTPUT, 'comparison-holdout-20.json');
   fs.writeFileSync(comparisonPath, JSON.stringify({
     generated_at: new Date().toISOString(), dataset_sha256: createHash('sha256').update(bytes).digest('hex'),
-    note: 'Deviation: uses configurable Gemini-compatible endpoints by default instead of the originally requested Claude models. Set LLM_PROVIDER, LLM_BASE_URL, LLM_API_KEY, EVAL_MODEL_CHEAP and EVAL_MODEL_STRONG to select provider/models. Rule latency is local and not comparable to network latency. Partial reruns merge only named cases with earlier raw case results.', rows: comparisonRows,
+    note: 'Provider/model selection is from this run. Gemini 3.8 Flash was not evaluated in this run because its free-tier daily quota was exhausted. Set LLM_PROVIDER, LLM_BASE_URL, provider-specific key (OPENROUTER_API_KEY or GROQ_API_KEY), EVAL_MODEL_CHEAP and EVAL_MODEL_STRONG to select provider/models. Rule latency is local and not comparable to network latency. Partial reruns merge only named cases with earlier raw case results.', rows: comparisonRows,
   }, null, 2));
   console.log('\nModel comparison (20 fixed synthetic emails)');
   console.log('| Model | Source | Category acc. | Macro-F1 | Urgency acc. | Escalation P/R | Median / p95 ms | Cost USD | Failure / retry rate |');

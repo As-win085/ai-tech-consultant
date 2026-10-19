@@ -21,6 +21,22 @@ export function buildServer(deps: ServerDeps): FastifyInstance {
     logger: config.logLevel === 'silent' ? false : { level: config.logLevel },
   });
 
+  const corsOrigins = new Set(['http://localhost:5173', 'http://127.0.0.1:5173']);
+  app.addHook('onRequest', (request, reply, done) => {
+    const origin = request.headers.origin;
+    if (origin && corsOrigins.has(origin)) {
+      reply.header('Access-Control-Allow-Origin', origin);
+      reply.header('Access-Control-Allow-Credentials', 'true');
+      reply.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+      reply.header('Access-Control-Allow-Headers', 'content-type,authorization');
+    }
+    if (request.method === 'OPTIONS') {
+      reply.code(204).send();
+      return;
+    }
+    done();
+  });
+
   app.setErrorHandler((error, request, reply) => {
     const requestId = request.id;
     let status = 500;

@@ -218,7 +218,11 @@ export class LlmClassifier implements Classifier {
       } catch (err) {
         lastError = err instanceof Error ? err.message : String(err);
         const transient = err instanceof RetryableProviderError ||
-          (err instanceof Error && /timeout|abort|network/i.test(err.message));
+          (err instanceof Error && (
+            err.name === 'AbortError' ||
+            err instanceof TypeError ||
+            /timeout|abort|network|fetch failed|socket/i.test(err.message)
+          ));
         if (transient && attempt < this.opts.retries) {
           const waitMs = retryDelayMs(attempt, err instanceof RetryableProviderError ? err.retryAfterMs : 0);
           this.lastRetryCount++;

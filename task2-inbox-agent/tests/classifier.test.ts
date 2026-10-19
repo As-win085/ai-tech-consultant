@@ -132,4 +132,25 @@ describe('LlmClassifier', () => {
     expect(calls).toBe(2);
     expect(classifier.lastRetryCount).toBe(1);
   });
+
+  it('retries transport TypeErrors and counts the retry', async () => {
+    let calls = 0;
+    const fetchImpl = (async () => {
+      calls++;
+      if (calls === 1) throw new TypeError('fetch failed');
+      return { ok: true, status: 200, json: async () => ({ choices: [{ message: { content: '{\"category\":\"product_howto\",\"urgency\":\"low\",\"ambiguity\":\"clear\",\"confidence\":0.9,\"riskFlags\":[],\"needsEscalation\":false}' } }] }) } as Response;
+    }) as typeof fetch;
+    const previousDelay = process.env.LLM_BACKOFF_BASE_MS;
+    process.env.LLM_BACKOFF_BASE_MS = '0';
+    try {
+      const classifier = new LlmClassifier({ provider: 'openrouter', model: 'test', baseUrl: 'http://example.test/v1', apiKey: 'test-only', timeoutMs: 1000, retries: 1, requestDelayMs: 0, fetchImpl });
+      const result = await classifier.classify(sampleEmail() as never);
+      expect(result.fallback).toBe(false);
+      expect(calls).toBe(2);
+      expect(classifier.lastRetryCount).toBe(1);
+    } finally {
+      if (previousDelay === undefined) delete process.env.LLM_BACKOFF_BASE_MS;
+      else process.env.LLM_BACKOFF_BASE_MS = previousDelay;
+    }
+  });
 });
