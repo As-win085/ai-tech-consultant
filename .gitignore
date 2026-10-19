@@ -10,6 +10,7 @@ venv/
 env/
 ENV/
 .pytest_cache/
+.pytest-tmp-full/
 .mypy_cache/
 .ruff_cache/
 .coverage
@@ -25,6 +26,7 @@ task1-knowledge-brain/data/
 
 # Node dependencies
 **/node_modules/
+**/.jest-cache/
 
 # Local service logs
 **/_server.*.log
