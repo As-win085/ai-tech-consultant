@@ -34,6 +34,7 @@ from app.kb_client import KbAnswer, KbUnavailable
 from app.schemas import Citation, Indicator
 from app.service import MeetingToScopeService
 from app.extractor import build_extractor
+from app.prompt import EXTRACTION_PROMPT
 from app.store import InMemoryStore
 from app.transcript import new_transcript
 
@@ -232,6 +233,7 @@ def main() -> int:
             "cases_file_sha256": hashlib.sha256(case_bytes).hexdigest(),
             "split": args.split,
             "extractor": args.extractor,
+            "prompt": EXTRACTION_PROMPT.report_block() if args.extractor == "llm" else None,
             "cases_run": len(results),
             "passed": passed,
             "total": len(results),

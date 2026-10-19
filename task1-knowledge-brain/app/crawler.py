@@ -1,6 +1,7 @@
 import argparse
 import hashlib
 import json
+import logging
 import re
 import time
 import json
@@ -16,6 +17,8 @@ from xml.etree import ElementTree as ET
 
 import httpx
 from bs4 import BeautifulSoup
+
+logger = logging.getLogger(__name__)
 
 SITEMAP_URL = "https://support.brilliantdirectories.com/support/sitemap.xml"
 ARTICLE_MARKER = "/support/solutions/articles/"
@@ -369,6 +372,9 @@ def crawl(
                     if urlsplit(image["url"]).scheme != "https" or image_host != article_host:
                         continue
                     try:
+                        logger.info(
+                            "llm_call prompt=image_caption@unversioned url=%s", image["url"]
+                        )
                         description = collapse_whitespace(image_describer(image["url"], image.get("context", "")))[:1000]
                         if description:
                             image["description"] = description

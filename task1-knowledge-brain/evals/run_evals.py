@@ -41,7 +41,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from app.answer import SYSTEM_PROMPT, AnswerConfig
+from app.answer import ANSWER_PROMPT, SYSTEM_PROMPT, AnswerConfig
 from app.chat import build_chat_provider
 from app.embeddings import build_embedding_provider
 from app.indexer import IndexConfig, index_document
@@ -338,6 +338,7 @@ def main() -> int:
                 "store_mode": args.store,
                 "embedding_model": getattr(embedding, "model_name", None),
                 "chat_model": getattr(chat, "model_name", None),
+                "prompt": ANSWER_PROMPT.report_block(),
                 "response_source": "actual configured providers for this run; inspect model fields and raw responses",
                 "passed": passed,
                 "total": total,

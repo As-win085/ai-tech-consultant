@@ -2,6 +2,7 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { resolve } from 'path';
 import { Classifier, LlmClassifier, RuleBasedClassifier, buildClassifier as makeClassifier } from '../src/classifier';
+import { promptReport } from '../src/promptStore';
 import { InboxAgent } from '../src/agent';
 import { InMemoryStore } from '../src/store';
 import { KnowledgeBrainError } from '../src/kbClient';
@@ -146,6 +147,7 @@ async function main() {
   const report: Record<string, unknown> = {
     generatedAt: new Date().toISOString(),
     classifier: classifier.name,
+    prompt: useLlm ? promptReport('classifier_system') : null,
     host: { platform: process.platform, node: process.version },
     thresholds: caseFile.scoring.passThresholds,
   };

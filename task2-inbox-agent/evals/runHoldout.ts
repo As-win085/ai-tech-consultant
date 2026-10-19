@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
 import * as dotenv from 'dotenv';
 import { LlmClassifier } from '../src/classifier';
+import { promptReport } from '../src/promptStore';
 import { Email } from '../src/types';
 import { loadPricing, priceCost } from './pricing';
 
@@ -197,6 +198,7 @@ async function main(): Promise<void> {
     const report = {
       generated_at: new Date().toISOString(), dataset: path.basename(DATA), dataset_sha256: createHash('sha256').update(bytes).digest('hex'),
       dataset_size: allCases.length, model: model.id, model_label: model.label, provider: PROVIDER, source_mode: 'live API',
+      prompt: promptReport('classifier_system'),
       merged_prior_results: Boolean(requestedCaseIds), rerun_case_ids: requestedCaseIds ?? null,
       thresholds: 'No pass threshold; descriptive metrics on this fixed synthetic holdout.',
       metrics: {

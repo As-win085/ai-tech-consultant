@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import re
 from dataclasses import dataclass, field
 from typing import Protocol, runtime_checkable
@@ -34,6 +35,8 @@ from app.schemas import (
     Transcript,
     utcnow,
 )
+
+logger = logging.getLogger(__name__)
 
 # --- Cue phrase sets ---------------------------------------------------------
 
@@ -595,14 +598,21 @@ def _link(a: Requirement, b: Requirement) -> None:
 class LlmExtractor:
     """LLM-backed extractor; the chat provider is injected (mockable)."""
 
-    def __init__(self, provider, *, system_prompt: str) -> None:
+    def __init__(self, provider, *, system_prompt: str, prompt_ref: str = "unversioned") -> None:
         self.provider = provider
         self.system_prompt = system_prompt
+        self.prompt_ref = prompt_ref
 
     def extract(self, transcript: Transcript) -> ExtractionResult:
         from app.prompt import build_extraction_user_prompt
 
         user_prompt = build_extraction_user_prompt(transcript)
+        logger.info(
+            "llm_call prompt=%s model=%s transcript=%s",
+            self.prompt_ref,
+            getattr(self.provider, "model_name", None),
+            transcript.transcript_id,
+        )
         raw = self.provider.complete(self.system_prompt, user_prompt)
         return _parse_llm_requirements(raw, transcript)
 
@@ -695,8 +705,12 @@ def build_extractor(settings: Settings):
     """Build the configured extractor (rules by default)."""
     if settings.extractor == "llm":
         from app.llm import build_chat_provider
-        from app.prompt import EXTRACTION_SYSTEM_PROMPT
+        from app.prompt import EXTRACTION_PROMPT
 
         provider = build_chat_provider(settings)
-        return LlmExtractor(provider, system_prompt=EXTRACTION_SYSTEM_PROMPT)
+        return LlmExtractor(
+            provider,
+            system_prompt=EXTRACTION_PROMPT.text,
+            prompt_ref=EXTRACTION_PROMPT.ref,
+        )
     return RuleBasedExtractor()

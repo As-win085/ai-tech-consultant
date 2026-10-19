@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-10-19T03:17:07.994521+00:00",
+  "split": "tuning",
+  "extractor": "llm",
+  "cases_file": "C:\\Users\\ASWIN\\Documents\\New folder\\mkdir ai-tech-consultant\\task3-meeting-to-scope\\evals\\cases.json",
+  "passed": null,
+  "total": 14,
+  "error": "chat request failed with HTTP 402",
+  "cost": {
+    "cost_usd": null,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cost_basis": "harness crash"
+  }
+}
