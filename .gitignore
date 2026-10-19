@@ -31,3 +31,6 @@ task1-knowledge-brain/data/
 # Local service logs
 **/_server.*.log
 *.log
+
+# Temporary scratch files (never commit — may contain secrets)
+_tmp_*
